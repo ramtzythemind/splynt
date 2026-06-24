@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Volumes/WDElements/**)",
+      "Bash(npx create-next-app@14 splynt-app --typescript --tailwind --eslint --app --src-dir=false --import-alias=\"@/*\" --use-npm)",
+      "Bash(npm create *)",
+      "Bash(cp -r /Volumes/WDElements/splynt-app/. /Volumes/WDElements/Splynt/)",
+      "Bash(rm -rf /Volumes/WDElements/splynt-app)",
+      "Bash(rsync -a /Volumes/WDElements/splynt-app/ /Volumes/WDElements/Splynt/)",
+      "Bash(npm install *)",
+      "Bash(npx shadcn@latest *)",
+      "Bash(npm run *)",
+      "Bash(npx tsc *)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('exports',{}\\), indent=2\\)\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(d.get\\('version','?'\\)\\)\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/login)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/signup)",
+      "Bash(curl *)",
+      "Bash(node *)",
+      "Bash(npm uninstall *)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(list\\(d['dependencies'].keys\\(\\)\\)\\)\")"
+    ]
+  }
+}
