@@ -49,7 +49,7 @@ export function DailyCheckin({ project, recentCheckins, onCheckinAdded }: Props)
   }
 
   return (
-    <div className="rounded-2xl border border-border/60 bg-card overflow-hidden">
+    <div className="rounded-2xl border border-border/60 bg-card overflow-hidden" data-tour="checkin">
       <button
         onClick={() => setExpanded(!expanded)}
         className="flex w-full items-center justify-between p-5 hover:bg-muted/30 transition-colors text-left"

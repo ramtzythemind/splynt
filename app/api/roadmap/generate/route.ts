@@ -17,8 +17,14 @@ export async function POST(request: Request) {
 
     const roadmap = await generateRoadmap(answers)
 
-    const ideaTitle = answers.idea.split(' ').slice(0, 5).join(' ')
-    const projectName = ideaTitle.length > 3 ? ideaTitle : 'My Startup'
+    let projectName = answers.projectName?.trim()
+    if (!projectName) {
+      const { count } = await supabase
+        .from('projects')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+      projectName = `Project ${(count ?? 0) + 1}`
+    }
 
     const { data: project, error } = await supabase
       .from('projects')

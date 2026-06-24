@@ -7,11 +7,17 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-    const { name, description } = await request.json()
+    const { name, description, is_public, public_slug } = await request.json()
+
+    const updates: Record<string, unknown> = {}
+    if (name !== undefined) updates.name = name
+    if (description !== undefined) updates.description = description
+    if (is_public !== undefined) updates.is_public = is_public
+    if (public_slug !== undefined) updates.public_slug = public_slug || null
 
     const { data: project, error } = await supabase
       .from('projects')
-      .update({ name, description })
+      .update(updates)
       .eq('id', params.id)
       .eq('user_id', user.id)
       .select()

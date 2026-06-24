@@ -144,6 +144,7 @@ export function ChatPanel({ project, initialMessages, onRoadmapUpdate }: Props) 
       >
         {/* Toggle button (desktop) */}
         <button
+          data-tour="chat"
           onClick={() => setOpen(!open)}
           className={cn(
             'hidden md:flex h-16 items-center justify-center border-b border-border/60 hover:bg-accent transition-colors',

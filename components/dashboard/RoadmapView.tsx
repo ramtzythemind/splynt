@@ -14,10 +14,12 @@ import {
   ChevronDown,
   ChevronRight,
   RefreshCw,
+  Share2,
 } from 'lucide-react'
 import Link from 'next/link'
 import { ProjectSettings } from './ProjectSettings'
 import { Button } from '@/components/ui/button'
+import { SocialPostModal } from '@/components/social/SocialPostModal'
 
 const PHASE_COLORS: Record<string, string> = {
   validation: 'bg-blue-500/10 text-blue-600 border-blue-200',
@@ -41,12 +43,14 @@ function StatusIcon({ status }: { status: RoadmapTask['status'] }) {
 interface RoadmapViewProps {
   project: Project
   onRoadmapUpdate?: (roadmap: RoadmapMilestone[]) => void
-  onProjectUpdate?: (updates: { name: string; description: string }) => void
+  onProjectUpdate?: (updates: { name: string; description: string; is_public?: boolean; public_slug?: string | null }) => void
+  onShareStats?: () => void
 }
 
-export function RoadmapView({ project, onRoadmapUpdate, onProjectUpdate }: RoadmapViewProps) {
+export function RoadmapView({ project, onRoadmapUpdate, onProjectUpdate, onShareStats }: RoadmapViewProps) {
   const [roadmap, setRoadmap] = useState<RoadmapMilestone[]>(project.roadmap ?? [])
   const [regenerating, setRegenerating] = useState(false)
+  const [shareTarget, setShareTarget] = useState<RoadmapMilestone | null>(null)
 
   const handleRegenerate = async () => {
     setRegenerating(true)
@@ -128,16 +132,25 @@ export function RoadmapView({ project, onRoadmapUpdate, onProjectUpdate }: Roadm
         </div>
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex items-start gap-3 min-w-0">
+          <div className="flex items-start gap-3 min-w-0" data-tour="roadmap">
             <div className="min-w-0">
               <h1 className="text-3xl font-bold tracking-tight">{project.name}</h1>
               <p className="mt-1 text-muted-foreground line-clamp-2">{project.description}</p>
             </div>
-            {onProjectUpdate && (
-              <div className="mt-1.5 flex-shrink-0">
+            <div className="mt-1.5 flex-shrink-0 flex items-center gap-1" data-tour="project-settings">
+              {onShareStats && (
+                <button
+                  onClick={onShareStats}
+                  title="Share stats card"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                >
+                  <Share2 className="h-4 w-4" />
+                </button>
+              )}
+              {onProjectUpdate && (
                 <ProjectSettings project={project} onUpdate={onProjectUpdate} />
-              </div>
-            )}
+              )}
+            </div>
           </div>
           <Badge variant="secondary" className="w-fit text-sm px-3 py-1">
             {completedMilestones}/{roadmap.length} milestones
@@ -224,6 +237,15 @@ export function RoadmapView({ project, onRoadmapUpdate, onProjectUpdate }: Roadm
                   <div className="hidden sm:block w-24">
                     <Progress value={milestoneProgress} className="h-1.5" />
                   </div>
+                  {milestone.status === 'completed' && (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setShareTarget(milestone) }}
+                      title="Share this win"
+                      className="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+                    >
+                      <Share2 className="h-3.5 w-3.5" />
+                    </button>
+                  )}
                   {isOpen ? (
                     <ChevronDown className="h-4 w-4 text-muted-foreground" />
                   ) : (
@@ -263,6 +285,14 @@ export function RoadmapView({ project, onRoadmapUpdate, onProjectUpdate }: Roadm
           )
         })}
       </div>
+      )}
+
+      {shareTarget && (
+        <SocialPostModal
+          project={project}
+          milestone={shareTarget}
+          onClose={() => setShareTarget(null)}
+        />
       )}
     </div>
   )

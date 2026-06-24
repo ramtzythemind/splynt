@@ -1,4 +1,5 @@
 export interface OnboardingAnswers {
+  projectName?: string
   idea: string
   targetAudience: string
   problem: string
@@ -53,6 +54,8 @@ export interface Project {
   roadmap: RoadmapMilestone[]
   idea_validation: IdeaValidation | null
   launch_checklist: LaunchChecklistItem[]
+  is_public: boolean
+  public_slug: string | null
   created_at: string
   updated_at: string
 }

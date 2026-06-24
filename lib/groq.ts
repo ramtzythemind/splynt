@@ -145,6 +145,62 @@ export async function generateDefaultChecklist(): Promise<import('@/types').Laun
   ]
 }
 
+export interface SocialPosts {
+  twitter: string
+  linkedin: string
+  threads: string
+}
+
+export async function generateSocialPosts({
+  projectName,
+  projectDescription,
+  milestoneTitle,
+  milestonePhase,
+  buildPageUrl,
+}: {
+  projectName: string
+  projectDescription: string
+  milestoneTitle: string
+  milestonePhase: string
+  buildPageUrl?: string
+}): Promise<SocialPosts> {
+  const res = await groq.chat.completions.create({
+    model: MODEL,
+    temperature: 0.8,
+    max_tokens: 1024,
+    messages: [
+      {
+        role: 'system',
+        content: 'You are a copywriter helping startup founders share their wins on social media. Return ONLY valid JSON — no markdown, no code fences.',
+      },
+      {
+        role: 'user',
+        content: `Write 3 social media posts celebrating a founder completing a milestone. Be authentic, specific, and in a building-in-public voice. No cringe corporate tone.
+
+Project: ${projectName}
+What it does: ${projectDescription}
+Milestone completed: ${milestoneTitle}
+Phase: ${milestonePhase}
+${buildPageUrl ? `Build page: ${buildPageUrl}` : ''}
+
+Return this exact JSON:
+{
+  "twitter": "Under 240 chars. Punchy and direct. Use #BuildInPublic. Include the milestone win. End with a link placeholder if build page provided.",
+  "linkedin": "150–250 words. Professional but personal. Story-driven. What was the challenge, what was achieved, what's next. No bullet spam.",
+  "threads": "Casual and conversational. 2-3 short paragraphs. Like texting a friend who's also a founder. Authentic, no hype."
+}
+
+Return ONLY the JSON.`,
+      },
+    ],
+  })
+
+  const text = res.choices[0]?.message?.content ?? ''
+  const match = text.match(/\{[\s\S]*\}/)
+  if (!match) throw new Error('Failed to parse social posts from AI')
+  return JSON.parse(match[0]) as SocialPosts
+}
+
 interface ChatContext {
   project: Project
   recentCheckins: CheckIn[]

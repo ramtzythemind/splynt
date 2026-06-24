@@ -90,3 +90,28 @@ alter table public.projects
 create trigger on_profile_updated
   before update on public.profiles
   for each row execute procedure public.handle_updated_at();
+
+-- ============================================================
+-- Migration: Build in Public + momentum
+-- ============================================================
+
+-- 6. Add public visibility columns to projects
+alter table public.projects
+  add column if not exists is_public boolean default false,
+  add column if not exists public_slug text unique;
+
+-- Allow anonymous reads for publicly published projects
+create policy "Public projects are viewable by anyone"
+  on public.projects for select
+  using (is_public = true);
+
+-- Allow anonymous reads for check-ins that belong to public projects
+create policy "Checkins of public projects are viewable by anyone"
+  on public.checkins for select
+  using (
+    exists (
+      select 1 from public.projects
+      where public.projects.id = public.checkins.project_id
+        and public.projects.is_public = true
+    )
+  );

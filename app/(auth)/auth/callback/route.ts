@@ -11,6 +11,31 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
 
     if (!error) {
+      // Pull Google identity metadata into the profile on first OAuth login
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user && user.app_metadata?.provider === 'google') {
+        const meta = user.user_metadata ?? {}
+        const fullName: string = meta.full_name ?? meta.name ?? ''
+        const firstName: string = meta.given_name ?? fullName.split(' ')[0] ?? ''
+        const lastName: string = meta.family_name ?? fullName.split(' ').slice(1).join(' ') ?? ''
+
+        if (firstName) {
+          // Only write if not already set — don't overwrite manual edits
+          const { data: existing } = await supabase
+            .from('profiles')
+            .select('first_name')
+            .eq('id', user.id)
+            .single()
+
+          if (!existing?.first_name) {
+            await supabase
+              .from('profiles')
+              .update({ first_name: firstName, last_name: lastName || null })
+              .eq('id', user.id)
+          }
+        }
+      }
+
       return NextResponse.redirect(`${origin}${next}`)
     }
   }

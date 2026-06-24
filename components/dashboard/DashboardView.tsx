@@ -1,11 +1,13 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import type { Project, RoadmapMilestone } from '@/types'
+import type { Profile, Project, RoadmapMilestone } from '@/types'
 import { ArrowRight, Plus, Target } from 'lucide-react'
+import { NicknameModal } from '@/components/auth/NicknameModal'
 
 function getProjectProgress(roadmap: RoadmapMilestone[]): number {
   if (!roadmap?.length) return 0
@@ -22,9 +24,18 @@ function getCurrentPhase(roadmap: RoadmapMilestone[]): string {
   return 'Completed'
 }
 
-export function DashboardView({ projects }: { projects: Project[] }) {
+export function DashboardView({ projects, profile }: { projects: Project[]; profile: Profile | null }) {
+  const [showNickname, setShowNickname] = useState(!profile?.nickname)
+
   return (
     <div>
+      {showNickname && (
+        <NicknameModal
+          firstName={profile?.first_name}
+          onDone={() => setShowNickname(false)}
+        />
+      )}
+
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Your Projects</h1>

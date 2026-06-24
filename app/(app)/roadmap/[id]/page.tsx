@@ -10,11 +10,12 @@ export default async function RoadmapPage({ params }: { params: { id: string } }
 
   if (!user) redirect('/login')
 
-  const [{ data: project }, { data: profile }, { data: checkins }, { data: chatMessages }] = await Promise.all([
+  const [{ data: project }, { data: profile }, { data: checkins }, { data: chatMessages }, { count: projectCount }] = await Promise.all([
     supabase.from('projects').select('*').eq('id', params.id).eq('user_id', user.id).single(),
     supabase.from('profiles').select('*').eq('id', user.id).single(),
     supabase.from('checkins').select('*').eq('project_id', params.id).order('created_at', { ascending: false }).limit(10),
     supabase.from('chat_messages').select('*').eq('project_id', params.id).order('created_at', { ascending: true }).limit(50),
+    supabase.from('projects').select('*', { count: 'exact', head: true }).eq('user_id', user.id),
   ])
 
   if (!project) notFound()
@@ -26,6 +27,9 @@ export default async function RoadmapPage({ params }: { params: { id: string } }
         project={project}
         recentCheckins={checkins ?? []}
         initialChatMessages={chatMessages ?? []}
+        isFirstProject={(projectCount ?? 0) === 1}
+        userId={user.id}
+        profile={profile as Profile | null}
       />
     </div>
   )

@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import { createClient } from '@/lib/supabase/client'
 import type { OnboardingAnswers } from '@/types'
 import { ArrowRight, ArrowLeft, Loader2, Sparkles } from 'lucide-react'
+import { NicknameModal } from '@/components/auth/NicknameModal'
 
 const STAGES = [
   'Just an idea',
@@ -20,6 +21,14 @@ const STAGES = [
 ]
 
 const questions = [
+  {
+    id: 'projectName' as keyof OnboardingAnswers,
+    title: "What's your project called?",
+    description: "Give your startup a name. You can always change it later, or skip and we'll name it for you.",
+    placeholder: 'e.g. Splynt, Notion, Stripe...',
+    type: 'input',
+    optional: true,
+  },
   {
     id: 'idea' as keyof OnboardingAnswers,
     title: 'What are you building?',
@@ -72,6 +81,7 @@ const questions = [
 ]
 
 const EMPTY_ANSWERS: OnboardingAnswers = {
+  projectName: '',
   idea: '',
   targetAudience: '',
   problem: '',
@@ -81,8 +91,14 @@ const EMPTY_ANSWERS: OnboardingAnswers = {
   biggestChallenge: '',
 }
 
-export function OnboardingFlow() {
+interface OnboardingFlowProps {
+  hasNickname?: boolean
+  firstName?: string | null
+}
+
+export function OnboardingFlow({ hasNickname = true, firstName }: OnboardingFlowProps) {
   const router = useRouter()
+  const [nicknameSet, setNicknameSet] = useState(hasNickname)
   const [step, setStep] = useState(0)
   const [answers, setAnswers] = useState<OnboardingAnswers>(EMPTY_ANSWERS)
   const [generating, setGenerating] = useState(false)
@@ -90,8 +106,9 @@ export function OnboardingFlow() {
 
   const current = questions[step]
   const progress = ((step + 1) / questions.length) * 100
-  const currentValue = answers[current.id]
-  const isValid = currentValue.trim().length > 0
+  const currentValue = answers[current.id] ?? ''
+  const isOptional = (current as { optional?: boolean }).optional ?? false
+  const isValid = currentValue.trim().length > 0 || isOptional
 
   const handleNext = () => {
     if (step < questions.length - 1) {
@@ -127,6 +144,10 @@ export function OnboardingFlow() {
       setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
       setGenerating(false)
     }
+  }
+
+  if (!nicknameSet) {
+    return <NicknameModal firstName={firstName} onDone={() => setNicknameSet(true)} />
   }
 
   if (generating) {
@@ -212,19 +233,33 @@ export function OnboardingFlow() {
           Back
         </Button>
 
-        <Button onClick={handleNext} disabled={!isValid} className="gap-2">
-          {step === questions.length - 1 ? (
-            <>
-              <Sparkles className="h-4 w-4" />
-              Generate Roadmap
-            </>
-          ) : (
-            <>
-              Next
-              <ArrowRight className="h-4 w-4" />
-            </>
+        <div className="flex items-center gap-2">
+          {isOptional && (
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setAnswers(a => ({ ...a, [current.id]: '' }))
+                handleNext()
+              }}
+              className="text-muted-foreground"
+            >
+              Skip
+            </Button>
           )}
-        </Button>
+          <Button onClick={handleNext} disabled={!isValid} className="gap-2">
+            {step === questions.length - 1 ? (
+              <>
+                <Sparkles className="h-4 w-4" />
+                Generate Roadmap
+              </>
+            ) : (
+              <>
+                Next
+                <ArrowRight className="h-4 w-4" />
+              </>
+            )}
+          </Button>
+        </div>
       </div>
     </div>
   )

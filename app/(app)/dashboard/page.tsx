@@ -23,7 +23,7 @@ export default async function DashboardPage() {
     <div className="min-h-screen bg-muted/20">
       <AppNav user={user} profile={profile as Profile | null} />
       <main className="mx-auto max-w-6xl px-4 py-8">
-        <DashboardView projects={projects} />
+        <DashboardView projects={projects} profile={profile as Profile | null} />
       </main>
     </div>
   )

@@ -10,11 +10,10 @@ export default async function OnboardingPage() {
 
   if (!user) redirect('/login')
 
-  const { data: projects } = await supabase
-    .from('projects')
-    .select('id')
-    .eq('user_id', user.id)
-    .limit(1)
+  const [{ data: projects }, { data: profile }] = await Promise.all([
+    supabase.from('projects').select('id').eq('user_id', user.id).limit(1),
+    supabase.from('profiles').select('nickname, first_name').eq('id', user.id).single(),
+  ])
 
   if (projects && projects.length > 0) {
     redirect('/dashboard')
@@ -36,7 +35,10 @@ export default async function OnboardingPage() {
           </p>
         </div>
 
-        <OnboardingFlow />
+        <OnboardingFlow
+          hasNickname={!!profile?.nickname}
+          firstName={profile?.first_name}
+        />
       </div>
     </div>
   )
