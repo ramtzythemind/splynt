@@ -184,7 +184,7 @@ export default function LandingPage() {
           <div className="mx-auto max-w-xl">
             <h2 className="mb-4 text-2xl font-bold">Ready to build your startup?</h2>
             <p className="mb-8 text-muted-foreground">
-              Join the waitlist for early access. We're onboarding founders one batch at a time.
+              Join the waitlist for early access. We&apos;re onboarding founders one batch at a time.
             </p>
             <WaitlistForm />
           </div>

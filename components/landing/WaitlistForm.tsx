@@ -39,9 +39,9 @@ export function WaitlistForm() {
       <div className="mx-auto flex max-w-sm flex-col items-center gap-3 rounded-2xl border border-green-500/20 bg-green-500/5 px-6 py-5 text-center">
         <CheckCircle2 className="h-6 w-6 text-green-500" />
         <div>
-          <p className="font-semibold">You're on the list!</p>
+          <p className="font-semibold">You&apos;re on the list!</p>
           <p className="mt-1 text-sm text-muted-foreground">
-            We'll reach out to <span className="font-medium text-foreground">{email}</span> when your spot is ready.
+            We&apos;ll reach out to <span className="font-medium text-foreground">{email}</span> when your spot is ready.
           </p>
         </div>
       </div>
@@ -78,7 +78,7 @@ export function WaitlistForm() {
       </div>
 
       <p className="text-xs text-muted-foreground text-left">
-        X (Twitter) or GitHub handle — we use this to reach out and know who's building.
+        X (Twitter) or GitHub handle — we use this to reach out and know who&apos;s building.
       </p>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
