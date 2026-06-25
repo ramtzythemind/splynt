@@ -190,6 +190,21 @@ export default function LandingPage() {
           </div>
         </section>
       </main>
+
+      <footer className="border-t border-border/60 px-4 py-8">
+        <div className="mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="flex h-5 w-5 items-center justify-center rounded bg-primary">
+              <Zap className="h-3 w-3 text-primary-foreground" />
+            </div>
+            <span>© {new Date().getFullYear()} Splynt. All rights reserved.</span>
+          </div>
+          <div className="flex gap-6 text-sm text-muted-foreground">
+            <Link href="/legal/terms" className="hover:text-foreground transition-colors">Terms of Service</Link>
+            <Link href="/legal/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
