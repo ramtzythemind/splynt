@@ -11,6 +11,7 @@ import { Loader2 } from 'lucide-react'
 export function SignupForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [inviteCode, setInviteCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -21,12 +22,33 @@ export function SignupForm() {
     setLoading(true)
     setError(null)
 
+    // Pre-validate invite code before creating the account
+    const code = inviteCode.trim().toUpperCase()
+    if (!code) {
+      setError('An invite code is required to join the closed beta.')
+      setLoading(false)
+      return
+    }
+
+    const validateRes = await fetch('/api/beta/validate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code }),
+    })
+    const validateData = await validateRes.json()
+    if (!validateData.valid) {
+      setError(validateData.error ?? 'Invalid invite code.')
+      setLoading(false)
+      return
+    }
+
     const supabase = createClient()
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding`,
+        // Pass the code through the confirmation link so the callback can consume it
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding&beta_code=${encodeURIComponent(code)}`,
       },
     })
 
@@ -109,6 +131,19 @@ export function SignupForm() {
             minLength={8}
             required
           />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="invite-code">Invite code</Label>
+          <Input
+            id="invite-code"
+            placeholder="BETA-XXXXXXXX"
+            value={inviteCode}
+            onChange={(e) => setInviteCode(e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, ''))}
+            className="font-mono tracking-widest"
+            required
+          />
+          <p className="text-xs text-muted-foreground">Splynt is in closed beta — you need an invite code to sign up.</p>
         </div>
 
         {error && (

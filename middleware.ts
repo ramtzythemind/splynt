@@ -27,23 +27,58 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  const isAuthRoute = request.nextUrl.pathname.startsWith('/login') ||
-    request.nextUrl.pathname.startsWith('/signup')
-  const isProtectedRoute = request.nextUrl.pathname.startsWith('/dashboard') ||
-    request.nextUrl.pathname.startsWith('/onboarding') ||
-    request.nextUrl.pathname.startsWith('/roadmap') ||
-    request.nextUrl.pathname.startsWith('/settings')
+  const path = request.nextUrl.pathname
 
+  const isAuthRoute      = path.startsWith('/login') || path.startsWith('/signup')
+  const isBetaActivate   = path.startsWith('/beta')
+  const isProtectedRoute =
+    path.startsWith('/dashboard') ||
+    path.startsWith('/onboarding') ||
+    path.startsWith('/roadmap') ||
+    path.startsWith('/settings')
+
+  // No session → redirect protected routes to login
   if (!user && isProtectedRoute) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
   }
 
+  // Logged-in user on login/signup → send to dashboard
   if (user && isAuthRoute) {
     const url = request.nextUrl.clone()
     url.pathname = '/dashboard'
     return NextResponse.redirect(url)
+  }
+
+  // Logged-in user on a protected route → check beta access
+  if (user && isProtectedRoute && !isBetaActivate) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('beta_access')
+      .eq('id', user.id)
+      .single()
+
+    if (!profile?.beta_access) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/beta/activate'
+      return NextResponse.redirect(url)
+    }
+  }
+
+  // Beta activate page → redirect away if already approved
+  if (user && isBetaActivate) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('beta_access')
+      .eq('id', user.id)
+      .single()
+
+    if (profile?.beta_access) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/dashboard'
+      return NextResponse.redirect(url)
+    }
   }
 
   return supabaseResponse

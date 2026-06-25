@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { Flame, Zap, CheckCircle2, CalendarCheck } from 'lucide-react'
+import { Flame, CheckCircle2, CalendarCheck } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { computeStreak, computeMomentumScore, getTier } from '@/lib/momentum'
 import type { CheckIn, Project } from '@/types'

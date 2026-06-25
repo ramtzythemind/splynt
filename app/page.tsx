@@ -1,7 +1,8 @@
 import Link from 'next/link'
-import { Zap, Hammer, Map, Bot, CheckSquare, TrendingUp } from 'lucide-react'
+import { Zap, Lock, Map, Bot, CheckSquare, TrendingUp, Flame, Share2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { WaitlistForm } from '@/components/landing/WaitlistForm'
 
 const features = [
   {
@@ -15,18 +16,28 @@ const features = [
     description: 'Chat with Splynt AI anytime — it knows your roadmap, your check-ins, and your goals. No generic advice.',
   },
   {
+    icon: Flame,
+    title: 'Momentum & streaks',
+    description: 'Your momentum score rises every time you ship and check in. Build a streak, reach Unstoppable status.',
+  },
+  {
     icon: CheckSquare,
+    title: 'Daily check-ins',
+    description: 'Log your progress, blockers, and next steps every day. Build momentum and track your growth over time.',
+  },
+  {
+    icon: TrendingUp,
     title: 'Launch checklist',
     description: 'A curated pre-launch checklist covering landing page, payments, analytics, legal, and more.',
   },
   {
-    icon: TrendingUp,
-    title: 'Daily check-ins',
-    description: 'Log your progress, blockers, and next steps every day. Build momentum and track your growth over time.',
+    icon: Share2,
+    title: 'Build in public',
+    description: 'Share a live progress page with your audience and export a shareable stats card for socials.',
   },
 ]
 
-export default function ComingSoonPage() {
+export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navbar */}
@@ -39,15 +50,22 @@ export default function ComingSoonPage() {
               </div>
               Splynt
             </Link>
-            <ThemeToggle />
+            <div className="flex items-center gap-2">
+              <Link
+                href="/login"
+                className="rounded-lg px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Sign in
+              </Link>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </header>
 
       <main className="flex flex-1 flex-col items-center pt-16">
         {/* Hero */}
-        <section className="relative flex w-full flex-col items-center justify-center overflow-hidden px-4 py-32 text-center">
-          {/* Background gradient */}
+        <section className="relative flex w-full flex-col items-center justify-center overflow-hidden px-4 py-28 text-center">
           <div className="pointer-events-none absolute inset-0 -z-10">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/20" />
             <div className="absolute left-1/2 top-1/4 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/8 blur-3xl" />
@@ -56,8 +74,8 @@ export default function ComingSoonPage() {
 
           <div className="mx-auto max-w-3xl">
             <Badge variant="secondary" className="mb-8 gap-1.5 px-3 py-1.5 text-xs font-medium">
-              <Hammer className="h-3 w-3 text-primary" />
-              Work in progress
+              <Lock className="h-3 w-3 text-primary" />
+              Closed Beta — limited spots
             </Badge>
 
             <h1 className="mb-6 text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
@@ -69,42 +87,34 @@ export default function ComingSoonPage() {
               at a time
             </h1>
 
-            <p className="mx-auto mb-12 max-w-2xl text-lg text-muted-foreground sm:text-xl leading-relaxed">
-              Splynt turns your idea into a structured roadmap with AI-powered milestones, a personal advisor that knows your context, and daily check-ins to keep you on track.
+            <p className="mx-auto mb-10 max-w-2xl text-lg text-muted-foreground sm:text-xl leading-relaxed">
+              Splynt turns your idea into a structured roadmap with AI-powered milestones, a personal advisor that knows your context, and daily check-ins that keep you accountable.
             </p>
 
-            {/* Progress bar */}
-            <div className="mx-auto mb-4 w-full max-w-xs">
-              <div className="mb-2 flex items-center justify-between text-xs text-muted-foreground">
-                <span>Build progress</span>
-                <span className="font-medium text-foreground">72%</span>
-              </div>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-primary to-primary/70"
-                  style={{ width: '72%' }}
-                />
-              </div>
+            {/* Waitlist form */}
+            <div id="waitlist" className="mb-6">
+              <WaitlistForm />
             </div>
 
             <p className="text-sm text-muted-foreground">
-              We&apos;re building in public — full launch coming soon.
+              Already have an invite?{' '}
+              <Link href="/signup" className="font-medium text-primary hover:underline">
+                Sign up →
+              </Link>
             </p>
           </div>
         </section>
 
-        {/* Blurred dashboard preview */}
+        {/* Dashboard preview */}
         <section className="w-full max-w-5xl px-4 pb-24">
           <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card shadow-2xl shadow-primary/10">
-            {/* Blur overlay */}
-            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-background/50 backdrop-blur-sm">
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-background/60 backdrop-blur-sm">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                <Hammer className="h-6 w-6 text-primary" />
+                <Lock className="h-5 w-5 text-primary" />
               </div>
-              <p className="text-sm font-semibold">Dashboard preview coming soon</p>
-              <p className="text-xs text-muted-foreground">Check back as we ship</p>
+              <p className="text-sm font-semibold">Beta access required</p>
+              <p className="text-xs text-muted-foreground">Request access above to unlock the dashboard</p>
             </div>
-            {/* Faux chrome */}
             <div className="flex items-center gap-2 border-b border-border/60 px-4 py-3">
               <div className="h-3 w-3 rounded-full bg-red-400" />
               <div className="h-3 w-3 rounded-full bg-yellow-400" />
@@ -115,10 +125,7 @@ export default function ComingSoonPage() {
               <div className="col-span-1 space-y-3">
                 <div className="h-5 w-24 rounded-md bg-muted" />
                 {['Validation', 'Build MVP', 'Launch', 'Growth'].map((phase, i) => (
-                  <div
-                    key={phase}
-                    className={`flex items-center gap-3 rounded-lg p-3 ${i === 1 ? 'bg-primary/10 ring-1 ring-primary/20' : 'bg-muted/30'}`}
-                  >
+                  <div key={phase} className={`flex items-center gap-3 rounded-lg p-3 ${i === 1 ? 'bg-primary/10 ring-1 ring-primary/20' : 'bg-muted/30'}`}>
                     <div className={`h-2 w-2 rounded-full ${i < 2 ? 'bg-primary' : 'bg-border'}`} />
                     <span className="text-sm font-medium">{phase}</span>
                     {i < 2 && <span className="ml-auto text-xs text-muted-foreground">{i === 0 ? '100%' : '60%'}</span>}
@@ -138,9 +145,7 @@ export default function ComingSoonPage() {
                     <div className={`h-4 w-4 flex-shrink-0 rounded ${task.done ? 'bg-primary' : 'border-2 border-border'}`}>
                       {task.done && <div className="flex h-full w-full items-center justify-center text-white text-[8px]">✓</div>}
                     </div>
-                    <span className={`text-sm ${task.done ? 'line-through text-muted-foreground' : 'font-medium'}`}>
-                      {task.title}
-                    </span>
+                    <span className={`text-sm ${task.done ? 'line-through text-muted-foreground' : 'font-medium'}`}>{task.title}</span>
                   </div>
                 ))}
               </div>
@@ -160,17 +165,28 @@ export default function ComingSoonPage() {
               </p>
             </div>
 
-            <div className="grid gap-8 sm:grid-cols-2">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {features.map((f) => (
                 <div key={f.title} className="rounded-2xl border border-border/60 bg-card p-6 shadow-sm">
                   <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
                     <f.icon className="h-5 w-5 text-primary" />
                   </div>
-                  <h3 className="mb-2 font-semibold text-lg">{f.title}</h3>
+                  <h3 className="mb-2 font-semibold">{f.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{f.description}</p>
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* Footer CTA */}
+        <section className="w-full px-4 py-20 text-center">
+          <div className="mx-auto max-w-xl">
+            <h2 className="mb-4 text-2xl font-bold">Ready to build your startup?</h2>
+            <p className="mb-8 text-muted-foreground">
+              Join the waitlist for early access. We're onboarding founders one batch at a time.
+            </p>
+            <WaitlistForm />
           </div>
         </section>
       </main>

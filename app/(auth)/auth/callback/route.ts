@@ -36,6 +36,13 @@ export async function GET(request: Request) {
         }
       }
 
+      // Consume beta invite code if present in the redirect URL
+      const betaCode = searchParams.get('beta_code')
+      if (betaCode) {
+        // Use supabase RPC — user session is now active so auth.uid() works
+        await supabase.rpc('redeem_beta_invite', { code_to_use: betaCode })
+      }
+
       return NextResponse.redirect(`${origin}${next}`)
     }
   }
