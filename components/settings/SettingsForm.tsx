@@ -5,9 +5,9 @@ import type { User } from '@supabase/supabase-js'
 import type { Profile } from '@/types'
 import { SKILL_TAGS } from '@/types'
 import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { Button } from '@/app/components/ui/button'
+import { Input } from '@/app/components/ui/input'
+import { Label } from '@/app/components/ui/label'
 import { AvatarCustomizer } from './AvatarCustomizer'
 import { UserAvatar } from './UserAvatar'
 import { Loader2, Check } from 'lucide-react'
@@ -107,11 +107,10 @@ export function SettingsForm({ user, initialProfile }: Props) {
               <button
                 key={tag}
                 onClick={() => toggleSkill(tag)}
-                className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-all ${
-                  active
+                className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-all ${active
                     ? 'border-primary bg-primary/10 text-primary'
                     : 'border-border hover:border-primary/40 hover:bg-muted/50 text-muted-foreground'
-                }`}
+                  }`}
               >
                 {tag}
               </button>

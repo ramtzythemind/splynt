@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { Zap, Lock, Map, Bot, CheckSquare, TrendingUp, Flame, Share2 } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { ThemeToggle } from '@/components/ThemeToggle'
-import { WaitlistForm } from '@/components/landing/WaitlistForm'
+import { Badge } from '@/app/components/ui/badge'
+import { ThemeToggle } from '@/app/components/ThemeToggle'
+import { WaitlistForm } from '@/app/components/landing/WaitlistForm'
 
 const features = [
   {
@@ -37,9 +37,48 @@ const features = [
   },
 ]
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': 'https://splynt.app/#website',
+      url: 'https://splynt.app',
+      name: 'Splynt',
+      description: 'AI-powered product builder for early-stage founders',
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: { '@type': 'EntryPoint', urlTemplate: 'https://splynt.app/build/{search_term_string}' },
+        'query-input': 'required name=search_term_string',
+      },
+    },
+    {
+      '@type': 'Organization',
+      '@id': 'https://splynt.app/#organization',
+      name: 'Splynt',
+      url: 'https://splynt.app',
+      logo: { '@type': 'ImageObject', url: 'https://splynt.app/favicon.ico' },
+      contactPoint: { '@type': 'ContactPoint', email: 'support@splynt.xyz', contactType: 'customer support' },
+    },
+    {
+      '@type': 'SoftwareApplication',
+      '@id': 'https://splynt.app/#app',
+      name: 'Splynt',
+      applicationCategory: 'BusinessApplication',
+      operatingSystem: 'Web',
+      description: 'AI-powered product builder that helps early-stage founders go from idea to launch with structured milestones, daily check-ins, momentum tracking, and a personal AI advisor.',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: 'Free during closed beta' },
+    },
+  ],
+}
+
 export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Navbar */}
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-md">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">

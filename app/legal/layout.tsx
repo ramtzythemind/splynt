@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Zap } from 'lucide-react'
-import { ThemeToggle } from '@/components/ThemeToggle'
+import { ThemeToggle } from '@/app/components/ThemeToggle'
 
 export default function LegalLayout({ children }: { children: React.ReactNode }) {
   return (

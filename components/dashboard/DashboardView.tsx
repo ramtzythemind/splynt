@@ -2,12 +2,12 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/app/components/ui/card'
+import { Badge } from '@/app/components/ui/badge'
+import { Progress } from '@/app/components/ui/progress'
 import type { Profile, Project, RoadmapMilestone } from '@/types'
 import { ArrowRight, Plus, Target } from 'lucide-react'
-import { NicknameModal } from '@/components/auth/NicknameModal'
+import { NicknameModal } from '@/app/components/auth/NicknameModal'
 
 function getProjectProgress(roadmap: RoadmapMilestone[]): number {
   if (!roadmap?.length) return 0

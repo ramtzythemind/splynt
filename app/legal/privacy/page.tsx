@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy — Splynt',
-  description: 'Read the Splynt Privacy Policy.',
+  title: 'Privacy Policy',
+  description: 'Read the Splynt Privacy Policy. Learn how we collect, use, and protect your personal data on the Splynt AI-powered startup builder platform.',
+  alternates: { canonical: 'https://splynt.app/legal/privacy' },
 }
 
 const EFFECTIVE_DATE = 'June 25, 2025'

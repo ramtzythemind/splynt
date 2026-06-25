@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
-import { Separator } from '@/components/ui/separator'
+import { Badge } from '@/app/components/ui/badge'
+import { Progress } from '@/app/components/ui/progress'
+import { Separator } from '@/app/components/ui/separator'
 import { createClient } from '@/lib/supabase/client'
 import type { Project, RoadmapMilestone, RoadmapTask } from '@/types'
 import {
@@ -18,8 +18,8 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { ProjectSettings } from './ProjectSettings'
-import { Button } from '@/components/ui/button'
-import { SocialPostModal } from '@/components/social/SocialPostModal'
+import { Button } from '@/app/components/ui/button'
+import { SocialPostModal } from '@/app/components/social/SocialPostModal'
 
 const PHASE_COLORS: Record<string, string> = {
   validation: 'bg-blue-500/10 text-blue-600 border-blue-200',
@@ -184,107 +184,105 @@ export function RoadmapView({ project, onRoadmapUpdate, onProjectUpdate, onShare
           </Button>
         </div>
       ) : (
-      <div className="space-y-4">
-        {roadmap.map((milestone, idx) => {
-          const isOpen = openMilestones.has(milestone.id)
-          const tasks = milestone.tasks ?? []
-          const completedTasks = tasks.filter((t) => t.status === 'completed').length
-          const milestoneProgress = tasks.length ? Math.round((completedTasks / tasks.length) * 100) : 0
+        <div className="space-y-4">
+          {roadmap.map((milestone, idx) => {
+            const isOpen = openMilestones.has(milestone.id)
+            const tasks = milestone.tasks ?? []
+            const completedTasks = tasks.filter((t) => t.status === 'completed').length
+            const milestoneProgress = tasks.length ? Math.round((completedTasks / tasks.length) * 100) : 0
 
-          return (
-            <div
-              key={milestone.id}
-              className={`rounded-2xl border transition-all ${
-                milestone.status === 'completed'
-                  ? 'border-border/40 bg-muted/30'
-                  : 'border-border/60 bg-card shadow-sm'
-              }`}
-            >
-              <button
-                onClick={() => toggleMilestone(milestone.id)}
-                className="flex w-full items-center gap-4 p-6 text-left"
+            return (
+              <div
+                key={milestone.id}
+                className={`rounded-2xl border transition-all ${milestone.status === 'completed'
+                    ? 'border-border/40 bg-muted/30'
+                    : 'border-border/60 bg-card shadow-sm'
+                  }`}
               >
-                <div className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold ${
-                  milestone.status === 'completed'
-                    ? 'bg-primary text-primary-foreground'
-                    : milestone.status === 'in_progress'
-                    ? 'bg-yellow-500/10 text-yellow-600 border border-yellow-200'
-                    : 'bg-muted text-muted-foreground'
-                }`}>
-                  {milestone.status === 'completed' ? '✓' : idx + 1}
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className={`font-semibold text-lg ${milestone.status === 'completed' ? 'line-through text-muted-foreground' : ''}`}>
-                      {milestone.title}
-                    </h3>
-                    <Badge
-                      variant="outline"
-                      className={`text-xs capitalize ${PHASE_COLORS[milestone.phase] || ''}`}
-                    >
-                      {milestone.phase}
-                    </Badge>
+                <button
+                  onClick={() => toggleMilestone(milestone.id)}
+                  className="flex w-full items-center gap-4 p-6 text-left"
+                >
+                  <div className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold ${milestone.status === 'completed'
+                      ? 'bg-primary text-primary-foreground'
+                      : milestone.status === 'in_progress'
+                        ? 'bg-yellow-500/10 text-yellow-600 border border-yellow-200'
+                        : 'bg-muted text-muted-foreground'
+                    }`}>
+                    {milestone.status === 'completed' ? '✓' : idx + 1}
                   </div>
-                  <div className="mt-1 flex items-center gap-3 text-sm text-muted-foreground">
-                    <span>{milestone.timeframe}</span>
-                    <span>·</span>
-                    <span>{completedTasks}/{tasks.length} tasks</span>
-                  </div>
-                </div>
 
-                <div className="flex items-center gap-3 flex-shrink-0">
-                  <div className="hidden sm:block w-24">
-                    <Progress value={milestoneProgress} className="h-1.5" />
-                  </div>
-                  {milestone.status === 'completed' && (
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setShareTarget(milestone) }}
-                      title="Share this win"
-                      className="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
-                    >
-                      <Share2 className="h-3.5 w-3.5" />
-                    </button>
-                  )}
-                  {isOpen ? (
-                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                  ) : (
-                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                  )}
-                </div>
-              </button>
-
-              {isOpen && (
-                <div className="border-t border-border/60 px-6 pb-6 pt-4">
-                  <p className="mb-4 text-sm text-muted-foreground">{milestone.description}</p>
-                  <div className="space-y-2">
-                    {tasks.map((task) => (
-                      <button
-                        key={task.id}
-                        onClick={() => toggleTask(milestone.id, task.id)}
-                        className="flex w-full items-center gap-3 rounded-xl border border-border/40 bg-background px-4 py-3 text-left transition-all hover:border-primary/30 hover:bg-primary/5"
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className={`font-semibold text-lg ${milestone.status === 'completed' ? 'line-through text-muted-foreground' : ''}`}>
+                        {milestone.title}
+                      </h3>
+                      <Badge
+                        variant="outline"
+                        className={`text-xs capitalize ${PHASE_COLORS[milestone.phase] || ''}`}
                       >
-                        <StatusIcon status={task.status} />
-                        <div className="min-w-0 flex-1">
-                          <p className={`text-sm font-medium ${task.status === 'completed' ? 'line-through text-muted-foreground' : ''}`}>
-                            {task.title}
-                          </p>
-                          {task.description && (
-                            <p className="mt-0.5 text-xs text-muted-foreground line-clamp-1">{task.description}</p>
-                          )}
-                        </div>
-                        <span className={`text-xs font-medium capitalize flex-shrink-0 ${PRIORITY_COLORS[task.priority] || ''}`}>
-                          {task.priority}
-                        </span>
-                      </button>
-                    ))}
+                        {milestone.phase}
+                      </Badge>
+                    </div>
+                    <div className="mt-1 flex items-center gap-3 text-sm text-muted-foreground">
+                      <span>{milestone.timeframe}</span>
+                      <span>·</span>
+                      <span>{completedTasks}/{tasks.length} tasks</span>
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          )
-        })}
-      </div>
+
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <div className="hidden sm:block w-24">
+                      <Progress value={milestoneProgress} className="h-1.5" />
+                    </div>
+                    {milestone.status === 'completed' && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setShareTarget(milestone) }}
+                        title="Share this win"
+                        className="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+                      >
+                        <Share2 className="h-3.5 w-3.5" />
+                      </button>
+                    )}
+                    {isOpen ? (
+                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </div>
+                </button>
+
+                {isOpen && (
+                  <div className="border-t border-border/60 px-6 pb-6 pt-4">
+                    <p className="mb-4 text-sm text-muted-foreground">{milestone.description}</p>
+                    <div className="space-y-2">
+                      {tasks.map((task) => (
+                        <button
+                          key={task.id}
+                          onClick={() => toggleTask(milestone.id, task.id)}
+                          className="flex w-full items-center gap-3 rounded-xl border border-border/40 bg-background px-4 py-3 text-left transition-all hover:border-primary/30 hover:bg-primary/5"
+                        >
+                          <StatusIcon status={task.status} />
+                          <div className="min-w-0 flex-1">
+                            <p className={`text-sm font-medium ${task.status === 'completed' ? 'line-through text-muted-foreground' : ''}`}>
+                              {task.title}
+                            </p>
+                            {task.description && (
+                              <p className="mt-0.5 text-xs text-muted-foreground line-clamp-1">{task.description}</p>
+                            )}
+                          </div>
+                          <span className={`text-xs font-medium capitalize flex-shrink-0 ${PRIORITY_COLORS[task.priority] || ''}`}>
+                            {task.priority}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
       )}
 
       {shareTarget && (

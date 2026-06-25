@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
-import { AppNav } from '@/components/dashboard/AppNav'
-import { RoadmapClientView } from '@/components/dashboard/RoadmapClientView'
+import { AppNav } from '@/app/components/dashboard/AppNav'
+import { RoadmapClientView } from '@/app/components/dashboard/RoadmapClientView'
 import type { Profile } from '@/types'
 
 export default async function RoadmapPage({ params }: { params: { id: string } }) {

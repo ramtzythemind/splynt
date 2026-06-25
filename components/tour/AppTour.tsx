@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { X, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/app/components/ui/button'
 import { cn } from '@/lib/utils'
 
 interface Step {
@@ -247,8 +247,8 @@ export function AppTour({ userId, onDone }: { userId: string; onDone: () => void
                   i === step
                     ? 'w-5 bg-primary'
                     : i < step
-                    ? 'w-1.5 bg-primary/40'
-                    : 'w-1.5 bg-muted'
+                      ? 'w-1.5 bg-primary/40'
+                      : 'w-1.5 bg-muted'
                 )}
               />
             ))}

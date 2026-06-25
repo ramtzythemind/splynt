@@ -2,19 +2,19 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ThemeToggle } from '@/components/ThemeToggle'
+import { ThemeToggle } from '@/app/components/ThemeToggle'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@/app/components/ui/dropdown-menu'
 import { createClient } from '@/lib/supabase/client'
 import { Zap, LogOut, LayoutDashboard, Settings } from 'lucide-react'
 import type { User } from '@supabase/supabase-js'
 import type { Profile } from '@/types'
-import { UserAvatar } from '@/components/settings/UserAvatar'
+import { UserAvatar } from '@/app/components/settings/UserAvatar'
 
 export function AppNav({ user, profile }: { user: User; profile?: Profile | null }) {
   const router = useRouter()

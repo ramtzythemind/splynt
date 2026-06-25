@@ -1,9 +1,9 @@
-import { Navbar } from '@/components/landing/Navbar'
-import { HeroSection } from '@/components/landing/HeroSection'
-import { HowItWorksSection } from '@/components/landing/HowItWorksSection'
-import { FeaturesSection } from '@/components/landing/FeaturesSection'
-import { CtaSection } from '@/components/landing/CtaSection'
-import { Footer } from '@/components/landing/Footer'
+import { Navbar } from '@/app/components/landing/Navbar'
+import { HeroSection } from '@/app/components/landing/HeroSection'
+import { HowItWorksSection } from '@/app/components/landing/HowItWorksSection'
+import { FeaturesSection } from '@/app/components/landing/FeaturesSection'
+import { CtaSection } from '@/app/components/landing/CtaSection'
+import { Footer } from '@/app/components/landing/Footer'
 
 export default function HomePage() {
   return (

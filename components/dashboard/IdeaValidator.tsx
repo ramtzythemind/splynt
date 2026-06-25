@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Progress } from '@/components/ui/progress'
-import { Button } from '@/components/ui/button'
+import { Progress } from '@/app/components/ui/progress'
+import { Button } from '@/app/components/ui/button'
 import type { IdeaValidation, Project } from '@/types'
 import { Sparkles, TrendingUp, Zap, Users, AlertTriangle, ChevronDown, ChevronUp, Loader2 } from 'lucide-react'
 

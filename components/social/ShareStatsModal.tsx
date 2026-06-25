@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react'
 import { toPng } from 'html-to-image'
 import { X, Download, Loader2, ImageIcon, Check } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/app/components/ui/button'
 import { StatsCard, CARD_DIMS, type CardFormat } from './StatsCard'
 import type { CheckIn, Profile, Project } from '@/types'
 import { cn } from '@/lib/utils'
@@ -27,21 +27,21 @@ const FORMAT_ORDER: CardFormat[] = ['square', 'portrait', 'stories']
 
 // Aspect-ratio thumbnail shapes for the format buttons
 const THUMB: Record<CardFormat, { w: number; h: number }> = {
-  square:   { w: 28, h: 28 },
+  square: { w: 28, h: 28 },
   portrait: { w: 22, h: 28 },
-  stories:  { w: 16, h: 28 },
+  stories: { w: 16, h: 28 },
 }
 
 export function ShareStatsModal({ project, checkins, profile, onClose }: Props) {
-  const captureRef  = useRef<HTMLDivElement>(null)
-  const [format, setFormat]       = useState<CardFormat>('square')
+  const captureRef = useRef<HTMLDivElement>(null)
+  const [format, setFormat] = useState<CardFormat>('square')
   const [downloading, setDownloading] = useState(false)
-  const [downloaded, setDownloaded]   = useState(false)
+  const [downloaded, setDownloaded] = useState(false)
 
   const { w, h, outW, outH } = CARD_DIMS[format]
-  const scale   = getScale(w, h)
-  const prevW   = Math.round(w * scale)
-  const prevH   = Math.round(h * scale)
+  const scale = getScale(w, h)
+  const prevW = Math.round(w * scale)
+  const prevH = Math.round(h * scale)
 
   const handleDownload = async () => {
     if (!captureRef.current) return
@@ -157,7 +157,7 @@ export function ShareStatsModal({ project, checkins, profile, onClose }: Props) 
           <p className="text-center text-xs text-muted-foreground leading-relaxed">
             {format === 'stories' && 'Optimised for Instagram Stories & TikTok.'}
             {format === 'portrait' && 'Great for Instagram feed, LinkedIn posts.'}
-            {format === 'square'  && 'Universal — works on all platforms.'}
+            {format === 'square' && 'Universal — works on all platforms.'}
             {' '}
             <span className="text-primary font-medium">splynt.xyz</span> is embedded to grow your audience.
           </p>

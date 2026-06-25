@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { DashboardView } from '@/components/dashboard/DashboardView'
-import { AppNav } from '@/components/dashboard/AppNav'
+import { DashboardView } from '@/app/components/dashboard/DashboardView'
+import { AppNav } from '@/app/components/dashboard/AppNav'
 import type { Profile } from '@/types'
 
 export default async function DashboardPage() {

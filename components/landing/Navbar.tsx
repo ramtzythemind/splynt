@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/app/components/ui/button'
 import { Zap } from 'lucide-react'
 
 export function Navbar() {

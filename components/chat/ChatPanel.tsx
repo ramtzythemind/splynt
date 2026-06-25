@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/app/components/ui/button'
+import { Textarea } from '@/app/components/ui/textarea'
 import type { ChatMessage, CheckIn, Project, RoadmapMilestone } from '@/types'
 import {
   ChevronLeft,

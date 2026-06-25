@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { LoginForm } from '@/components/auth/LoginForm'
+import { LoginForm } from '@/app/components/auth/LoginForm'
 import { Zap } from 'lucide-react'
 
 export default function LoginPage() {

@@ -2,10 +2,10 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
+import { Button } from '@/app/components/ui/button'
+import { Input } from '@/app/components/ui/input'
+import { Label } from '@/app/components/ui/label'
+import { Separator } from '@/app/components/ui/separator'
 import type { Project } from '@/types'
 import { Settings, Loader2, Trash2, AlertTriangle, X, Check, Globe, Copy, ExternalLink } from 'lucide-react'
 
@@ -167,14 +167,12 @@ export function ProjectSettings({ project, onUpdate }: Props) {
                   </div>
                   <button
                     onClick={() => setIsPublic((v) => !v)}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                      isPublic ? 'bg-primary' : 'bg-muted'
-                    }`}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${isPublic ? 'bg-primary' : 'bg-muted'
+                      }`}
                   >
                     <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
-                        isPublic ? 'translate-x-6' : 'translate-x-1'
-                      }`}
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${isPublic ? 'translate-x-6' : 'translate-x-1'
+                        }`}
                     />
                   </button>
                 </div>

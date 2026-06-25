@@ -1,16 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import { ChatPanel } from '@/components/chat/ChatPanel'
+import { ChatPanel } from '@/app/components/chat/ChatPanel'
 import { RoadmapView } from './RoadmapView'
 import { IdeaValidator } from './IdeaValidator'
 import { DailyCheckin } from './DailyCheckin'
 import { LaunchChecklist } from './LaunchChecklist'
 import { ProgressTimeline } from './ProgressTimeline'
-import { MomentumWidget } from '@/components/momentum/MomentumWidget'
-import { MomentumBar } from '@/components/momentum/MomentumBar'
-import { AppTour } from '@/components/tour/AppTour'
-import { ShareStatsModal } from '@/components/social/ShareStatsModal'
+import { MomentumWidget } from '@/app/components/momentum/MomentumWidget'
+import { MomentumBar } from '@/app/components/momentum/MomentumBar'
+import { AppTour } from '@/app/components/tour/AppTour'
+import { ShareStatsModal } from '@/app/components/social/ShareStatsModal'
 import type { Project, CheckIn, ChatMessage, RoadmapMilestone, IdeaValidation, LaunchChecklistItem, Profile } from '@/types'
 import { createClient } from '@/lib/supabase/client'
 
@@ -67,45 +67,45 @@ export function RoadmapClientView({ project: initialProject, recentCheckins: ini
       <MomentumBar project={project} checkins={checkins} />
 
       <div className="flex">
-      {/* Main content — shrinks when chat panel is open (handled by CSS margin) */}
-      <main className="flex-1 min-w-0 px-4 py-8 md:pr-4 transition-all duration-300">
-        <div className="mx-auto max-w-4xl space-y-6">
-          {/* Roadmap */}
-          <RoadmapView
-            project={project}
-            onRoadmapUpdate={handleRoadmapUpdate}
-            onProjectUpdate={handleProjectUpdate}
-            onShareStats={() => setShowShareModal(true)}
-          />
+        {/* Main content — shrinks when chat panel is open (handled by CSS margin) */}
+        <main className="flex-1 min-w-0 px-4 py-8 md:pr-4 transition-all duration-300">
+          <div className="mx-auto max-w-4xl space-y-6">
+            {/* Roadmap */}
+            <RoadmapView
+              project={project}
+              onRoadmapUpdate={handleRoadmapUpdate}
+              onProjectUpdate={handleProjectUpdate}
+              onShareStats={() => setShowShareModal(true)}
+            />
 
-          {/* Momentum Widget */}
-          <MomentumWidget project={project} checkins={checkins} />
+            {/* Momentum Widget */}
+            <MomentumWidget project={project} checkins={checkins} />
 
-          {/* Progress Timeline */}
-          <ProgressTimeline milestones={project.roadmap} />
+            {/* Progress Timeline */}
+            <ProgressTimeline milestones={project.roadmap} />
 
-          {/* Idea Validator */}
-          <IdeaValidator project={project} onUpdate={handleValidationUpdate} />
+            {/* Idea Validator */}
+            <IdeaValidator project={project} onUpdate={handleValidationUpdate} />
 
-          {/* Daily Check-in */}
-          <DailyCheckin
-            project={project}
-            recentCheckins={checkins}
-            onCheckinAdded={handleCheckinAdded}
-          />
+            {/* Daily Check-in */}
+            <DailyCheckin
+              project={project}
+              recentCheckins={checkins}
+              onCheckinAdded={handleCheckinAdded}
+            />
 
-          {/* Launch Checklist */}
-          <LaunchChecklist project={project} onUpdate={handleChecklistUpdate} />
-        </div>
-      </main>
+            {/* Launch Checklist */}
+            <LaunchChecklist project={project} onUpdate={handleChecklistUpdate} />
+          </div>
+        </main>
 
-      {/* AI Chat Panel */}
-      <ChatPanel
-        project={project}
-        recentCheckins={checkins}
-        initialMessages={initialChatMessages}
-        onRoadmapUpdate={handleRoadmapUpdate}
-      />
+        {/* AI Chat Panel */}
+        <ChatPanel
+          project={project}
+          recentCheckins={checkins}
+          initialMessages={initialChatMessages}
+          onRoadmapUpdate={handleRoadmapUpdate}
+        />
 
       </div>
 

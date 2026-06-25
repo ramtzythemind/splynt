@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { Badge } from '@/components/ui/badge'
+import { Button } from '@/app/components/ui/button'
+import { Textarea } from '@/app/components/ui/textarea'
+import { Badge } from '@/app/components/ui/badge'
 import type { CheckIn, Project } from '@/types'
 import { CalendarCheck, ChevronDown, ChevronUp, Loader2, Sparkles } from 'lucide-react'
 

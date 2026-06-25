@@ -4,8 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Zap, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Button } from '@/app/components/ui/button'
+import { Input } from '@/app/components/ui/input'
 
 export default function BetaActivatePage() {
   const router = useRouter()

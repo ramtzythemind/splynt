@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow'
+import { OnboardingFlow } from '@/app/components/onboarding/OnboardingFlow'
 import { Zap } from 'lucide-react'
 import Link from 'next/link'
 

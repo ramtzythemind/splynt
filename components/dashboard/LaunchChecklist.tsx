@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Progress } from '@/components/ui/progress'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Progress } from '@/app/components/ui/progress'
+import { Badge } from '@/app/components/ui/badge'
+import { Button } from '@/app/components/ui/button'
 import type { LaunchChecklistItem, Project } from '@/types'
 import { Rocket, ChevronDown, ChevronUp, CheckCircle2, Circle, Loader2 } from 'lucide-react'
 

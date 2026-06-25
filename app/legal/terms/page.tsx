@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Terms of Service — Splynt',
-  description: 'Read the Splynt Terms of Service.',
+  title: 'Terms of Service',
+  description: 'Read the Splynt Terms of Service. Understand your rights and responsibilities when using the Splynt AI-powered startup builder platform.',
+  alternates: { canonical: 'https://splynt.app/legal/terms' },
 }
 
 const EFFECTIVE_DATE = 'June 25, 2025'

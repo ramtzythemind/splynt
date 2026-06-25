@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import type { RoadmapMilestone } from '@/types'
-import { Badge } from '@/components/ui/badge'
+import { Badge } from '@/app/components/ui/badge'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 
 const PHASE_COLORS: Record<string, { dot: string; badge: string }> = {
@@ -56,8 +56,8 @@ export function ProgressTimeline({ milestones: rawMilestones }: Props) {
                         ${milestone.status === 'completed'
                           ? 'bg-primary'
                           : milestone.status === 'in_progress'
-                          ? `${colors.dot} ring-4 ring-offset-2 ring-offset-card ring-primary/20`
-                          : 'bg-muted text-muted-foreground'}
+                            ? `${colors.dot} ring-4 ring-offset-2 ring-offset-card ring-primary/20`
+                            : 'bg-muted text-muted-foreground'}
                       `}>
                         {milestone.status === 'completed' ? '✓' : idx + 1}
                       </div>
@@ -88,9 +88,8 @@ export function ProgressTimeline({ milestones: rawMilestones }: Props) {
                           {tasks.map(task => (
                             <div
                               key={task.id}
-                              className={`h-1.5 w-3 rounded-full transition-colors ${
-                                task.status === 'completed' ? 'bg-primary' : 'bg-border'
-                              }`}
+                              className={`h-1.5 w-3 rounded-full transition-colors ${task.status === 'completed' ? 'bg-primary' : 'bg-border'
+                                }`}
                             />
                           ))}
                         </div>

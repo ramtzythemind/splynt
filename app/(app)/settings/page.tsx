@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { AppNav } from '@/components/dashboard/AppNav'
-import { SettingsForm } from '@/components/settings/SettingsForm'
+import { AppNav } from '@/app/components/dashboard/AppNav'
+import { SettingsForm } from '@/app/components/settings/SettingsForm'
 import type { Profile } from '@/types'
 
 export default async function SettingsPage() {

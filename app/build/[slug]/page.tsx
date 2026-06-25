@@ -40,15 +40,25 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     .eq('is_public', true)
     .single()
 
-  if (!data) return { title: 'Build Log — Splynt' }
+  if (!data) return { title: 'Build Log' }
+
+  const title = `${data.name} — Build Log`
+  const description = data.description ?? `Follow ${data.name}'s startup journey on Splynt — milestones, daily check-ins, and real progress.`
 
   return {
-    title: `${data.name} — Build Log on Splynt`,
-    description: data.description ?? `Follow ${data.name}'s startup journey on Splynt.`,
+    title,
+    description,
+    alternates: { canonical: `https://splynt.app/build/${params.slug}` },
     openGraph: {
-      title: `${data.name} — Building in Public`,
-      description: data.description ?? `Follow the journey of ${data.name} on Splynt.`,
+      title: `${data.name} — Building in Public on Splynt`,
+      description,
+      url: `https://splynt.app/build/${params.slug}`,
       type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${data.name} — Building in Public`,
+      description,
     },
   }
 }

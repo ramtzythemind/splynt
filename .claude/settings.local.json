@@ -21,7 +21,8 @@
       "Bash(node *)",
       "Bash(npm uninstall *)",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(list\\(d['dependencies'].keys\\(\\)\\)\\)\")",
-      "Bash(grep -n \"join_beta_waitlist\\\\|rename\\\\|DO \\\\$\\\\$\\\\|name.*handle\\\\|handle\" \"/Volumes/WDElements/Splynt/supabase-migrations.sql\")"
+      "Bash(grep -n \"join_beta_waitlist\\\\|rename\\\\|DO \\\\$\\\\$\\\\|name.*handle\\\\|handle\" \"/Volumes/WDElements/Splynt/supabase-migrations.sql\")",
+      "Bash(git *)"
     ]
   }
 }

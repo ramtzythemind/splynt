@@ -2,15 +2,15 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { Input } from '@/components/ui/input'
-import { Progress } from '@/components/ui/progress'
-import { Badge } from '@/components/ui/badge'
+import { Button } from '@/app/components/ui/button'
+import { Textarea } from '@/app/components/ui/textarea'
+import { Input } from '@/app/components/ui/input'
+import { Progress } from '@/app/components/ui/progress'
+import { Badge } from '@/app/components/ui/badge'
 import { createClient } from '@/lib/supabase/client'
 import type { OnboardingAnswers } from '@/types'
 import { ArrowRight, ArrowLeft, Loader2, Sparkles } from 'lucide-react'
-import { NicknameModal } from '@/components/auth/NicknameModal'
+import { NicknameModal } from '@/app/components/auth/NicknameModal'
 
 const STAGES = [
   'Just an idea',
@@ -206,11 +206,10 @@ export function OnboardingFlow({ hasNickname = true, firstName }: OnboardingFlow
               <button
                 key={option}
                 onClick={() => setAnswers({ ...answers, [current.id]: option })}
-                className={`w-full rounded-xl border px-4 py-3 text-left text-sm font-medium transition-all ${
-                  currentValue === option
+                className={`w-full rounded-xl border px-4 py-3 text-left text-sm font-medium transition-all ${currentValue === option
                     ? 'border-primary bg-primary/10 text-primary'
                     : 'border-border hover:border-primary/40 hover:bg-muted/50'
-                }`}
+                  }`}
               >
                 {option}
               </button>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/app/components/ui/button'
 import { Share2, Copy, Check, Loader2, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { Project, RoadmapMilestone } from '@/types'
