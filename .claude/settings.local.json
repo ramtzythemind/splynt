@@ -36,7 +36,11 @@
       "Bash(pkill -f \"next dev\")",
       "WebSearch",
       "Bash(echo \"EXIT=$?\")",
-      "Bash(npx tsx -e ' *)"
+      "Bash(npx tsx -e ' *)",
+      "Bash(xargs -0 ls -l)",
+      "Bash(sort -k5 -rn)",
+      "Bash(awk '{printf \"%10.2f MB  %s\\\\n\", $5/1048576, $9}')",
+      "Bash(python3 -c ' *)"
     ],
     "defaultMode": "auto"
   }

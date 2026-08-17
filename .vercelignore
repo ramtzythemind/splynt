@@ -1,7 +1,12 @@
-# The ACARS client runs on the pilot's simulator PC, not on Vercel.
-# Keeping it out of the upload avoids shipping code the deployment never runs.
-acars
+# NB: same syntax as .gitignore — a pattern without a leading slash matches at
+# ANY depth. Bare `supabase` would also exclude src/lib/supabase, and bare
+# `acars` would exclude src/app/api/acars. Every entry here must stay anchored.
 
-# Database migrations and one-off data scripts are run from a workstation.
-supabase
-scripts
+# The ACARS client runs on the pilot's simulator PC, not on Vercel.
+/acars
+
+# Migrations are applied from a workstation, not by the deployment.
+/supabase
+
+# One-off data scripts (seed, import, validation).
+/scripts
