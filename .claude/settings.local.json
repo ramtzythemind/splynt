@@ -40,7 +40,9 @@
       "Bash(xargs -0 ls -l)",
       "Bash(sort -k5 -rn)",
       "Bash(awk '{printf \"%10.2f MB  %s\\\\n\", $5/1048576, $9}')",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(npx tsx *)",
+      "Bash(set -e)"
     ],
     "defaultMode": "auto"
   }

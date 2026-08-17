@@ -85,16 +85,18 @@ npm run providers:check
 
 Gli orari non sono generati: sono i tabelloni pubblicati delle compagnie.
 
-- **200 aeroporti** con coordinate, elevazione e fuso orario IANA
+- **219 aeroporti** con coordinate, elevazione e fuso orario IANA
 - **24 tipi di aeromobile** con velocità di crociera, raggio e capacità reali
-- **812 tratte** su 12 compagnie
+- **876 tratte** su 14 compagnie
 
 **Di linea:** ITA Airways, Ryanair, Lufthansa, British Airways, Air France,
 KLM, Emirates, American Airlines.
 
-**Regionali (turboelica):** Emerald Airlines (Dublino, ATR 72), Loganair
-(Glasgow e le isole scozzesi, ATR 72), Binter Canarias (Canarie, ATR 72),
-Olympic Air (Atene e l'Egeo, Dash 8 Q400).
+**Di ingresso (turboelica, volabili dal grado 1):** Aeroitalia (Fiumicino,
+ATR 72 **e** 737-800), Widerøe (Bodø e i fiordi norvegesi, Dash 8 Q400),
+Emerald Airlines (Dublino, ATR 72), Loganair (Glasgow e le isole scozzesi,
+ATR 72), Binter Canarias (Canarie, ATR 72), Olympic Air (Atene e l'Egeo,
+Dash 8 Q400).
 
 Ogni tratta porta numero di volo, orario STD in UTC, aeromobile assegnato e
 passeggeri tipici. I voli di ritorno seguono la convenzione del settore
@@ -104,9 +106,16 @@ realistico per categoria.
 ### Da dove si comincia
 
 Un pilota nuovo ha 0 XP, quindi grado 1 (Cadet), che abilita **solo la classe
-turboelica**. Le quattro regionali esistono per questo: sono le uniche
-compagnie volabili al primo grado. Le altre otto compaiono nell'onboarding
-contrassegnate col grado che richiedono.
+turboelica**. Le sei compagnie di ingresso esistono per questo: sono le uniche
+volabili al primo grado. Le altre otto compaiono nell'onboarding contrassegnate
+col grado che richiedono.
+
+**Aeroitalia è il percorso più lineare**: opera ATR 72 e 737-800 dallo stesso
+hub, quindi al grado 3 passi al jet senza cambiare compagnia né spostarti.
+
+Cambiando compagnia vieni riassegnato al suo hub, a meno che la nuova non voli
+già dallo scalo in cui ti trovi — altrimenti ti ritroveresti davanti a un
+tabellone vuoto.
 
 Un volo ATR tipico rende 650-950 XP, quindi il grado 2 arriva in 2-3 voli e il
 grado 3 — che sblocca A320 e 737 di linea — in 6-8 voli, circa 7 ore di volo.

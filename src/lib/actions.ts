@@ -39,12 +39,27 @@ export async function joinAirline(airlineId: string): Promise<Result> {
 
   if (!airline) return { ok: false, error: "Compagnia non trovata" };
 
+  // Changing employer means relocating. Staying put is only sensible when the
+  // new airline actually flies out of where the pilot already is — otherwise
+  // they would land on an empty departure board with no obvious way forward.
+  let position = pilot.current_icao ?? airline.hub_icao;
+  if (pilot.current_icao && pilot.current_icao !== airline.hub_icao) {
+    const { count } = await supabase
+      .from("schedules")
+      .select("id", { count: "exact", head: true })
+      .eq("airline_id", airline.id)
+      .eq("dep_icao", pilot.current_icao)
+      .eq("is_active", true);
+
+    if ((count ?? 0) === 0) position = airline.hub_icao;
+  }
+
   const { error } = await supabase
     .from("pilots")
     .update({
       airline_id: airline.id,
       home_base_icao: airline.hub_icao,
-      current_icao: pilot.current_icao ?? airline.hub_icao,
+      current_icao: position,
       onboarded_at: pilot.onboarded_at ?? new Date().toISOString(),
     })
     .eq("id", pilot.id);
