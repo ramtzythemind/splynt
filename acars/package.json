@@ -1,0 +1,22 @@
+{
+  "name": "splynt-acars",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Client ACARS per Splynt — collega MSFS 2020/2024 alla tua carriera.",
+  "type": "module",
+  "bin": { "splynt-acars": "dist/index.js" },
+  "scripts": {
+    "build": "tsc",
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "node-simconnect": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}

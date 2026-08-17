@@ -22,7 +22,22 @@
       "Bash(npm uninstall *)",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(list\\(d['dependencies'].keys\\(\\)\\)\\)\")",
       "Bash(grep -n \"join_beta_waitlist\\\\|rename\\\\|DO \\\\$\\\\$\\\\|name.*handle\\\\|handle\" \"/Volumes/WDElements/Splynt/supabase-migrations.sql\")",
-      "Bash(git *)"
-    ]
+      "Bash(git *)",
+      "Bash(npx --yes create-next-app@latest .scaffold --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --no-turbopack --yes)",
+      "Bash(npm pkg *)",
+      "Bash(npm i *)",
+      "Bash(sed -i '' 's/t\\\\.pax_capacity/t.pax/g' scripts/check-dataset.ts)",
+      "Bash(sed -i '' 's/createBrowserClient<Database>\\(/createBrowserClient\\(/; s/createServerClient<Database>\\(/createServerClient\\(/; s/createSupabaseClient<Database>\\(/createSupabaseClient\\(/' src/lib/supabase/client.ts src/lib/supabase/server.ts)",
+      "Bash(sed -i '' '/^import type { Database } from \"@\\\\/lib\\\\/supabase\\\\/types\";$/d' src/lib/supabase/client.ts src/lib/supabase/server.ts)",
+      "Bash(sed -i '' 's/^import type { Database } from \"@\\\\/lib\\\\/supabase\\\\/types\";$//' src/lib/supabase/client.ts)",
+      "Bash(python3 -)",
+      "Bash(npx @next/codemod@canary middleware-to-proxy . --force)",
+      "Bash(npm view *)",
+      "Bash(pkill -f \"next dev\")",
+      "WebSearch",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(npx tsx -e ' *)"
+    ],
+    "defaultMode": "auto"
   }
 }
