@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Separate Node project — linted and type-checked by `acars/` itself.
+    "acars/**",
   ]),
 ]);
 

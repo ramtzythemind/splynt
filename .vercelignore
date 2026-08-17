@@ -1,0 +1,7 @@
+# The ACARS client runs on the pilot's simulator PC, not on Vercel.
+# Keeping it out of the upload avoids shipping code the deployment never runs.
+acars
+
+# Database migrations and one-off data scripts are run from a workstation.
+supabase
+scripts

@@ -30,5 +30,8 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  // The ACARS desktop client is a separate Node project with its own tsconfig
+  // and its own dependencies. It must not be pulled into the web build, which
+  // never installs `acars/node_modules`.
+  "exclude": ["node_modules", "acars"]
 }
