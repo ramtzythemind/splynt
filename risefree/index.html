@@ -578,7 +578,6 @@
       color: var(--ink);
       border-color: var(--border-strong);
     }
-
   </style>
   <script src="/assets/i18n.js"></script>
 </head>
@@ -623,7 +622,8 @@
         <div class="modes" role="group" aria-label="Modalità di calcolo" data-i18n-attr="aria-label:setup.modesAria">
           <button type="button" id="mode-wake" aria-pressed="true" data-i18n="setup.modeWake">⏰ Voglio svegliarmi
             alle…</button>
-          <button type="button" id="mode-bed" aria-pressed="false" data-i18n="setup.modeBed">🛏️ Vado a letto ora</button>
+          <button type="button" id="mode-bed" aria-pressed="false" data-i18n="setup.modeBed">🛏️ Vado a letto
+            ora</button>
         </div>
 
         <div class="input-row">
@@ -1001,7 +1001,10 @@
   </script>
 
   <!-- 100% privacy-first analytics -->
-  <script data-goatcounter="https://ramtzy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 
 </body>
 
