@@ -20,11 +20,12 @@
   <meta name="twitter:card" content="summary">
 
   <link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/i18n.js"></script>
 </head>
 
 <body>
 
-  <a class="skip-link" href="#tools">Vai ai tool</a>
+  <a class="skip-link" href="#tools" data-i18n="nav.skip">Vai ai tool</a>
 
   <header class="site-header">
     <div class="wrap">
@@ -33,9 +34,10 @@
         splynt<span class="brand-dot">.xyz</span>
       </a>
       <nav class="site-nav" aria-label="Principale">
-        <a href="#tools">Tool</a>
-        <a href="#perche">Perché</a>
-        <a href="/supporta/">Supportami</a>
+        <a href="#tools" data-i18n="nav.tools">Tool</a>
+        <a href="#perche" data-i18n="nav.why">Perché</a>
+        <a href="/supporta/" data-i18n="nav.support">Supportami</a>
+        <span data-lang-switch></span>
       </nav>
     </div>
   </header>
@@ -44,17 +46,17 @@
 
     <section class="hero">
       <div class="wrap">
-        <p class="eyebrow">Micro-tool onesti</p>
-        <h1>Piccoli tool gratuiti, senza abbonamento, <em>senza trucchi</em>.</h1>
-        <p class="manifesto">
+        <p class="eyebrow" data-i18n="hero.eyebrow">Micro-tool onesti</p>
+        <h1 data-i18n="hero.title">Piccoli tool gratuiti, senza abbonamento, <em>senza trucchi</em>.</h1>
+        <p class="manifesto" data-i18n="hero.manifesto">
           Se un'app ti chiede <strong>15&nbsp;€ al mese</strong> per una funzione che è
           un <code>if/else</code>, probabilmente la trovi già qui gratis.
         </p>
         <ul class="hero-facts">
-          <li>Nessun account</li>
-          <li>Nessuna pubblicità</li>
-          <li>Nessun abbonamento</li>
-          <li>Funziona dal telefono</li>
+          <li data-i18n="hero.fact1">Nessun account</li>
+          <li data-i18n="hero.fact2">Nessuna pubblicità</li>
+          <li data-i18n="hero.fact3">Nessun abbonamento</li>
+          <li data-i18n="hero.fact4">Funziona dal telefono</li>
         </ul>
       </div>
     </section>
@@ -62,7 +64,7 @@
     <section class="section" id="tools">
       <div class="wrap">
         <div class="section-head">
-          <h2>I tool</h2>
+          <h2 data-i18n="tools.heading">I tool</h2>
           <p data-tool-count></p>
         </div>
 
@@ -79,6 +81,15 @@
                 <span class="tool-cta">Apri il tool →</span>
               </a>
             </li>
+            <li>
+              <a class="tool-card" href="/risefree/">
+                <span class="tool-icon" aria-hidden="true">🌙</span>
+                <h3 class="tool-title">RiseFree <span class="badge">gratis</span></h3>
+                <p class="tool-desc">A che ora andare a letto o puntare la sveglia per svegliarti a fine ciclo, non nel
+                  mezzo.</p>
+                <span class="tool-cta">Apri il tool →</span>
+              </a>
+            </li>
           </noscript>
         </ul>
       </div>
@@ -87,23 +98,30 @@
     <section class="section" id="perche">
       <div class="wrap">
         <div class="why">
-          <h2>Perché esiste questo sito</h2>
-          <p>
+          <h2 data-i18n="why.heading">Perché esiste questo sito</h2>
+          <p data-i18n="why.p1">
             Un sacco di app fanno una cosa sola, la fanno in tre righe di codice, e poi
             te la mettono dietro un abbonamento, un login, un banner pubblicitario e una
             richiesta di accesso ai contatti. Qui no: ogni tool è una pagina che si apre,
             fa il suo lavoro e ti lascia in pace.
           </p>
-          <p>
-            Tutto gira nel tuo browser. Non c'è un backend, non c'è un database, non c'è
-            niente da registrare. Se un tool ti è utile e vuoi offrirmi un caffè, la porta
-            è aperta — ma resta del tutto facoltativo.
+          <p data-i18n="why.p2">
+            I calcoli girano nel tuo browser: non c'è un backend, non c'è un database,
+            non c'è niente da registrare. L'unica cosa che raccolgo è un conteggio
+            anonimo delle visite — senza cookie, senza profili, senza sapere chi sei —
+            perché mi serve a capire se questi tool servono a qualcuno. Se poi uno ti è
+            utile e vuoi offrirmi un caffè, la porta è aperta: resta del tutto
+            facoltativo.
           </p>
           <ul class="why-list">
-            <li><b>Zero account</b><span>Apri la pagina e la usi. Punto.</span></li>
-            <li><b>Zero tracker</b><span>Nessun profilo, nessuna rivendita di dati.</span></li>
-            <li><b>Zero paywall</b><span>Tutte le funzioni, sempre, gratis.</span></li>
-            <li><b>Codice onesto</b><span>Se un calcolo è una stima, te lo dico.</span></li>
+            <li><b data-i18n="why.k1t">Zero account</b><span data-i18n="why.k1d">Apri la pagina e la usi. Punto.</span>
+            </li>
+            <li><b data-i18n="why.k2t">Zero profilazione</b><span data-i18n="why.k2d">Visite contate in forma anonima,
+                senza cookie.</span></li>
+            <li><b data-i18n="why.k3t">Zero paywall</b><span data-i18n="why.k3d">Tutte le funzioni, sempre,
+                gratis.</span></li>
+            <li><b data-i18n="why.k4t">Codice onesto</b><span data-i18n="why.k4d">Se un calcolo è una stima, te lo
+                dico.</span></li>
           </ul>
         </div>
       </div>
@@ -113,21 +131,57 @@
 
   <footer class="site-footer">
     <div class="wrap">
-      <p>
+      <p data-i18n="footer.claim">
         splynt.xyz esiste perché le cose semplici dovrebbero restare semplici:
         niente pubblicità, niente account, niente abbonamenti.
       </p>
       <nav class="footer-links" aria-label="Collegamenti del footer">
-        <a href="/supporta/">Supportami</a>
-        <a href="mailto:ciao@splynt.xyz">Scrivimi</a>
+        <a href="/supporta/" data-i18n="footer.support">Supportami</a>
+        <a href="mailto:ciao@splynt.xyz" data-i18n="footer.write">Scrivimi</a>
       </nav>
     </div>
   </footer>
 
+  <script>
+    SplyntLang.apply({
+      "meta.title": "splynt.xyz — small free tools, no subscription",
+      "meta.desc": "A collection of free, honest micro-tools. No account, no ads, no subscription for features that are an if/else.",
+      "nav.skip": "Skip to the tools",
+      "nav.tools": "Tools",
+      "nav.why": "Why",
+      "nav.support": "Support me",
+      "hero.eyebrow": "Honest micro-tools",
+      "hero.title": "Small free tools, no subscription, <em>no catch</em>.",
+      "hero.manifesto": "If an app charges you <strong>€15 a month</strong> for a feature that is one <code>if/else</code>, chances are you'll find it here for free.",
+      "hero.fact1": "No account",
+      "hero.fact2": "No ads",
+      "hero.fact3": "No subscription",
+      "hero.fact4": "Works on your phone",
+      "tools.heading": "The tools",
+      "tools.open": "Open the tool →",
+      "tools.wip": "In progress",
+      "tools.soon": "soon",
+      "tools.empty": "The first tool is on its way. Check back soon.",
+      "why.heading": "Why this site exists",
+      "why.p1": "Plenty of apps do one thing, do it in three lines of code, and then put it behind a subscription, a login, an ad banner and a request to access your contacts. Not here: every tool is a page that opens, does its job and leaves you alone.",
+      "why.p2": "The maths runs in your browser: there's no backend, no database, nothing to sign up for. The only thing I collect is an anonymous visit count — no cookies, no profiles, no idea who you are — because I need to know whether these tools are useful to anyone. If one of them helps and you feel like buying me a coffee, the door is open: it stays entirely optional.",
+      "why.k1t": "Zero accounts",
+      "why.k1d": "Open the page and use it. That's it.",
+      "why.k2t": "Zero profiling",
+      "why.k2d": "Visits counted anonymously, without cookies.",
+      "why.k3t": "Zero paywalls",
+      "why.k3d": "Every feature, always, for free.",
+      "why.k4t": "Honest code",
+      "why.k4d": "If a number is an estimate, I say so.",
+      "footer.claim": "splynt.xyz exists because simple things should stay simple: no ads, no accounts, no subscriptions.",
+      "footer.support": "Support me",
+      "footer.write": "Email me"
+    });
+  </script>
   <script src="/assets/tools.js"></script>
 
   <!-- 100% privacy-first analytics -->
-  <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <script data-goatcounter="https://ramtzy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
 </body>
 

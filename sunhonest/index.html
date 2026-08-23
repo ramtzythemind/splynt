@@ -772,7 +772,53 @@
         animation: none !important;
       }
     }
+
+    /* --------------------------------------------------- selettore lingua --- */
+    html.i18n-pending body {
+      visibility: hidden;
+    }
+
+    .header-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      gap: 2px;
+      padding: 3px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+
+    .lang-btn {
+      font: inherit;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      line-height: 1;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: none;
+      color: var(--ink-3);
+      cursor: pointer;
+    }
+
+    .lang-btn:hover {
+      color: var(--ink);
+    }
+
+    .lang-btn[aria-pressed="true"] {
+      background: var(--surface);
+      color: var(--ink);
+      border-color: var(--border-strong);
+    }
   </style>
+  <script src="/assets/i18n.js"></script>
 </head>
 
 <body>
@@ -783,16 +829,19 @@
         <span class="brand-mark" aria-hidden="true"></span>
         splynt<span class="brand-dot">.xyz</span>
       </a>
-      <a class="back-link" href="/#tools">← tutti i tool</a>
+      <span class="header-right">
+        <span data-lang-switch></span>
+        <a class="back-link" href="/#tools" data-i18n="nav.back">← tutti i tool</a>
+      </span>
     </div>
   </header>
 
   <main>
     <section class="hero">
       <div class="wrap">
-        <p class="eyebrow">☀️ SunHonest — gratis, senza account</p>
-        <h1>Quanto puoi stare al sole senza scottarti</h1>
-        <p class="lede">
+        <p class="eyebrow" data-i18n="hero.eyebrow">☀️ SunHonest — gratis, senza account</p>
+        <h1 data-i18n="hero.title">Quanto puoi stare al sole senza scottarti</h1>
+        <p class="lede" data-i18n="hero.lede">
           Indice UV reale della tua posizione, tempo di esposizione sicuro per il tuo
           tipo di pelle e un piano di rotazione fronte/retro con gli orari già calcolati.
           Nessun abbonamento, nessuna registrazione: i dati arrivano da Open-Meteo e i
@@ -805,31 +854,32 @@
 
       <!-- ============================================== impostazioni ==== -->
       <section class="card" aria-labelledby="setup-title">
-        <h2 id="setup-title">1. Dimmi dove sei e com'è la tua pelle</h2>
-        <p class="card-sub">La posizione non viene salvata da nessuna parte se non nel tuo browser.</p>
+        <h2 id="setup-title" data-i18n="setup.title">1. Dimmi dove sei e com'è la tua pelle</h2>
+        <p class="card-sub" data-i18n="setup.sub">La posizione non viene salvata da nessuna parte se non nel tuo
+          browser.</p>
 
         <div class="loc-row">
           <label class="field">
-            <span>Città</span>
+            <span data-i18n="setup.city">Città</span>
             <input type="text" id="q" placeholder="Es. Rimini, Palermo, Lisbona…" autocomplete="off"
-              enterkeyhint="search">
+              enterkeyhint="search" data-i18n-attr="placeholder:setup.cityPlaceholder">
           </label>
-          <button class="btn btn--ghost" id="search-btn" type="button">Cerca</button>
-          <button class="btn" id="geo-btn" type="button">📍 Usa la mia posizione</button>
+          <button class="btn btn--ghost" id="search-btn" type="button" data-i18n="setup.search">Cerca</button>
+          <button class="btn" id="geo-btn" type="button" data-i18n="setup.geo">📍 Usa la mia posizione</button>
         </div>
 
         <ul class="results-list" id="results" hidden></ul>
-        <p class="loc-status" id="loc-status">Nessuna posizione selezionata.</p>
+        <p class="loc-status" id="loc-status" data-i18n="setup.noLoc">Nessuna posizione selezionata.</p>
 
         <div class="field-row" style="margin-top:18px">
           <label class="field">
-            <span>Tipo di pelle (scala Fitzpatrick)</span>
+            <span data-i18n="setup.skin">Tipo di pelle (scala Fitzpatrick)</span>
             <select id="skin"></select>
           </label>
           <label class="field">
-            <span>Protezione solare</span>
+            <span data-i18n="setup.spf">Protezione solare</span>
             <select id="spf">
-              <option value="1">Nessuna crema</option>
+              <option value="1" data-i18n="setup.spfNone">Nessuna crema</option>
               <option value="15">SPF 15</option>
               <option value="30" selected>SPF 30</option>
               <option value="50">SPF 50</option>
@@ -840,15 +890,15 @@
 
       <!-- ==================================================== output ==== -->
       <section class="card" id="out-card" aria-labelledby="out-title" aria-live="polite">
-        <h2 id="out-title">2. Il verdetto</h2>
-        <p class="card-sub">Calcolato sull'andamento orario dell'UV, non su un numero fisso.</p>
-        <p class="state" id="state">Scegli una posizione qui sopra per iniziare.</p>
+        <h2 id="out-title" data-i18n="out.title">2. Il verdetto</h2>
+        <p class="card-sub" data-i18n="out.sub">Calcolato sull'andamento orario dell'UV, non su un numero fisso.</p>
+        <p class="state" id="state" data-i18n="out.pick">Scegli una posizione qui sopra per iniziare.</p>
 
         <div id="out" hidden>
           <div class="uv-head">
             <div class="uv-dial" id="dial">
               <b id="uv-now">–</b>
-              <span>UV ora</span>
+              <span data-i18n="out.uvNow">UV ora</span>
             </div>
             <div class="uv-head-text">
               <h3 id="band-title">–</h3>
@@ -858,19 +908,19 @@
 
           <div class="metrics">
             <div class="metric metric--hero">
-              <div class="k">Sessione con rotazione</div>
+              <div class="k" data-i18n="out.mRot">Sessione con rotazione</div>
               <div class="v" id="m-rot">–</div>
               <div class="n" id="m-rot-note">girandoti fronte/retro</div>
             </div>
             <div class="metric">
-              <div class="k">Stando fermo da un lato</div>
+              <div class="k" data-i18n="out.mFlat">Stando fermo da un lato</div>
               <div class="v" id="m-flat">–</div>
-              <div class="n">tutta la dose sullo stesso lato</div>
+              <div class="n" data-i18n="out.mFlatNote">tutta la dose sullo stesso lato</div>
             </div>
             <div class="metric">
-              <div class="k">Vitamina D</div>
+              <div class="k" data-i18n="out.mVitd">Vitamina D</div>
               <div class="v" id="m-vitd">–</div>
-              <div class="n">bastano, senza crema, braccia e gambe</div>
+              <div class="n" data-i18n="out.mVitdNote">bastano, senza crema, braccia e gambe</div>
             </div>
           </div>
 
@@ -880,63 +930,65 @@
 
       <!-- ====================================================== piano ==== -->
       <section class="card" id="plan-card" aria-labelledby="plan-title" hidden>
-        <h2 id="plan-title">3. Piano di rotazione</h2>
+        <h2 id="plan-title" data-i18n="plan.title">3. Piano di rotazione</h2>
         <p class="card-sub" id="plan-sub"></p>
         <ol class="plan" id="plan"></ol>
         <div class="notes">
           <ul>
-            <li>I blocchi si allungano man mano che il sole cala: sono calcolati a <b>dose uguale</b>, non a minuti
-              uguali.</li>
-            <li>Alla fine della sessione, per oggi hai preso abbastanza: ombra, maglietta, o ci si rivede domani.</li>
+            <li data-i18n="plan.note1">I blocchi si allungano man mano che il sole cala: sono calcolati a <b>dose
+                uguale</b>, non a minuti uguali.</li>
+            <li data-i18n="plan.note2">Alla fine della sessione, per oggi hai preso abbastanza: ombra, maglietta, o ci
+              si
+              rivede domani.</li>
           </ul>
         </div>
       </section>
 
       <!-- ==================================================== grafico ==== -->
       <section class="card" id="chart-card" aria-labelledby="chart-title" hidden>
-        <h2 id="chart-title">L'UV di oggi, ora per ora</h2>
+        <h2 id="chart-title" data-i18n="chart.title">L'UV di oggi, ora per ora</h2>
         <p class="card-sub" id="chart-sub"></p>
         <div class="chart">
           <div class="chart-plot" id="plot"></div>
           <div class="chart-axis" id="axis"></div>
         </div>
         <div class="legend" aria-hidden="true">
-          <span><i style="--c: var(--uv-1)"></i> 0–2 basso</span>
-          <span><i style="--c: var(--uv-2)"></i> 3–5 moderato</span>
-          <span><i style="--c: var(--uv-3)"></i> 6–7 alto</span>
-          <span><i style="--c: var(--uv-4)"></i> 8–10 molto alto</span>
-          <span><i style="--c: var(--uv-5)"></i> 11+ estremo</span>
+          <span><i style="--c: var(--uv-1)"></i> <span data-i18n="chart.b1">0–2 basso</span></span>
+          <span><i style="--c: var(--uv-2)"></i> <span data-i18n="chart.b2">3–5 moderato</span></span>
+          <span><i style="--c: var(--uv-3)"></i> <span data-i18n="chart.b3">6–7 alto</span></span>
+          <span><i style="--c: var(--uv-4)"></i> <span data-i18n="chart.b4">8–10 molto alto</span></span>
+          <span><i style="--c: var(--uv-5)"></i> <span data-i18n="chart.b5">11+ estremo</span></span>
         </div>
         <details class="honest">
-          <summary>Vedi i numeri in tabella</summary>
+          <summary data-i18n="chart.table">Vedi i numeri in tabella</summary>
           <div class="body" id="table-wrap"></div>
         </details>
       </section>
 
       <!-- ================================================== onestà ====== -->
       <section class="card">
-        <h2>Come funziona il calcolo (senza giri di parole)</h2>
-        <p class="card-sub">Se una cosa è una stima, qui c'è scritto che è una stima.</p>
+        <h2 data-i18n="honest.title">Come funziona il calcolo (senza giri di parole)</h2>
+        <p class="card-sub" data-i18n="honest.sub">Se una cosa è una stima, qui c'è scritto che è una stima.</p>
         <div class="notes" style="color:var(--ink-2)">
-          <p>
+          <p data-i18n="honest.p1">
             L'indice UV si converte in energia: <code>UVI 1 ≈ 0,025 W/m²</code> di
             radiazione eritemale. Il tuo tipo di pelle ha una <b>dose minima
               eritemale</b> (MED), cioè la dose oltre la quale arriva il rossore. Io
             integro l'UV previsto minuto per minuto e ti fermo al <b>75% della MED</b>,
             così resti sotto la soglia della scottatura con un margine.
           </p>
-          <p style="margin-top:10px">
+          <p style="margin-top:10px" data-i18n="honest.p2">
             La crema moltiplica il tempo, ma non per il numero scritto sulla confezione:
             quasi nessuno ne mette la quantità del test di laboratorio. Uso un fattore
             reale pari a circa il <b>60%</b> di quello dichiarato — è prudente, ed è la
             ragione per cui SPF 50 qui non vale 50 volte il tempo.
           </p>
-          <p style="margin-top:10px">
+          <p style="margin-top:10px" data-i18n="honest.p3">
             La rotazione fronte/retro non è una furbata: raddoppia il tempo totale della
             sessione perché ogni lato riceve metà della dose. Il conto assume che tu ti
             giri davvero quando dice il piano.
           </p>
-          <p style="margin-top:10px">
+          <p style="margin-top:10px" data-i18n="honest.p4">
             <b>Cosa questo tool non è:</b> un dispositivo medico. Non conosce i tuoi
             farmaci fotosensibilizzanti, i tuoi nei, il riflesso della neve o
             dell'acqua (che può aggiungere fino al 30–80% di UV), né quanto sei in
@@ -951,17 +1003,120 @@
 
   <footer class="site-footer">
     <div class="wrap">
-      <p>
-        Dati UV: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>,
-        gratuiti e senza chiave API. Nessun dato lascia il tuo browser.
+      <p data-i18n="footer.claim">
+        I calcoli restano nel tuo browser: la posizione non viene salvata da nessuna
+        parte. Le uniche richieste esterne sono i dati UV di
+        <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>
+        e un conteggio anonimo delle visite, senza cookie.
       </p>
       <nav class="footer-links" aria-label="Collegamenti del footer">
-        <a href="/">Home</a>
-        <a href="/supporta/">Supportami</a>
+        <a href="/" data-i18n="footer.home">Home</a>
+        <a href="/supporta/" data-i18n="footer.support">Supportami</a>
       </nav>
     </div>
   </footer>
 
+  <script>
+    SplyntLang.apply({
+      "meta.title": "SunHonest — how long you can stay in the sun without burning",
+      "meta.desc": "Live UV index, a safe exposure time for your skin type and a front/back rotation plan. Free, no account, data from Open-Meteo.",
+      "nav.back": "← all the tools",
+
+      "hero.eyebrow": "☀️ SunHonest — free, no account",
+      "hero.title": "How long you can stay in the sun without burning",
+      "hero.lede": "The real UV index where you are, a safe exposure time for your skin type, and a front/back rotation plan with the times already worked out. No subscription, no sign-up: the data comes from Open-Meteo and the maths happens in your browser.",
+
+      "setup.title": "1. Tell me where you are and what your skin is like",
+      "setup.sub": "Your location isn't stored anywhere except in your own browser.",
+      "setup.city": "City",
+      "setup.cityPlaceholder": "e.g. Brighton, Lisbon, Palermo…",
+      "setup.search": "Search",
+      "setup.geo": "📍 Use my location",
+      "setup.noLoc": "No location selected yet.",
+      "setup.skin": "Skin type (Fitzpatrick scale)",
+      "setup.spf": "Sunscreen",
+      "setup.spfNone": "No sunscreen",
+
+      "skin.1": "I — very fair, always burns, never tans",
+      "skin.2": "II — fair, burns easily, tans a little",
+      "skin.3": "III — medium, sometimes burns, tans gradually",
+      "skin.4": "IV — olive, rarely burns, tans well",
+      "skin.5": "V — brown, very rarely burns",
+      "skin.6": "VI — deeply pigmented, practically never burns",
+
+      "out.title": "2. The verdict",
+      "out.sub": "Worked out from the hour-by-hour UV curve, not from a single fixed number.",
+      "out.pick": "Pick a location above to get started.",
+      "out.uvNow": "UV now",
+      "out.bandTitle": "<span class=\"uv-band-name\">{band}</span> UV in {place}",
+      "out.mRot": "Session with rotation",
+      "out.mFlat": "Staying on one side",
+      "out.mFlatNote": "the whole dose on the same side",
+      "out.mVitd": "Vitamin D",
+      "out.mVitdNote": "is enough, bare arms and legs, no sunscreen",
+      "out.notNeeded": "not needed right now",
+      "out.tillEvening": "(until sundown)",
+      "out.rotNoteSpf": "turning front to back, with SPF {spf}",
+      "out.rotNoteBare": "turning front to back, no sunscreen",
+
+      "band.1": "Low",
+      "band.1d": "You can stay out without worrying. Sunglasses if the glare bothers you.",
+      "band.2": "Moderate",
+      "band.2d": "Seek shade around midday, sunscreen on exposed skin.",
+      "band.3": "High",
+      "band.3d": "Protection needed: sunscreen, a hat, shade in the middle of the day.",
+      "band.4": "Very high",
+      "band.4d": "Extra protection required. Fair skin burns in minutes.",
+      "band.5": "Extreme",
+      "band.5d": "Avoid direct sun between 11am and 4pm. Seriously.",
+
+      "warn.night": "UV is basically zero right now: you couldn't burn if you tried.",
+      "warn.nightNext": " The sun gets its teeth back around <b>{time}</b>.",
+      "warn.capped": "Good news: between now and sundown (<b>{time}</b>) you never reach the dose that burns you. The plan covers the whole window.",
+      "warn.short": "High UV and sensitive skin: <b>{dur}</b> is barely anything. Better to move the session past 4pm, or stay in the shade with a t-shirt on.",
+
+      "plan.title": "3. Rotation plan",
+      "plan.sub": "A <b>{dur}</b> session from {from} to {to}. Turn over when the plan says so: each side takes exactly half the dose.",
+      "plan.front": "🔆 Front (belly and face)",
+      "plan.back": "🔄 Back (shoulders)",
+      "plan.reapply": "Reapply sunscreen (it's been 2 hours) — and after every swim anyway",
+      "plan.note1": "The blocks get longer as the sun goes down: they're worked out by <b>equal dose</b>, not equal minutes.",
+      "plan.note2": "At the end of the session you've had enough for today: shade, a t-shirt, or see you tomorrow.",
+
+      "chart.title": "Today's UV, hour by hour",
+      "chart.sub": "Today's peak: <b>UV {uv}</b> around {h}:00. Local time in {place}.",
+      "chart.aria": "{h}:00 — UV index {uv}, {band}",
+      "chart.now": "now",
+      "chart.b1": "0–2 low",
+      "chart.b2": "3–5 moderate",
+      "chart.b3": "6–7 high",
+      "chart.b4": "8–10 very high",
+      "chart.b5": "11+ extreme",
+      "chart.table": "See the numbers as a table",
+
+      "loc.loading": "Location: <b>{name}</b>{country} — fetching UV data…",
+      "loc.loaded": "Location: <b>{name}</b>{country} · data updated at {time}",
+      "err.fetch": "I can't fetch the UV data ({err}). Try again in a moment: none of your data is involved, it's just the network.",
+      "search.working": "Searching…",
+      "search.none": "No place found with that name.",
+      "search.down": "Search isn't available right now.",
+      "geo.unsupported": "Your browser doesn't offer geolocation: search for the city by hand.",
+      "geo.asking": "Asking the browser for your location…",
+      "geo.yourSpot": "your location",
+      "geo.denied": "Location denied or unavailable: search for the city above.",
+
+      "honest.title": "How the maths works (no hand-waving)",
+      "honest.sub": "If something is an estimate, it says so right here.",
+      "honest.p1": "The UV index converts into energy: <code>UVI 1 ≈ 0.025 W/m²</code> of erythemal radiation. Your skin type has a <b>minimal erythemal dose</b> (MED), the dose past which redness sets in. I integrate the forecast UV minute by minute and stop you at <b>75% of the MED</b>, so you stay under the burn threshold with a margin.",
+      "honest.p2": "Sunscreen multiplies your time, but not by the number on the bottle: almost nobody applies the lab-test amount. I use a real-world factor of about <b>60%</b> of the stated value — it's conservative, and it's why SPF 50 doesn't buy you 50× the time here.",
+      "honest.p3": "Front/back rotation isn't a trick: it doubles the total session because each side takes half the dose. The maths assumes you actually turn over when the plan says so.",
+      "honest.p4": "<b>What this tool is not:</b> a medical device. It doesn't know about your photosensitising medication, your moles, glare off snow or water (which can add 30–80% more UV), or your altitude (+10% per 1000 m). If you have a skin condition, your doctor beats the algorithm.",
+
+      "footer.claim": "The maths stays in your browser and your location is never stored. The only outside requests are the UV data from <a href=\"https://open-meteo.com/\" target=\"_blank\" rel=\"noopener\">Open-Meteo</a> and an anonymous visit count, without cookies.",
+      "footer.home": "Home",
+      "footer.support": "Support me"
+    });
+  </script>
   <script>
     (function () {
       "use strict";
@@ -975,21 +1130,46 @@
       var SAFE_FRACTION = 0.75;        // ci si ferma al 75% della MED
       var SPF_REAL_FACTOR = 0.6;       // applicazione reale, non da laboratorio
 
+      /* Traduzione: t() con testo italiano di fallback, tf() con {segnaposto}. */
+      var t = function (key, it) {
+        return window.SplyntLang ? window.SplyntLang.t(key, it) : it;
+      };
+      function tf(key, it, vars) {
+        return t(key, it).replace(/\{(\w+)\}/g, function (_, k) {
+          return vars[k] == null ? "" : vars[k];
+        });
+      }
+
       var SKIN_TYPES = [
-        { id: 1, med: 2.0, label: "I — molto chiara, si scotta sempre, non si abbronza" },
-        { id: 2, med: 2.5, label: "II — chiara, si scotta facilmente, si abbronza poco" },
-        { id: 3, med: 3.5, label: "III — media, a volte si scotta, si abbronza gradualmente" },
-        { id: 4, med: 4.5, label: "IV — olivastra, si scotta raramente, si abbronza bene" },
-        { id: 5, med: 6.0, label: "V — scura, si scotta molto raramente" },
-        { id: 6, med: 10.0, label: "VI — molto scura, praticamente non si scotta" }
+        { id: 1, med: 2.0, key: "skin.1", label: "I — molto chiara, si scotta sempre, non si abbronza" },
+        { id: 2, med: 2.5, key: "skin.2", label: "II — chiara, si scotta facilmente, si abbronza poco" },
+        { id: 3, med: 3.5, key: "skin.3", label: "III — media, a volte si scotta, si abbronza gradualmente" },
+        { id: 4, med: 4.5, key: "skin.4", label: "IV — olivastra, si scotta raramente, si abbronza bene" },
+        { id: 5, med: 6.0, key: "skin.5", label: "V — scura, si scotta molto raramente" },
+        { id: 6, med: 10.0, key: "skin.6", label: "VI — molto scura, praticamente non si scotta" }
       ];
 
       var BANDS = [
-        { max: 2.9, n: 1, name: "Basso", desc: "Puoi stare fuori tranquillo. Occhiali se il riverbero dà fastidio." },
-        { max: 5.9, n: 2, name: "Moderato", desc: "Cerca l'ombra a mezzogiorno, crema sulle parti scoperte." },
-        { max: 7.9, n: 3, name: "Alto", desc: "Protezione necessaria: crema, cappello, ombra nelle ore centrali." },
-        { max: 10.9, n: 4, name: "Molto alto", desc: "Serve protezione extra. La pelle chiara si scotta in pochi minuti." },
-        { max: 99, n: 5, name: "Estremo", desc: "Evita il sole diretto tra le 11 e le 16. Sul serio." }
+        {
+          max: 2.9, n: 1, nameKey: "band.1", name: "Basso",
+          descKey: "band.1d", desc: "Puoi stare fuori tranquillo. Occhiali se il riverbero dà fastidio."
+        },
+        {
+          max: 5.9, n: 2, nameKey: "band.2", name: "Moderato",
+          descKey: "band.2d", desc: "Cerca l'ombra a mezzogiorno, crema sulle parti scoperte."
+        },
+        {
+          max: 7.9, n: 3, nameKey: "band.3", name: "Alto",
+          descKey: "band.3d", desc: "Protezione necessaria: crema, cappello, ombra nelle ore centrali."
+        },
+        {
+          max: 10.9, n: 4, nameKey: "band.4", name: "Molto alto",
+          descKey: "band.4d", desc: "Serve protezione extra. La pelle chiara si scotta in pochi minuti."
+        },
+        {
+          max: 99, n: 5, nameKey: "band.5", name: "Estremo",
+          descKey: "band.5d", desc: "Evita il sole diretto tra le 11 e le 16. Sul serio."
+        }
       ];
 
       var $ = function (id) { return document.getElementById(id); };
@@ -1002,7 +1182,7 @@
       SKIN_TYPES.forEach(function (s) {
         var o = document.createElement("option");
         o.value = String(s.id);
-        o.textContent = s.label;
+        o.textContent = t(s.key, s.label);
         skinSel.appendChild(o);
       });
 
@@ -1049,6 +1229,8 @@
         return BANDS[BANDS.length - 1];
       }
 
+      function bandName(band) { return t(band.nameKey, band.name); }
+
       function setState(msg, isError) {
         var el = $("state");
         el.textContent = msg;
@@ -1068,12 +1250,12 @@
       }
 
       function uvAt(ms) {
-        var s = state.series, t = s.times, u = s.uv;
-        if (ms <= t[0]) return u[0];
-        if (ms >= t[t.length - 1]) return u[u.length - 1];
-        var i = Math.floor((ms - t[0]) / 3600000);
-        if (i >= t.length - 1) return u[u.length - 1];
-        var f = (ms - t[i]) / (t[i + 1] - t[i]);
+        var s = state.series, tArr = s.times, u = s.uv;
+        if (ms <= tArr[0]) return u[0];
+        if (ms >= tArr[tArr.length - 1]) return u[u.length - 1];
+        var i = Math.floor((ms - tArr[0]) / 3600000);
+        if (i >= tArr.length - 1) return u[u.length - 1];
+        var f = (ms - tArr[i]) / (tArr[i + 1] - tArr[i]);
         return u[i] + (u[i + 1] - u[i]) * f;
       }
 
@@ -1118,18 +1300,18 @@
         var perBlock = totalDose / blocks;
         if (perBlock <= 0) return [];
 
-        var out = [], t = startMs, acc = 0, cut = perBlock, m = 0;
+        var out = [], tCur = startMs, acc = 0, cut = perBlock, m = 0;
         for (; m < totalMin; m++) {
           acc += uvAt(startMs + m * 60000) * SED_PER_MIN_PER_UVI;
           if (acc >= cut - 1e-9) {
-            out.push({ from: t, to: startMs + (m + 1) * 60000 });
-            t = startMs + (m + 1) * 60000;
+            out.push({ from: tCur, to: startMs + (m + 1) * 60000 });
+            tCur = startMs + (m + 1) * 60000;
             cut += perBlock;
             if (out.length === blocks) break;
           }
         }
-        if (out.length < blocks && t < startMs + totalMin * 60000) {
-          out.push({ from: t, to: startMs + totalMin * 60000 });
+        if (out.length < blocks && tCur < startMs + totalMin * 60000) {
+          out.push({ from: tCur, to: startMs + totalMin * 60000 });
         }
         return out;
       }
@@ -1150,8 +1332,10 @@
         /* testata */
         $("uv-now").textContent = uvNow < 1 ? uvNow.toFixed(1) : Math.round(uvNow);
         $("dial").style.setProperty("--dial", "var(--uv-" + band.n + ")");
-        $("band-title").innerHTML = 'UV <span class="uv-band-name">' + band.name.toLowerCase() + "</span> a " + esc(state.place.name);
-        $("band-desc").textContent = band.desc;
+        $("band-title").innerHTML = tf("out.bandTitle", "UV <span class=\"uv-band-name\">{band}</span> a {place}", {
+          band: bandName(band).toLowerCase(), place: esc(state.place.name)
+        });
+        $("band-desc").textContent = t(band.descKey, band.desc);
 
         var targetNoSpf = skin.med * SAFE_FRACTION;
         var target = targetNoSpf * spfEff;
@@ -1173,10 +1357,10 @@
           $("m-rot").textContent = "—";
           $("m-flat").textContent = "—";
           $("m-vitd").textContent = "—";
-          $("m-rot-note").textContent = "adesso non serve";
+          $("m-rot-note").textContent = t("out.notNeeded", "adesso non serve");
           $("warn").hidden = false;
-          $("warn").innerHTML = "Adesso l'UV è praticamente zero: non ti scotti nemmeno se ci provi." +
-            (up ? " Il sole torna a mordere verso le <b>" + fmtTime(up) + "</b>." : "");
+          $("warn").innerHTML = t("warn.night", "Adesso l'UV è praticamente zero: non ti scotti nemmeno se ci provi.") +
+            (up ? tf("warn.nightNext", " Il sole torna a mordere verso le <b>{time}</b>.", { time: fmtTime(up) }) : "");
           $("plan-card").hidden = true;
           renderChart(uvNow);
           return;
@@ -1186,21 +1370,24 @@
         if (rot === null || rot > minutesOfSun) { rot = minutesOfSun; capped = true; }
         if (flat === null || flat > minutesOfSun) flat = minutesOfSun;
 
-        $("m-rot").innerHTML = fmtDur(rot) + (capped ? ' <small>(fino a sera)</small>' : "");
+        $("m-rot").innerHTML = fmtDur(rot) +
+          (capped ? " <small>" + t("out.tillEvening", "(fino a sera)") + "</small>" : "");
         $("m-flat").textContent = fmtDur(flat);
         $("m-vitd").textContent = vitd === null ? "—" : fmtDur(Math.max(5, Math.min(vitd, 40)));
         $("m-rot-note").textContent = spf > 1
-          ? "girandoti fronte/retro, con SPF " + spf
-          : "girandoti fronte/retro, senza crema";
+          ? tf("out.rotNoteSpf", "girandoti fronte/retro, con SPF {spf}", { spf: spf })
+          : t("out.rotNoteBare", "girandoti fronte/retro, senza crema");
 
         if (capped) {
           $("warn").hidden = false;
-          $("warn").innerHTML = "Buone notizie: da adesso a quando il sole cala (<b>" + fmtTime(end) +
-            "</b>) non arrivi alla dose che ti scotta. Il piano copre tutta la finestra.";
+          $("warn").innerHTML = tf("warn.capped",
+            "Buone notizie: da adesso a quando il sole cala (<b>{time}</b>) non arrivi alla dose che ti scotta. Il piano copre tutta la finestra.",
+            { time: fmtTime(end) });
         } else if (rot <= 20) {
           $("warn").hidden = false;
-          $("warn").innerHTML = "UV alto e pelle sensibile: <b>" + fmtDur(rot) +
-            "</b> è pochissimo. Meglio spostare la sessione a dopo le 16, o restare all'ombra con la maglietta.";
+          $("warn").innerHTML = tf("warn.short",
+            "UV alto e pelle sensibile: <b>{dur}</b> è pochissimo. Meglio spostare la sessione a dopo le 16, o restare all'ombra con la maglietta.",
+            { dur: fmtDur(rot) });
         }
 
         renderPlan(now, rot, spf);
@@ -1218,9 +1405,9 @@
         if (!blocks.length) { card.hidden = true; return; }
 
         card.hidden = false;
-        $("plan-sub").innerHTML = "Sessione di <b>" + fmtDur(totalMin) + "</b> dalle " +
-          fmtTime(startMs) + " alle " + fmtTime(startMs + totalMin * 60000) +
-          ". Gira quando te lo dice il piano: ogni lato prende esattamente metà della dose.";
+        $("plan-sub").innerHTML = tf("plan.sub",
+          "Sessione di <b>{dur}</b> dalle {from} alle {to}. Gira quando te lo dice il piano: ogni lato prende esattamente metà della dose.",
+          { dur: fmtDur(totalMin), from: fmtTime(startMs), to: fmtTime(startMs + totalMin * 60000) });
 
         list.innerHTML = "";
         var sessionEnd = startMs + totalMin * 60000;
@@ -1232,7 +1419,9 @@
           li.innerHTML =
             '<span class="step">' + (i + 1) + "</span>" +
             '<span class="clock">' + fmtTime(b.from) + " → " + fmtTime(b.to) + "</span>" +
-            '<span class="side">' + (i % 2 === 0 ? "🔆 Fronte (pancia e viso)" : "🔄 Retro (schiena)") + "</span>" +
+            '<span class="side">' + (i % 2 === 0
+              ? t("plan.front", "🔆 Fronte (pancia e viso)")
+              : t("plan.back", "🔄 Retro (schiena)")) + "</span>" +
             '<span class="dur">' + fmtDur(min) + "</span>";
           list.appendChild(li);
 
@@ -1240,7 +1429,8 @@
           if (b.to >= nextReapply && sessionEnd - b.to > 20 * 60000) {
             var r = document.createElement("li");
             r.className = "reapply";
-            r.innerHTML = '<span class="step">☂️</span><span class="side">Rimetti la crema (sono passate 2 ore) — e comunque dopo ogni bagno</span>';
+            r.innerHTML = '<span class="step">☂️</span><span class="side">' +
+              t("plan.reapply", "Rimetti la crema (sono passate 2 ore) — e comunque dopo ogni bagno") + "</span>";
             list.appendChild(r);
           }
           while (b.to >= nextReapply) nextReapply += 120 * 60000;
@@ -1288,7 +1478,8 @@
           col.type = "button";
           col.className = "chart-col";
           if (h === nowHour) col.dataset.now = "1";
-          col.setAttribute("aria-label", h + ":00 — indice UV " + uv.toFixed(1) + ", " + b.name.toLowerCase());
+          col.setAttribute("aria-label", tf("chart.aria", "{h}:00 — indice UV {uv}, {band}",
+            { h: h, uv: uv.toFixed(1), band: bandName(b).toLowerCase() }));
 
           var bar = document.createElement("div");
           bar.className = "chart-bar";
@@ -1299,12 +1490,12 @@
           if (h === nowHour || (i === peakI && labelPeak)) {
             var lab = document.createElement("span");
             lab.className = "chart-peak";
-            lab.textContent = (h === nowHour ? "ora " : "") + uv.toFixed(1);
+            lab.textContent = (h === nowHour ? t("chart.now", "ora") + " " : "") + uv.toFixed(1);
             col.appendChild(lab);
           }
 
           function show() {
-            tip.innerHTML = "<b>" + h + ":00</b> · UV <b>" + uv.toFixed(1) + "</b> · " + b.name.toLowerCase();
+            tip.innerHTML = "<b>" + h + ":00</b> · UV <b>" + uv.toFixed(1) + "</b> · " + bandName(b).toLowerCase();
             tip.classList.add("is-on");
             tip.style.left = (col.offsetLeft + col.offsetWidth / 2) + "px";
             tip.style.top = (col.offsetTop - 4) + "px";
@@ -1323,8 +1514,9 @@
         });
 
         var peakH = parseInt(s.labels[peakI].slice(11, 13), 10);
-        $("chart-sub").innerHTML = "Picco di oggi: <b>UV " + s.uv[peakI].toFixed(1) +
-          "</b> verso le " + peakH + ":00. Ore locali di " + esc(state.place.name) + ".";
+        $("chart-sub").innerHTML = tf("chart.sub",
+          "Picco di oggi: <b>UV {uv}</b> verso le {h}:00. Ore locali di {place}.",
+          { uv: s.uv[peakI].toFixed(1), h: peakH, place: esc(state.place.name) });
         $("chart-card").hidden = false;
 
         /* tabella equivalente, per chi non distingue i colori o stampa la pagina */
@@ -1338,8 +1530,9 @@
 
       function loadForecast(place) {
         state.place = place;
-        $("loc-status").innerHTML = "Posizione: <b>" + esc(place.name) + "</b>" +
-          (place.country ? " (" + esc(place.country) + ")" : "") + " — carico i dati UV…";
+        $("loc-status").innerHTML = tf("loc.loading", "Posizione: <b>{name}</b>{country} — carico i dati UV…", {
+          name: esc(place.name), country: place.country ? " (" + esc(place.country) + ")" : ""
+        });
 
         var url = "https://api.open-meteo.com/v1/forecast" +
           "?latitude=" + encodeURIComponent(place.lat) +
@@ -1357,29 +1550,38 @@
             if (!data.hourly || !data.hourly.uv_index) throw new Error("dati mancanti");
             state.series = buildSeries(data);
             state.tz = data.utc_offset_seconds * 1000;
-            $("loc-status").innerHTML = "Posizione: <b>" + esc(place.name) + "</b>" +
-              (place.country ? " (" + esc(place.country) + ")" : "") + " · dati aggiornati alle " + fmtTime(Date.now());
+            $("loc-status").innerHTML = tf("loc.loaded",
+              "Posizione: <b>{name}</b>{country} · dati aggiornati alle {time}", {
+              name: esc(place.name),
+              country: place.country ? " (" + esc(place.country) + ")" : "",
+              time: fmtTime(Date.now())
+            });
             compute();
           })
           .catch(function (err) {
             $("out").hidden = true;
             $("plan-card").hidden = true;
             $("chart-card").hidden = true;
-            setState("Non riesco a scaricare i dati UV (" + err.message + "). Riprova tra un attimo: nessun dato tuo è coinvolto, è solo la rete.", true);
+            setState(tf("err.fetch",
+              "Non riesco a scaricare i dati UV ({err}). Riprova tra un attimo: nessun dato tuo è coinvolto, è solo la rete.",
+              { err: err.message }), true);
           });
       }
 
       function search(q) {
         var box = $("results");
         box.hidden = false;
-        box.innerHTML = "<li><p class='loc-status'>Cerco…</p></li>";
+        box.innerHTML = "<li><p class='loc-status'>" + t("search.working", "Cerco…") + "</p></li>";
 
-        fetch("https://geocoding-api.open-meteo.com/v1/search?count=5&language=it&format=json&name=" + encodeURIComponent(q))
+        var langParam = (window.SplyntLang && window.SplyntLang.lang === "en") ? "en" : "it";
+        fetch("https://geocoding-api.open-meteo.com/v1/search?count=5&format=json&language=" + langParam +
+          "&name=" + encodeURIComponent(q))
           .then(function (r) { return r.json(); })
           .then(function (data) {
             box.innerHTML = "";
             if (!data.results || !data.results.length) {
-              box.innerHTML = "<li><p class='loc-status'>Nessun posto trovato con questo nome.</p></li>";
+              box.innerHTML = "<li><p class='loc-status'>" +
+                t("search.none", "Nessun posto trovato con questo nome.") + "</p></li>";
               return;
             }
             data.results.forEach(function (r) {
@@ -1397,7 +1599,8 @@
             });
           })
           .catch(function () {
-            box.innerHTML = "<li><p class='loc-status'>Ricerca non disponibile in questo momento.</p></li>";
+            box.innerHTML = "<li><p class='loc-status'>" +
+              t("search.down", "Ricerca non disponibile in questo momento.") + "</p></li>";
           });
       }
 
@@ -1414,21 +1617,23 @@
 
       $("geo-btn").addEventListener("click", function () {
         if (!navigator.geolocation) {
-          $("loc-status").textContent = "Il browser non offre la geolocalizzazione: cerca la città a mano.";
+          $("loc-status").textContent = t("geo.unsupported",
+            "Il browser non offre la geolocalizzazione: cerca la città a mano.");
           return;
         }
-        $("loc-status").textContent = "Chiedo la posizione al browser…";
+        $("loc-status").textContent = t("geo.asking", "Chiedo la posizione al browser…");
         navigator.geolocation.getCurrentPosition(
           function (pos) {
             loadForecast({
-              name: "la tua posizione",
+              name: t("geo.yourSpot", "la tua posizione"),
               country: "",
               lat: pos.coords.latitude.toFixed(4),
               lon: pos.coords.longitude.toFixed(4)
             });
           },
           function () {
-            $("loc-status").textContent = "Posizione negata o non disponibile: cerca la città qui sopra.";
+            $("loc-status").textContent = t("geo.denied",
+              "Posizione negata o non disponibile: cerca la città qui sopra.");
           },
           { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
         );
@@ -1448,7 +1653,7 @@
   </script>
 
   <!-- 100% privacy-first analytics -->
-  <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <script data-goatcounter="https://ramtzy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
 </body>
 

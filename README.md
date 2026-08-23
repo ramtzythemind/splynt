@@ -15,6 +15,7 @@ puro, nessun framework, nessun build step, nessun backend.
 ├── vercel.json           cleanUrls + header di sicurezza
 ├── assets/
 │   ├── style.css         palette crema/arancione, dark/light automatico
+│   ├── i18n.js           switch di lingua IT/EN
 │   └── tools.js          ⬅️ l'elenco dei tool (l'unico file da modificare)
 ├── sunhonest/
 │   └── index.html        tool: UV index + rotazione fronte/retro
@@ -45,9 +46,67 @@ puro, nessun framework, nessun build step, nessun backend.
 
 Il layout non va toccato: la home genera le card dall'array.
 
+4. Incolla lo snippet di Simple Analytics prima di `</body>`, come nelle altre
+   pagine (vedi sotto).
+5. Aggiungi il selettore di lingua e il dizionario inglese (vedi *Lingue*).
+
 > Se aggiungi un tool che chiama un'API esterna, ricordati di autorizzarne il
 > dominio in `connect-src` dentro `vercel.json`, altrimenti la CSP blocca le
 > richieste in produzione.
+
+## Lingue (IT / EN)
+
+L'italiano è scritto **direttamente nell'HTML**: è la fonte di verità, e la
+pagina funziona anche senza JavaScript. L'inglese arriva da un dizionario che
+ogni pagina passa a `SplyntLang.apply({...})`.
+
+Nel markup:
+
+```html
+<h1 data-i18n="hero.title">Testo italiano</h1>
+<input data-i18n-attr="placeholder:setup.cityPlaceholder">
+<span data-lang-switch></span>   <!-- dove compare il selettore IT/EN -->
+```
+
+Nel JS di un tool, per le stringhe generate a runtime:
+
+```js
+var t = function (key, it) { return window.SplyntLang ? SplyntLang.t(key, it) : it; };
+t("plan.front", "🔆 Fronte (pancia e viso)")
+tf("plan.sub", "Sessione di <b>{dur}</b> dalle {from}…", { dur: …, from: … })
+```
+
+Due regole da rispettare:
+
+1. Il blocco `SplyntLang.apply({...})` va **alla fine del body, prima dello
+   script del tool**: traduce il markup statico e poi lascia che sia il codice a
+   scrivere i contenuti dinamici. Invertendo l'ordine, la traduzione
+   sovrascrive i risultati appena calcolati.
+2. Un elemento riscritto dal JS non deve avere `data-i18n` *e* basta: il suo
+   testo dinamico va prodotto con `t()`.
+
+La lingua si sceglie con `?lang=it|en`, poi resta salvata in `localStorage`;
+al primo accesso vince la lingua del browser (italiano solo per browser
+italiani, inglese per tutti gli altri).
+
+> **Nota SEO:** i crawler vedono l'HTML italiano, quindi l'inglese non porta
+> traffico organico. Se un giorno l'inglese diventasse importante per la
+> ricerca, la strada è duplicare le pagine sotto `/en/` — più lavoro per ogni
+> tool, ma indicizzabile.
+
+## Analytics
+
+Simple Analytics (cookieless), stesso snippet su tutte le pagine:
+
+```html
+<script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+```
+
+Perché funzioni in produzione la CSP in `vercel.json` deve autorizzare i tre
+host: `scripts.simpleanalyticscdn.com` in `script-src`,
+`queue.simpleanalyticscdn.com` in `connect-src` **e** in `img-src` (il fallback
+a pixel). In locale lo script non registra nulla: Simple Analytics ignora
+`localhost`.
 
 ## Sviluppo in locale
 

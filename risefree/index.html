@@ -533,7 +533,54 @@
         animation: none !important;
       }
     }
+
+    /* --------------------------------------------------- selettore lingua --- */
+    html.i18n-pending body {
+      visibility: hidden;
+    }
+
+    .header-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      gap: 2px;
+      padding: 3px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+
+    .lang-btn {
+      font: inherit;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      line-height: 1;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: none;
+      color: var(--ink-3);
+      cursor: pointer;
+    }
+
+    .lang-btn:hover {
+      color: var(--ink);
+    }
+
+    .lang-btn[aria-pressed="true"] {
+      background: var(--surface);
+      color: var(--ink);
+      border-color: var(--border-strong);
+    }
+
   </style>
+  <script src="/assets/i18n.js"></script>
 </head>
 
 <body>
@@ -544,16 +591,19 @@
         <span class="brand-mark" aria-hidden="true"></span>
         splynt<span class="brand-dot">.xyz</span>
       </a>
-      <a class="back-link" href="/#tools">← tutti i tool</a>
+      <span class="header-right">
+        <span data-lang-switch></span>
+        <a class="back-link" href="/#tools" data-i18n="nav.back">← tutti i tool</a>
+      </span>
     </div>
   </header>
 
   <main>
     <section class="hero">
       <div class="wrap">
-        <p class="eyebrow">🌙 RiseFree — gratis, senza account</p>
-        <h1>A che ora andare a dormire (e a che ora svegliarti)</h1>
-        <p class="lede">
+        <p class="eyebrow" data-i18n="hero.eyebrow">🌙 RiseFree — gratis, senza account</p>
+        <h1 data-i18n="hero.title">A che ora andare a dormire (e a che ora svegliarti)</h1>
+        <p class="lede" data-i18n="hero.lede">
           Il sonno procede a cicli di circa 90 minuti: svegliarsi a fine ciclo, e non
           nel mezzo, è quello che fa la differenza tra alzarsi e rianimarsi. RiseFree
           conta i cicli per te. Niente abbonamento da 19,99 € al mese: è una
@@ -566,12 +616,14 @@
 
       <!-- =============================================== impostazioni ==== -->
       <section class="card" aria-labelledby="setup-title">
-        <h2 id="setup-title">1. Cosa ti serve sapere</h2>
-        <p class="card-sub">Niente account, niente dati storici: bastano un orario e una preferenza.</p>
+        <h2 id="setup-title" data-i18n="setup.title">1. Cosa ti serve sapere</h2>
+        <p class="card-sub" data-i18n="setup.sub">Niente account, niente dati storici: bastano un orario e una
+          preferenza.</p>
 
-        <div class="modes" role="group" aria-label="Modalità di calcolo">
-          <button type="button" id="mode-wake" aria-pressed="true">⏰ Voglio svegliarmi alle…</button>
-          <button type="button" id="mode-bed" aria-pressed="false">🛏️ Vado a letto ora</button>
+        <div class="modes" role="group" aria-label="Modalità di calcolo" data-i18n-attr="aria-label:setup.modesAria">
+          <button type="button" id="mode-wake" aria-pressed="true" data-i18n="setup.modeWake">⏰ Voglio svegliarmi
+            alle…</button>
+          <button type="button" id="mode-bed" aria-pressed="false" data-i18n="setup.modeBed">🛏️ Vado a letto ora</button>
         </div>
 
         <div class="input-row">
@@ -579,15 +631,16 @@
             <span id="time-label">Orario della sveglia</span>
             <input type="time" id="time" step="300">
           </label>
-          <button class="btn btn--ghost" type="button" id="now-btn" hidden>Usa l'ora attuale</button>
+          <button class="btn btn--ghost" type="button" id="now-btn" hidden data-i18n="setup.useNow">Usa l'ora
+            attuale</button>
         </div>
 
         <label class="field chrono">
-          <span>Il tuo cronotipo (facoltativo)</span>
+          <span data-i18n="setup.chrono">Il tuo cronotipo (facoltativo)</span>
           <select id="chrono">
-            <option value="early">Mattiniero — crollo presto, mi sveglio da solo</option>
-            <option value="mid" selected>Nella media — non mi faccio troppe domande</option>
-            <option value="late">Nottambulo — la sera mi si accende il cervello</option>
+            <option value="early" data-i18n="setup.chronoEarly">Mattiniero — crollo presto, mi sveglio da solo</option>
+            <option value="mid" selected data-i18n="setup.chronoMid">Nella media — non mi faccio troppe domande</option>
+            <option value="late" data-i18n="setup.chronoLate">Nottambulo — la sera mi si accende il cervello</option>
           </select>
         </label>
         <p class="chrono-hint" id="chrono-hint"></p>
@@ -595,8 +648,8 @@
 
       <!-- ==================================================== risultati == -->
       <section class="card" aria-labelledby="out-title" aria-live="polite">
-        <h2 id="out-title">2. Gli orari giusti</h2>
-        <p class="card-sub" id="out-sub">Inserisci un orario per vedere le proposte.</p>
+        <h2 id="out-title" data-i18n="out.title">2. Gli orari giusti</h2>
+        <p class="card-sub" id="out-sub" data-i18n="out.sub">Inserisci un orario per vedere le proposte.</p>
         <p class="state" id="state" hidden></p>
         <ol class="opts" id="opts"></ol>
         <p class="nap" id="nap" hidden></p>
@@ -604,22 +657,23 @@
 
       <!-- ====================================================== onestà === -->
       <section class="card">
-        <h2>Come funziona il calcolo (senza giri di parole)</h2>
-        <p class="card-sub">Se una cosa è una media statistica, qui c'è scritto che è una media statistica.</p>
+        <h2 data-i18n="honest.title">Come funziona il calcolo (senza giri di parole)</h2>
+        <p class="card-sub" data-i18n="honest.sub">Se una cosa è una media statistica, qui c'è scritto che è una media
+          statistica.</p>
         <div class="notes">
-          <p>
+          <p data-i18n="honest.p1">
             Un ciclo di sonno dura <b>in media 90 minuti</b>, e attraversa sonno leggero,
             profondo e REM. Alla fine di ogni ciclo c'è un risveglio breve e naturale:
             se la sveglia capita lì, ti alzi lucido; se capita in pieno sonno profondo,
             ti alzi con l'inerzia del sonno addosso, anche dopo otto ore a letto.
           </p>
-          <p>
+          <p data-i18n="honest.p2">
             Prima del primo ciclo c'è il tempo che ci metti ad addormentarti: la
             <b>latenza</b>, in media <b>15 minuti</b> per chi dorme bene. Quindi
             <i>vai a letto</i> alle 22:45 significa <i>dormi</i> dalle 23:00: gli orari
             che vedi tengono già conto di questo.
           </p>
-          <p>
+          <p data-i18n="honest.p3">
             Il cronotipo agisce proprio lì, ed è l'unico pezzo davvero incerto del
             conto: <b>10 minuti</b> se sei mattiniero, <b>15</b> nella media,
             <b>35</b> se sei nottambulo — perché un nottambulo messo a letto alle
@@ -629,7 +683,7 @@
             diagnosi: le differenze vere tra cronotipi arrivano a un paio d'ore, e per
             stimarle servirebbero settimane di dati (e un account, e 19,99 € al mese).
           </p>
-          <p>
+          <p data-i18n="honest.p4">
             <b>Cosa questo tool non è:</b> una misurazione. I 90 minuti sono una media —
             nella realtà un ciclo va da 80 a 110 minuti e cambia nel corso della notte
             (il REM si allunga verso mattina). Quindi prendi questi orari come un
@@ -644,38 +698,123 @@
 
   <footer class="site-footer">
     <div class="wrap">
-      <p>
-        Tutto calcolato nel tuo browser: nessuna API, nessun account, nessun dato
-        che esce da qui. Nemmeno l'orario che scrivi.
+      <p data-i18n="footer.claim">
+        Tutto calcolato nel tuo browser: nessun account, e l'orario che scrivi non
+        esce da qui. L'unica richiesta esterna è un conteggio anonimo delle visite,
+        senza cookie.
       </p>
       <nav class="footer-links" aria-label="Collegamenti del footer">
-        <a href="/">Home</a>
-        <a href="/supporta/">Supportami</a>
+        <a href="/" data-i18n="footer.home">Home</a>
+        <a href="/supporta/" data-i18n="footer.support">Supportami</a>
       </nav>
     </div>
   </footer>
 
+  <script>
+    SplyntLang.apply({
+      "meta.title": "RiseFree — when to go to bed (and when to wake up)",
+      "meta.desc": "Work out the right time to go to bed or to set your alarm, aligned to 90-minute sleep cycles. Free, no account, no subscription.",
+      "nav.back": "← all the tools",
+
+      "hero.eyebrow": "🌙 RiseFree — free, no account",
+      "hero.title": "When to go to bed (and when to wake up)",
+      "hero.lede": "Sleep runs in cycles of about 90 minutes: waking at the end of one, rather than in the middle, is the difference between getting up and being resuscitated. RiseFree counts the cycles for you. No €19.99 a month: it's a multiplication, and your browser does it.",
+
+      "setup.title": "1. What I need to know",
+      "setup.sub": "No account, no history: an hour and a preference are enough.",
+      "setup.modesAria": "Calculation mode",
+      "setup.modeWake": "⏰ I want to wake up at…",
+      "setup.modeBed": "🛏️ I'm going to bed now",
+      "setup.labelWake": "Alarm time",
+      "setup.labelBed": "What time you're getting into bed",
+      "setup.useNow": "Use the current time",
+      "setup.chrono": "Your chronotype (optional)",
+      "setup.chronoEarly": "Early bird — I crash early and wake up on my own",
+      "setup.chronoMid": "Average — I don't overthink it",
+      "setup.chronoLate": "Night owl — my brain switches on in the evening",
+
+      "chrono.early": "Early bird: I count 10 minutes to fall asleep, since you go out like a light.",
+      "chrono.mid": "Average: I count the standard 15 minutes to fall asleep.",
+      "chrono.late": "Night owl: I count 35 minutes, because before «your» night your brain doesn't switch off.",
+
+      "out.title": "2. The right times",
+      "out.sub": "Enter a time to see the options.",
+      "out.subWake": "Alarm at <b>{time}</b> {day}. Go to bed at one of these times — the {lat} minutes it takes you to fall asleep are already counted.",
+      "out.subBed": "In bed at <b>{time}</b>. Counting {lat} minutes to drift off, set your alarm for one of these times.",
+      "state.askWake": "Type the alarm time above.",
+      "state.askBed": "Type what time you're getting into bed (or use the current time).",
+
+      "opt.tag6": "Ideal",
+      "opt.note6": "the full night",
+      "opt.tag5": "Great",
+      "opt.note5": "the compromise that holds up",
+      "opt.tag4": "Short",
+      "opt.note4": "you survive, you don't thrive",
+      "opt.tag3": "Emergency",
+      "opt.note3": "only if you have no choice",
+      "opt.meta": "<b>{cycles} cycles</b> · {dur} of sleep · {note}",
+      "opt.ariaBed": "In bed at {time} {day}, {cycles} cycles, {dur} of sleep, {tag}",
+      "opt.ariaWake": "Alarm at {time} {day}, {cycles} cycles, {dur} of sleep, {tag}",
+
+      "day.past": "already gone",
+      "day.today": "today",
+      "day.tomorrow": "tomorrow",
+      "day.dayAfter": "in two days",
+
+      "nap.text": "If it's a nap instead: <b>{short}</b> (20 minutes, the power nap that doesn't leave you groggy) or <b>{long}</b> (a whole cycle). In between, from 30 to 60 minutes, you wake up worse than you went down.",
+
+      "honest.title": "How the maths works (no hand-waving)",
+      "honest.sub": "If something is a statistical average, it says so right here.",
+      "honest.p1": "A sleep cycle lasts <b>90 minutes on average</b>, running through light sleep, deep sleep and REM. At the end of each one there's a brief, natural awakening: if the alarm lands there you get up clear-headed; if it lands in deep sleep you get up with sleep inertia on you, even after eight hours in bed.",
+      "honest.p2": "Before the first cycle there's the time it takes you to fall asleep: <b>latency</b>, on average <b>15 minutes</b> for a good sleeper. So <i>go to bed</i> at 10:45pm means <i>asleep</i> from 11:00pm: the times you see already account for it.",
+      "honest.p3": "The chronotype acts exactly there, and it's the only genuinely uncertain part of the sum: <b>10 minutes</b> if you're an early bird, <b>15</b> on average, <b>35</b> if you're a night owl — because a night owl put to bed at eleven doesn't fall asleep on command. In practice the window shifts by about twenty minutes, but the cycles stay aligned to the second, because latency sits before sleep, not inside it. It's a gentle nudge, not a diagnosis: real differences between chronotypes reach a couple of hours, and estimating them would take weeks of data (and an account, and €19.99 a month).",
+      "honest.p4": "<b>What this tool is not:</b> a measurement. The 90 minutes are an average — in reality a cycle runs from 80 to 110 minutes and changes through the night (REM gets longer towards morning). So treat these times as a wide target, not a stopwatch. If you've been sleeping badly for weeks, no calculation fixes that: that's a conversation for a doctor.",
+
+      "footer.claim": "All worked out in your browser: no account, and the time you type never leaves this page. The only outside request is an anonymous visit count, without cookies.",
+      "footer.home": "Home",
+      "footer.support": "Support me"
+    });
+  </script>
   <script>
     (function () {
       "use strict";
 
       var CYCLE = 90;        /* minuti: durata media di un ciclo */
 
+      /* Traduzione: t() con testo italiano di fallback, tf() con {segnaposto}. */
+      var t = function (key, it) {
+        return window.SplyntLang ? window.SplyntLang.t(key, it) : it;
+      };
+      function tf(key, it, vars) {
+        return t(key, it).replace(/\{(\w+)\}/g, function (_, k) {
+          return vars[k] == null ? "" : vars[k];
+        });
+      }
+
       /* Il cronotipo agisce sui minuti stimati per addormentarsi: è l'unico pezzo
          davvero incerto del conto, e sposta la finestra di ~25 minuti senza
          disallineare i cicli (la latenza sta *prima* del primo ciclo, non dentro). */
       var CHRONO = {
-        early: { latency: 10, hint: "Mattiniero: conto 10 minuti per addormentarti, tanto crolli in fretta." },
-        mid: { latency: 15, hint: "Nella media: conto i canonici 15 minuti per addormentarti." },
-        late: { latency: 35, hint: "Nottambulo: conto 35 minuti, perché prima della «tua» notte il cervello non stacca." }
+        early: {
+          latency: 10, hintKey: "chrono.early",
+          hint: "Mattiniero: conto 10 minuti per addormentarti, tanto crolli in fretta."
+        },
+        mid: {
+          latency: 15, hintKey: "chrono.mid",
+          hint: "Nella media: conto i canonici 15 minuti per addormentarti."
+        },
+        late: {
+          latency: 35, hintKey: "chrono.late",
+          hint: "Nottambulo: conto 35 minuti, perché prima della «tua» notte il cervello non stacca."
+        }
       };
 
       /* Quante ore di sonno valgono le proposte, dalla migliore alla peggiore. */
       var OPTIONS = [
-        { cycles: 6, tag: "Ideale", q: "best", note: "la notte piena" },
-        { cycles: 5, tag: "Ottimo", q: "best", note: "il compromesso che regge" },
-        { cycles: 4, tag: "Corto", q: "ok", note: "si sopravvive, non si prospera" },
-        { cycles: 3, tag: "Emergenza", q: "low", note: "solo se non hai scelta" }
+        { cycles: 6, q: "best", tagKey: "opt.tag6", tag: "Ideale", noteKey: "opt.note6", note: "la notte piena" },
+        { cycles: 5, q: "best", tagKey: "opt.tag5", tag: "Ottimo", noteKey: "opt.note5", note: "il compromesso che regge" },
+        { cycles: 4, q: "ok", tagKey: "opt.tag4", tag: "Corto", noteKey: "opt.note4", note: "si sopravvive, non si prospera" },
+        { cycles: 3, q: "low", tagKey: "opt.tag3", tag: "Emergenza", noteKey: "opt.note3", note: "solo se non hai scelta" }
       ];
 
       var $ = function (id) { return document.getElementById(id); };
@@ -694,13 +833,13 @@
 
       /* "oggi" / "domani" rispetto ad adesso, per non far sbagliare notte a nessuno */
       function dayLabel(date) {
-        if (date.getTime() < Date.now()) return "già passato";
+        if (date.getTime() < Date.now()) return t("day.past", "già passato");
         var a = new Date(); a.setHours(0, 0, 0, 0);
         var b = new Date(date.getTime()); b.setHours(0, 0, 0, 0);
         var diff = Math.round((b - a) / 86400000);
-        if (diff <= 0) return "oggi";
-        if (diff === 1) return "domani";
-        return "dopodomani";
+        if (diff <= 0) return t("day.today", "oggi");
+        if (diff === 1) return t("day.tomorrow", "domani");
+        return t("day.dayAfter", "dopodomani");
       }
 
       /* L'orario scritto, agganciato al giorno giusto.
@@ -734,7 +873,7 @@
       function render() {
         var raw = $("time").value;
         var chrono = CHRONO[$("chrono").value] || CHRONO.mid;
-        $("chrono-hint").textContent = chrono.hint;
+        $("chrono-hint").textContent = t(chrono.hintKey, chrono.hint);
 
         var list = $("opts");
         list.innerHTML = "";
@@ -743,9 +882,9 @@
         if (!raw) {
           $("state").hidden = false;
           $("state").textContent = mode === "wake"
-            ? "Scrivi l'ora della sveglia qui sopra."
-            : "Scrivi a che ora ti metti a letto (o usa l'ora attuale).";
-          $("out-sub").textContent = "Inserisci un orario per vedere le proposte.";
+            ? t("state.askWake", "Scrivi l'ora della sveglia qui sopra.")
+            : t("state.askBed", "Scrivi a che ora ti metti a letto (o usa l'ora attuale).");
+          $("out-sub").textContent = t("out.sub", "Inserisci un orario per vedere le proposte.");
           return;
         }
         $("state").hidden = true;
@@ -753,12 +892,13 @@
         var anchor = anchorFor(raw, mode === "wake");
 
         if (mode === "wake") {
-          $("out-sub").innerHTML = "Sveglia alle <b>" + fmt(anchor) + "</b> di " + dayLabel(anchor) +
-            ". Vai a letto a uno di questi orari — i " + chrono.latency +
-            " minuti per addormentarti sono già contati.";
+          $("out-sub").innerHTML = tf("out.subWake",
+            "Sveglia alle <b>{time}</b> di {day}. Vai a letto a uno di questi orari — i {lat} minuti per addormentarti sono già contati.",
+            { time: fmt(anchor), day: dayLabel(anchor), lat: chrono.latency });
         } else {
-          $("out-sub").innerHTML = "A letto alle <b>" + fmt(anchor) + "</b>. Contando " + chrono.latency +
-            " minuti per prendere sonno, punta la sveglia a uno di questi orari.";
+          $("out-sub").innerHTML = tf("out.subBed",
+            "A letto alle <b>{time}</b>. Contando {lat} minuti per prendere sonno, punta la sveglia a uno di questi orari.",
+            { time: fmt(anchor), lat: chrono.latency });
         }
 
         OPTIONS.forEach(function (opt) {
@@ -781,16 +921,25 @@
           if (past) li.dataset.past = "1";
           else if (opt.q === "best") li.dataset.best = "1";
 
+          var tag = t(opt.tagKey, opt.tag);
+          var meta = tf("opt.meta", "<b>{cycles} cicli</b> · {dur} di sonno · {note}", {
+            cycles: opt.cycles, dur: fmtDur(sleepMin), note: t(opt.noteKey, opt.note)
+          });
+
           li.innerHTML =
             '<span class="rail" aria-hidden="true"></span>' +
             '<span class="time">' + fmt(target) + "<small>" + dayLabel(target) + "</small></span>" +
-            '<span class="meta"><b>' + opt.cycles + " cicli</b> · " + fmtDur(sleepMin) +
-            " di sonno · " + opt.note + "</span>" +
-            '<span class="tag">' + opt.tag + "</span>";
+            '<span class="meta">' + meta + "</span>" +
+            '<span class="tag">' + tag + "</span>";
 
-          var verb = mode === "wake" ? "A letto alle " : "Sveglia alle ";
-          li.setAttribute("aria-label", verb + fmt(target) + " " + dayLabel(target) + ", " +
-            opt.cycles + " cicli, " + fmtDur(sleepMin) + " di sonno, " + opt.tag.toLowerCase());
+          li.setAttribute("aria-label", tf(mode === "wake" ? "opt.ariaBed" : "opt.ariaWake",
+            mode === "wake"
+              ? "A letto alle {time} {day}, {cycles} cicli, {dur} di sonno, {tag}"
+              : "Sveglia alle {time} {day}, {cycles} cicli, {dur} di sonno, {tag}",
+            {
+              time: fmt(target), day: dayLabel(target), cycles: opt.cycles,
+              dur: fmtDur(sleepMin), tag: tag.toLowerCase()
+            }));
 
           list.appendChild(li);
         });
@@ -799,9 +948,9 @@
           var nap20 = roundTo5(new Date(anchor.getTime() + (chrono.latency + 20) * 60000));
           var nap90 = roundTo5(new Date(anchor.getTime() + (chrono.latency + CYCLE) * 60000));
           $("nap").hidden = false;
-          $("nap").innerHTML = "Se invece è un pisolino: <b>" + fmt(nap20) +
-            "</b> (20 minuti, il power nap che non ti stordisce) oppure <b>" + fmt(nap90) +
-            "</b> (un ciclo intero). Nel mezzo, tra i 30 e i 60 minuti, ci si sveglia peggio di come ci si è addormentati.";
+          $("nap").innerHTML = tf("nap.text",
+            "Se invece è un pisolino: <b>{short}</b> (20 minuti, il power nap che non ti stordisce) oppure <b>{long}</b> (un ciclo intero). Nel mezzo, tra i 30 e i 60 minuti, ci si sveglia peggio di come ci si è addormentati.",
+            { short: fmt(nap20), long: fmt(nap90) });
         }
 
         savePrefs();
@@ -813,7 +962,9 @@
         mode = next;
         $("mode-wake").setAttribute("aria-pressed", String(mode === "wake"));
         $("mode-bed").setAttribute("aria-pressed", String(mode === "bed"));
-        $("time-label").textContent = mode === "wake" ? "Orario della sveglia" : "A che ora ti metti a letto";
+        $("time-label").textContent = mode === "wake"
+          ? t("setup.labelWake", "Orario della sveglia")
+          : t("setup.labelBed", "A che ora ti metti a letto");
         $("now-btn").hidden = mode !== "bed";
         if (mode === "bed") $("time").value = fmt(new Date());
         render();
@@ -850,7 +1001,7 @@
   </script>
 
   <!-- 100% privacy-first analytics -->
-  <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <script data-goatcounter="https://ramtzy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
 </body>
 

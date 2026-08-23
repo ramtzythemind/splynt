@@ -7,7 +7,12 @@
       "Bash(node harness.mjs)",
       "Bash(pkill -f \"Google Chrome --headless\")",
       "Bash(pkill -f \"http.server 8788\")",
-      "Bash(rm -rf /tmp/chr-d2 /tmp/chr-d3 /tmp/chr-m1 /tmp/chr-m2 /tmp/chr-m3 /tmp/chr-m4 /tmp/chr-rt /tmp/chr-dark)"
+      "Bash(rm -rf /tmp/chr-d2 /tmp/chr-d3 /tmp/chr-m1 /tmp/chr-m2 /tmp/chr-m3 /tmp/chr-m4 /tmp/chr-rt /tmp/chr-dark)",
+      "Bash(rm -f csp-old.html csp-new.html out-old.txt out-new.txt)",
+      "Bash(rm -rf /tmp/chr-csp-old /tmp/chr-csp-new)",
+      "Bash(node *)",
+      "Bash(pkill -f \"http.server 8791\")",
+      "Bash(rm -rf /tmp/chr-l* /tmp/chr-f1 /tmp/chr-f2 /tmp/chr-sw /tmp/chr-s1 /tmp/chr-s2)"
     ]
   }
 }

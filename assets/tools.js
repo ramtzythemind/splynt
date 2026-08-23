@@ -5,10 +5,12 @@
    Campi:
      name    (string)  nome del tool
      icon    (string)  emoji
-     desc    (string)  una riga di descrizione
+     desc    (string)  una riga di descrizione, in italiano
+     descEn  (string)  la stessa riga in inglese (per lo switch di lingua)
      href    (string)  cartella del tool, es. "/nomeTool/"
      status  (string)  "live" (cliccabile) | "soon" (placeholder non cliccabile)
      tag     (string)  opzionale, etichetta accanto al nome ("gratis", "beta"…)
+     tagEn   (string)  opzionale, la stessa etichetta in inglese
    ========================================================================== */
 
 const TOOLS = [
@@ -16,17 +18,21 @@ const TOOLS = [
     name: "SunHonest",
     icon: "☀️",
     desc: "Indice UV in tempo reale, quanto puoi stare al sole senza scottarti e il piano di rotazione fronte/retro.",
+    descEn: "Live UV index, how long you can stay in the sun without burning, and a front/back rotation plan.",
     href: "/sunhonest/",
     status: "live",
     tag: "gratis",
+    tagEn: "free",
   },
   {
     name: "RiseFree",
     icon: "🌙",
     desc: "A che ora andare a letto o puntare la sveglia per svegliarti a fine ciclo, non nel mezzo.",
+    descEn: "When to go to bed, or when to set your alarm, so you wake up between sleep cycles instead of mid-cycle.",
     href: "/risefree/",
     status: "live",
     tag: "gratis",
+    tagEn: "free",
   },
 
   // Esempio di tool annunciato ma non ancora online:
@@ -34,6 +40,7 @@ const TOOLS = [
   //   name: "NomeTool",
   //   icon: "🧭",
   //   desc: "Una riga che spiega il problema che risolve.",
+  //   descEn: "One line explaining the problem it solves.",
   //   href: "/nometool/",
   //   status: "soon",
   // },
@@ -47,17 +54,24 @@ const TOOLS = [
   const grid = document.querySelector("[data-tool-grid]");
   if (!grid) return;
 
+  /* Se i18n.js non è caricato, resta tutto in italiano. */
+  const T = (window.SplyntLang && window.SplyntLang.t)
+    ? window.SplyntLang.t
+    : (key, fallback) => fallback;
+  const isEn = !!(window.SplyntLang && window.SplyntLang.lang === "en");
+
   const counter = document.querySelector("[data-tool-count]");
   const live = TOOLS.filter((t) => t.status !== "soon");
 
   if (counter) {
-    counter.textContent =
-      live.length === 1 ? "1 tool online" : `${live.length} tool online`;
+    counter.textContent = isEn
+      ? (live.length === 1 ? "1 tool live" : `${live.length} tools live`)
+      : (live.length === 1 ? "1 tool online" : `${live.length} tool online`);
   }
 
   if (!TOOLS.length) {
-    grid.innerHTML =
-      '<li><p class="tool-empty">Il primo tool sta arrivando. Torna tra poco.</p></li>';
+    const empty = T("tools.empty", "Il primo tool sta arrivando. Torna tra poco.");
+    grid.innerHTML = `<li><p class="tool-empty">${empty}</p></li>`;
     return;
   }
 
@@ -81,7 +95,8 @@ const TOOLS = [
     title.className = "tool-title";
     title.append(document.createTextNode(tool.name));
 
-    const label = soon ? "presto" : tool.tag;
+    const soonLabel = T("tools.soon", "presto");
+    const label = soon ? soonLabel : (isEn && tool.tagEn ? tool.tagEn : tool.tag);
     if (label) {
       const badge = document.createElement("span");
       badge.className = "badge" + (soon ? " badge--soon" : "");
@@ -91,12 +106,14 @@ const TOOLS = [
 
     const desc = document.createElement("p");
     desc.className = "tool-desc";
-    desc.textContent = tool.desc;
+    desc.textContent = (isEn && tool.descEn) ? tool.descEn : tool.desc;
 
     const cta = document.createElement("span");
     cta.className = "tool-cta";
     cta.dataset.status = card.dataset.status;
-    cta.textContent = soon ? "In lavorazione" : "Apri il tool →";
+    cta.textContent = soon
+      ? T("tools.wip", "In lavorazione")
+      : T("tools.open", "Apri il tool →");
 
     card.append(icon, title, desc, cta);
     item.append(card);

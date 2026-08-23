@@ -171,6 +171,39 @@ a { color: var(--accent-strong); }
 }
 .site-nav a:hover { color: var(--ink); background: var(--surface-2); }
 
+/* --------------------------------------------------- selettore lingua --- */
+
+html.i18n-pending body { visibility: hidden; }
+
+.lang-switch {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.lang-btn {
+  font: inherit;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  line-height: 1;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: none;
+  color: var(--ink-3);
+  cursor: pointer;
+}
+.lang-btn:hover { color: var(--ink); }
+.lang-btn[aria-pressed="true"] {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--border-strong);
+}
+
 /* ---------------------------------------------------------------- hero --- */
 
 .hero { padding-block: 32px 12px; }
