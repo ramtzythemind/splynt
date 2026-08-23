@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>splynt.xyz — piccoli tool gratuiti, senza abbonamento</title>
+  <meta name="description"
+    content="Una collezione di micro-tool gratuiti e onesti. Niente account, niente pubblicità, niente abbonamenti per funzioni che sono un if/else.">
+  <meta name="theme-color" content="#fff8f0" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15100c" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://splynt.xyz/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://splynt.xyz/">
+  <meta property="og:title" content="splynt.xyz — piccoli tool gratuiti, senza abbonamento">
+  <meta property="og:description"
+    content="Micro-tool che risolvono un problema specifico. Gratis, senza account, senza trucchi.">
+  <meta name="twitter:card" content="summary">
+
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+
+<body>
+
+  <a class="skip-link" href="#tools">Vai ai tool</a>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true"></span>
+        splynt<span class="brand-dot">.xyz</span>
+      </a>
+      <nav class="site-nav" aria-label="Principale">
+        <a href="#tools">Tool</a>
+        <a href="#perche">Perché</a>
+        <a href="/supporta/">Supportami</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow">Micro-tool onesti</p>
+        <h1>Piccoli tool gratuiti, senza abbonamento, <em>senza trucchi</em>.</h1>
+        <p class="manifesto">
+          Se un'app ti chiede <strong>15&nbsp;€ al mese</strong> per una funzione che è
+          un <code>if/else</code>, probabilmente la trovi già qui gratis.
+        </p>
+        <ul class="hero-facts">
+          <li>Nessun account</li>
+          <li>Nessuna pubblicità</li>
+          <li>Nessun abbonamento</li>
+          <li>Funziona dal telefono</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="tools">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>I tool</h2>
+          <p data-tool-count></p>
+        </div>
+
+        <ul class="tool-grid" data-tool-grid>
+          <!-- Le card sono generate da /assets/tools.js.
+             Fallback statico per chi ha JavaScript disattivato: -->
+          <noscript>
+            <li>
+              <a class="tool-card" href="/sunhonest/">
+                <span class="tool-icon" aria-hidden="true">☀️</span>
+                <h3 class="tool-title">SunHonest <span class="badge">gratis</span></h3>
+                <p class="tool-desc">Indice UV in tempo reale, quanto puoi stare al sole senza scottarti e il piano di
+                  rotazione fronte/retro.</p>
+                <span class="tool-cta">Apri il tool →</span>
+              </a>
+            </li>
+          </noscript>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="perche">
+      <div class="wrap">
+        <div class="why">
+          <h2>Perché esiste questo sito</h2>
+          <p>
+            Un sacco di app fanno una cosa sola, la fanno in tre righe di codice, e poi
+            te la mettono dietro un abbonamento, un login, un banner pubblicitario e una
+            richiesta di accesso ai contatti. Qui no: ogni tool è una pagina che si apre,
+            fa il suo lavoro e ti lascia in pace.
+          </p>
+          <p>
+            Tutto gira nel tuo browser. Non c'è un backend, non c'è un database, non c'è
+            niente da registrare. Se un tool ti è utile e vuoi offrirmi un caffè, la porta
+            è aperta — ma resta del tutto facoltativo.
+          </p>
+          <ul class="why-list">
+            <li><b>Zero account</b><span>Apri la pagina e la usi. Punto.</span></li>
+            <li><b>Zero tracker</b><span>Nessun profilo, nessuna rivendita di dati.</span></li>
+            <li><b>Zero paywall</b><span>Tutte le funzioni, sempre, gratis.</span></li>
+            <li><b>Codice onesto</b><span>Se un calcolo è una stima, te lo dico.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>
+        splynt.xyz esiste perché le cose semplici dovrebbero restare semplici:
+        niente pubblicità, niente account, niente abbonamenti.
+      </p>
+      <nav class="footer-links" aria-label="Collegamenti del footer">
+        <a href="/supporta/">Supportami</a>
+        <a href="mailto:ciao@splynt.xyz">Scrivimi</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/assets/tools.js"></script>
+
+  <!-- 100% privacy-first analytics -->
+  <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+
+</body>
+
+</html>

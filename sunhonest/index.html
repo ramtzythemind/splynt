@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SunHonest — quanto puoi stare al sole senza scottarti</title>
+  <meta name="description"
+    content="Indice UV in tempo reale, tempo di esposizione sicuro in base al tuo tipo di pelle e piano di rotazione fronte/retro. Gratis, senza account, dati Open-Meteo.">
+  <meta name="theme-color" content="#fff8f0" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15100c" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://splynt.xyz/sunhonest/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="SunHonest — quanto puoi stare al sole senza scottarti">
+  <meta property="og:description"
+    content="UV index in tempo reale + piano di rotazione fronte/retro. Gratis, senza account.">
+
+  <style>
+    /* ============================================================ tokens ==== */
+    :root {
+      color-scheme: light dark;
+      --bg: #fff8f0;
+      --bg-glow: #ffe9cf;
+      --surface: #ffffff;
+      --surface-2: #fffaf3;
+      --border: #f0dfc9;
+      --border-strong: #e4cdae;
+      --ink: #241a12;
+      --ink-2: #5c4c3e;
+      --ink-3: #8a7767;
+      --accent: #e8720c;
+      --accent-strong: #b9540a;
+      --accent-soft: #ffeeda;
+      --accent-ring: rgba(232, 114, 12, .28);
+
+      /* scala UV (bande OMS) — tarata per il fondo chiaro */
+      --uv-1: #2f7d43;
+      /* basso      0–2  */
+      --uv-2: #9a7a00;
+      /* moderato   3–5  */
+      --uv-3: #c25e05;
+      /* alto       6–7  */
+      --uv-4: #c0342a;
+      /* molto alto 8–10 */
+      --uv-5: #7c4bc4;
+      /* estremo    11+  */
+
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 1px 2px rgba(60, 38, 16, .04), 0 8px 24px rgba(60, 38, 16, .06);
+      --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #15100c;
+        --bg-glow: #2a1c10;
+        --surface: #1e1711;
+        --surface-2: #241c15;
+        --border: #362a20;
+        --border-strong: #4a392b;
+        --ink: #f6ece1;
+        --ink-2: #c6b5a5;
+        --ink-3: #9a8878;
+        --accent: #ff9a3d;
+        --accent-strong: #ffab5c;
+        --accent-soft: #33220f;
+        --accent-ring: rgba(255, 154, 61, .3);
+
+        /* stessi gradini, ri-scelti sul fondo scuro (non un semplice flip) */
+        --uv-1: #5cbf68;
+        --uv-2: #e0bb45;
+        --uv-3: #ff9a3d;
+        --uv-4: #ff7264;
+        --uv-5: #bb92f2;
+        --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
+      }
+    }
+
+    /* ============================================================= base ===== */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--bg);
+      background-image: radial-gradient(120% 55% at 50% -10%, var(--bg-glow) 0%, transparent 60%);
+      background-repeat: no-repeat;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.2;
+      letter-spacing: -.02em;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    a {
+      color: var(--accent-strong);
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: .9em;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent-strong);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 820px;
+      margin-inline: auto;
+      padding-inline: 20px;
+    }
+
+    .site-header {
+      padding-block: 22px;
+    }
+
+    .site-header .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -.02em;
+    }
+
+    .brand-mark {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #ffd08a, var(--accent) 70%);
+      box-shadow: 0 0 0 4px var(--accent-ring);
+      flex: none;
+    }
+
+    .brand-dot {
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+
+    .back-link {
+      font-size: .9rem;
+      font-weight: 500;
+      color: var(--ink-2);
+      text-decoration: none;
+      padding: 7px 12px;
+      border-radius: 999px;
+    }
+
+    .back-link:hover {
+      background: var(--surface-2);
+      color: var(--ink);
+    }
+
+    .hero {
+      padding-block: 18px 8px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: var(--accent-strong);
+      background: var(--accent-soft);
+      border: 1px solid var(--border);
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.9rem, 6vw, 2.7rem);
+      margin-bottom: 14px;
+    }
+
+    .hero .lede {
+      color: var(--ink-2);
+      max-width: 60ch;
+    }
+
+    /* ============================================================ cards ===== */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 4vw, 26px);
+      margin-top: 20px;
+    }
+
+    .card>h2 {
+      font-size: 1.12rem;
+      margin-bottom: 4px;
+    }
+
+    .card>h2+.card-sub {
+      color: var(--ink-3);
+      font-size: .88rem;
+      margin-bottom: 16px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    label.field {
+      display: block;
+    }
+
+    label.field>span {
+      display: block;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--ink-2);
+      margin-bottom: 6px;
+    }
+
+    select,
+    input[type="text"] {
+      width: 100%;
+      font: inherit;
+      font-size: .95rem;
+      color: var(--ink);
+      background: var(--surface-2);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 11px 12px;
+    }
+
+    select {
+      appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, var(--ink-3) 50%), linear-gradient(135deg, var(--ink-3) 50%, transparent 50%);
+      background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+      padding-right: 34px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font: inherit;
+      font-weight: 600;
+      font-size: .95rem;
+      padding: 11px 16px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: var(--accent-strong);
+      color: #fff;
+      cursor: pointer;
+      text-decoration: none;
+      transition: filter .15s ease, transform .15s ease;
+    }
+
+    .btn:hover {
+      filter: brightness(1.08);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn--ghost {
+      background: var(--surface-2);
+      color: var(--ink);
+      border-color: var(--border-strong);
+    }
+
+    .btn--sm {
+      padding: 8px 13px;
+      font-size: .87rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .btn {
+        color: #2a1605;
+      }
+
+      .btn--ghost {
+        color: var(--ink);
+      }
+    }
+
+    .loc-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+
+    .loc-row .field {
+      flex: 1 1 240px;
+    }
+
+    .loc-status {
+      font-size: .88rem;
+      color: var(--ink-3);
+      margin-top: 12px;
+    }
+
+    .loc-status b {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .results-list {
+      list-style: none;
+      margin: 12px 0 0;
+      padding: 0;
+      display: grid;
+      gap: 6px;
+    }
+
+    .results-list button {
+      width: 100%;
+      text-align: left;
+      font: inherit;
+      font-size: .92rem;
+      cursor: pointer;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--ink);
+      border-radius: var(--radius-sm);
+      padding: 9px 12px;
+    }
+
+    .results-list button:hover {
+      border-color: var(--border-strong);
+    }
+
+    .results-list span {
+      color: var(--ink-3);
+      font-size: .85rem;
+    }
+
+    /* ============================================================ output ==== */
+    .state {
+      color: var(--ink-2);
+      font-size: .95rem;
+    }
+
+    .state--error {
+      color: #b3261e;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .state--error {
+        color: #ff8a7a;
+      }
+    }
+
+    .uv-head {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .uv-dial {
+      --dial: var(--uv-1);
+      width: 104px;
+      height: 104px;
+      border-radius: 50%;
+      flex: none;
+      display: grid;
+      place-items: center;
+      gap: 0;
+      background: var(--surface-2);
+      border: 6px solid var(--dial);
+      box-shadow: inset 0 0 0 2px var(--surface);
+    }
+
+    .uv-dial b {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -.03em;
+    }
+
+    .uv-dial span {
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--ink-3);
+    }
+
+    .uv-head-text h3 {
+      font-size: 1.25rem;
+      margin-bottom: 4px;
+    }
+
+    .uv-head-text p {
+      color: var(--ink-2);
+      font-size: .92rem;
+    }
+
+    .uv-band-name {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .metric {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+    }
+
+    .metric .k {
+      font-size: .78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--ink-3);
+    }
+
+    .metric .v {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -.02em;
+      margin-top: 2px;
+    }
+
+    .metric .v small {
+      font-size: .95rem;
+      font-weight: 600;
+      color: var(--ink-2);
+    }
+
+    .metric .n {
+      font-size: .82rem;
+      color: var(--ink-3);
+      margin-top: 2px;
+    }
+
+    .metric--hero {
+      background: var(--accent-soft);
+      border-color: var(--border-strong);
+    }
+
+    /* ============================================================= chart ==== */
+    .chart {
+      margin-top: 8px;
+    }
+
+    .chart-plot {
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 148px;
+      padding-top: 18px;
+      border-bottom: 1px solid var(--border-strong);
+    }
+
+    .chart-col {
+      position: relative;
+      flex: 1 1 0;
+      min-width: 0;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      background: none;
+      border: 0;
+      padding: 0;
+      cursor: default;
+      font: inherit;
+    }
+
+    .chart-bar {
+      width: 100%;
+      border-radius: 4px 4px 0 0;
+      background: var(--bar, var(--uv-1));
+      min-height: 2px;
+      transition: filter .12s ease;
+    }
+
+    .chart-col[data-now="1"] .chart-bar {
+      outline: 2px solid var(--ink-2);
+      outline-offset: 2px;
+    }
+
+    .chart-col:hover .chart-bar,
+    .chart-col:focus-visible .chart-bar {
+      filter: brightness(1.12);
+    }
+
+    .chart-peak {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--ink-2);
+      white-space: nowrap;
+      background: var(--surface);
+      padding: 0 4px;
+      border-radius: 4px;
+    }
+
+    .chart-axis {
+      display: flex;
+      gap: 2px;
+      margin-top: 6px;
+    }
+
+    .chart-axis span {
+      flex: 1 1 0;
+      min-width: 0;
+      text-align: center;
+      font-size: .68rem;
+      color: var(--ink-3);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .chart-tip {
+      position: absolute;
+      z-index: 3;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, -100%);
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      padding: 7px 10px;
+      font-size: .82rem;
+      white-space: nowrap;
+      color: var(--ink);
+      transition: opacity .12s ease;
+    }
+
+    .chart-tip b {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .chart-tip.is-on {
+      opacity: 1;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      margin-top: 14px;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .78rem;
+      color: var(--ink-2);
+    }
+
+    .legend i {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      background: var(--c);
+      display: inline-block;
+    }
+
+    /* ============================================================== plan ==== */
+    .plan {
+      list-style: none;
+      margin: 16px 0 0;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .plan li {
+      display: grid;
+      grid-template-columns: 26px minmax(96px, auto) 1fr auto;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+    }
+
+    .plan .step {
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--ink-3);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .plan .clock {
+      font-family: var(--mono);
+      font-size: .88rem;
+      color: var(--ink-2);
+    }
+
+    .plan .side {
+      font-weight: 600;
+      font-size: .95rem;
+    }
+
+    .plan .dur {
+      font-size: .85rem;
+      color: var(--ink-3);
+      white-space: nowrap;
+    }
+
+    .plan li.reapply {
+      background: var(--accent-soft);
+      border-color: var(--border-strong);
+      grid-template-columns: 26px 1fr;
+    }
+
+    .plan li.reapply .side {
+      font-weight: 600;
+      color: var(--accent-strong);
+    }
+
+    @media (max-width: 480px) {
+      .plan li {
+        grid-template-columns: 22px 1fr auto;
+        row-gap: 2px;
+      }
+
+      .plan .clock {
+        grid-column: 2 / -1;
+        order: 3;
+      }
+    }
+
+    .notes {
+      margin-top: 18px;
+      font-size: .87rem;
+      color: var(--ink-3);
+    }
+
+    .notes ul {
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+
+    .notes li+li {
+      margin-top: 4px;
+    }
+
+    details.honest {
+      margin-top: 20px;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+
+    details.honest summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: .95rem;
+      color: var(--ink-2);
+    }
+
+    details.honest .body {
+      margin-top: 12px;
+      font-size: .89rem;
+      color: var(--ink-3);
+    }
+
+    details.honest .body p+p {
+      margin-top: 10px;
+    }
+
+    .warn {
+      margin-top: 20px;
+      font-size: .87rem;
+      color: var(--ink-2);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+    }
+
+    .site-footer {
+      margin-top: 44px;
+      border-top: 1px solid var(--border);
+      padding-block: 24px 40px;
+      color: var(--ink-3);
+      font-size: .86rem;
+    }
+
+    .site-footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .site-footer a {
+      color: var(--ink-2);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true"></span>
+        splynt<span class="brand-dot">.xyz</span>
+      </a>
+      <a class="back-link" href="/#tools">← tutti i tool</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow">☀️ SunHonest — gratis, senza account</p>
+        <h1>Quanto puoi stare al sole senza scottarti</h1>
+        <p class="lede">
+          Indice UV reale della tua posizione, tempo di esposizione sicuro per il tuo
+          tipo di pelle e un piano di rotazione fronte/retro con gli orari già calcolati.
+          Nessun abbonamento, nessuna registrazione: i dati arrivano da Open-Meteo e i
+          conti li fa il tuo browser.
+        </p>
+      </div>
+    </section>
+
+    <div class="wrap">
+
+      <!-- ============================================== impostazioni ==== -->
+      <section class="card" aria-labelledby="setup-title">
+        <h2 id="setup-title">1. Dimmi dove sei e com'è la tua pelle</h2>
+        <p class="card-sub">La posizione non viene salvata da nessuna parte se non nel tuo browser.</p>
+
+        <div class="loc-row">
+          <label class="field">
+            <span>Città</span>
+            <input type="text" id="q" placeholder="Es. Rimini, Palermo, Lisbona…" autocomplete="off"
+              enterkeyhint="search">
+          </label>
+          <button class="btn btn--ghost" id="search-btn" type="button">Cerca</button>
+          <button class="btn" id="geo-btn" type="button">📍 Usa la mia posizione</button>
+        </div>
+
+        <ul class="results-list" id="results" hidden></ul>
+        <p class="loc-status" id="loc-status">Nessuna posizione selezionata.</p>
+
+        <div class="field-row" style="margin-top:18px">
+          <label class="field">
+            <span>Tipo di pelle (scala Fitzpatrick)</span>
+            <select id="skin"></select>
+          </label>
+          <label class="field">
+            <span>Protezione solare</span>
+            <select id="spf">
+              <option value="1">Nessuna crema</option>
+              <option value="15">SPF 15</option>
+              <option value="30" selected>SPF 30</option>
+              <option value="50">SPF 50</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <!-- ==================================================== output ==== -->
+      <section class="card" id="out-card" aria-labelledby="out-title" aria-live="polite">
+        <h2 id="out-title">2. Il verdetto</h2>
+        <p class="card-sub">Calcolato sull'andamento orario dell'UV, non su un numero fisso.</p>
+        <p class="state" id="state">Scegli una posizione qui sopra per iniziare.</p>
+
+        <div id="out" hidden>
+          <div class="uv-head">
+            <div class="uv-dial" id="dial">
+              <b id="uv-now">–</b>
+              <span>UV ora</span>
+            </div>
+            <div class="uv-head-text">
+              <h3 id="band-title">–</h3>
+              <p id="band-desc"></p>
+            </div>
+          </div>
+
+          <div class="metrics">
+            <div class="metric metric--hero">
+              <div class="k">Sessione con rotazione</div>
+              <div class="v" id="m-rot">–</div>
+              <div class="n" id="m-rot-note">girandoti fronte/retro</div>
+            </div>
+            <div class="metric">
+              <div class="k">Stando fermo da un lato</div>
+              <div class="v" id="m-flat">–</div>
+              <div class="n">tutta la dose sullo stesso lato</div>
+            </div>
+            <div class="metric">
+              <div class="k">Vitamina D</div>
+              <div class="v" id="m-vitd">–</div>
+              <div class="n">bastano, senza crema, braccia e gambe</div>
+            </div>
+          </div>
+
+          <p class="warn" id="warn" hidden></p>
+        </div>
+      </section>
+
+      <!-- ====================================================== piano ==== -->
+      <section class="card" id="plan-card" aria-labelledby="plan-title" hidden>
+        <h2 id="plan-title">3. Piano di rotazione</h2>
+        <p class="card-sub" id="plan-sub"></p>
+        <ol class="plan" id="plan"></ol>
+        <div class="notes">
+          <ul>
+            <li>I blocchi si allungano man mano che il sole cala: sono calcolati a <b>dose uguale</b>, non a minuti
+              uguali.</li>
+            <li>Alla fine della sessione, per oggi hai preso abbastanza: ombra, maglietta, o ci si rivede domani.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ==================================================== grafico ==== -->
+      <section class="card" id="chart-card" aria-labelledby="chart-title" hidden>
+        <h2 id="chart-title">L'UV di oggi, ora per ora</h2>
+        <p class="card-sub" id="chart-sub"></p>
+        <div class="chart">
+          <div class="chart-plot" id="plot"></div>
+          <div class="chart-axis" id="axis"></div>
+        </div>
+        <div class="legend" aria-hidden="true">
+          <span><i style="--c: var(--uv-1)"></i> 0–2 basso</span>
+          <span><i style="--c: var(--uv-2)"></i> 3–5 moderato</span>
+          <span><i style="--c: var(--uv-3)"></i> 6–7 alto</span>
+          <span><i style="--c: var(--uv-4)"></i> 8–10 molto alto</span>
+          <span><i style="--c: var(--uv-5)"></i> 11+ estremo</span>
+        </div>
+        <details class="honest">
+          <summary>Vedi i numeri in tabella</summary>
+          <div class="body" id="table-wrap"></div>
+        </details>
+      </section>
+
+      <!-- ================================================== onestà ====== -->
+      <section class="card">
+        <h2>Come funziona il calcolo (senza giri di parole)</h2>
+        <p class="card-sub">Se una cosa è una stima, qui c'è scritto che è una stima.</p>
+        <div class="notes" style="color:var(--ink-2)">
+          <p>
+            L'indice UV si converte in energia: <code>UVI 1 ≈ 0,025 W/m²</code> di
+            radiazione eritemale. Il tuo tipo di pelle ha una <b>dose minima
+              eritemale</b> (MED), cioè la dose oltre la quale arriva il rossore. Io
+            integro l'UV previsto minuto per minuto e ti fermo al <b>75% della MED</b>,
+            così resti sotto la soglia della scottatura con un margine.
+          </p>
+          <p style="margin-top:10px">
+            La crema moltiplica il tempo, ma non per il numero scritto sulla confezione:
+            quasi nessuno ne mette la quantità del test di laboratorio. Uso un fattore
+            reale pari a circa il <b>60%</b> di quello dichiarato — è prudente, ed è la
+            ragione per cui SPF 50 qui non vale 50 volte il tempo.
+          </p>
+          <p style="margin-top:10px">
+            La rotazione fronte/retro non è una furbata: raddoppia il tempo totale della
+            sessione perché ogni lato riceve metà della dose. Il conto assume che tu ti
+            giri davvero quando dice il piano.
+          </p>
+          <p style="margin-top:10px">
+            <b>Cosa questo tool non è:</b> un dispositivo medico. Non conosce i tuoi
+            farmaci fotosensibilizzanti, i tuoi nei, il riflesso della neve o
+            dell'acqua (che può aggiungere fino al 30–80% di UV), né quanto sei in
+            quota (+10% ogni 1000 m). Se hai una condizione della pelle, il medico batte
+            l'algoritmo.
+          </p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>
+        Dati UV: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>,
+        gratuiti e senza chiave API. Nessun dato lascia il tuo browser.
+      </p>
+      <nav class="footer-links" aria-label="Collegamenti del footer">
+        <a href="/">Home</a>
+        <a href="/supporta/">Supportami</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      "use strict";
+
+      /* ================================================== costanti fisiche ===
+         1 SED = 100 J/m² di dose eritemale.
+         UVI 1 = 0,025 W/m²  →  1 minuto a UVI 1 = 1,5 J/m² = 0,015 SED.
+         MED per fototipo, in SED (valori standard 200–1000 J/m²).
+      */
+      var SED_PER_MIN_PER_UVI = 0.015;
+      var SAFE_FRACTION = 0.75;        // ci si ferma al 75% della MED
+      var SPF_REAL_FACTOR = 0.6;       // applicazione reale, non da laboratorio
+
+      var SKIN_TYPES = [
+        { id: 1, med: 2.0, label: "I — molto chiara, si scotta sempre, non si abbronza" },
+        { id: 2, med: 2.5, label: "II — chiara, si scotta facilmente, si abbronza poco" },
+        { id: 3, med: 3.5, label: "III — media, a volte si scotta, si abbronza gradualmente" },
+        { id: 4, med: 4.5, label: "IV — olivastra, si scotta raramente, si abbronza bene" },
+        { id: 5, med: 6.0, label: "V — scura, si scotta molto raramente" },
+        { id: 6, med: 10.0, label: "VI — molto scura, praticamente non si scotta" }
+      ];
+
+      var BANDS = [
+        { max: 2.9, n: 1, name: "Basso", desc: "Puoi stare fuori tranquillo. Occhiali se il riverbero dà fastidio." },
+        { max: 5.9, n: 2, name: "Moderato", desc: "Cerca l'ombra a mezzogiorno, crema sulle parti scoperte." },
+        { max: 7.9, n: 3, name: "Alto", desc: "Protezione necessaria: crema, cappello, ombra nelle ore centrali." },
+        { max: 10.9, n: 4, name: "Molto alto", desc: "Serve protezione extra. La pelle chiara si scotta in pochi minuti." },
+        { max: 99, n: 5, name: "Estremo", desc: "Evita il sole diretto tra le 11 e le 16. Sul serio." }
+      ];
+
+      var $ = function (id) { return document.getElementById(id); };
+
+      var state = { series: null, place: null, tz: 0 };
+
+      /* ======================================================== preferenze === */
+
+      var skinSel = $("skin");
+      SKIN_TYPES.forEach(function (s) {
+        var o = document.createElement("option");
+        o.value = String(s.id);
+        o.textContent = s.label;
+        skinSel.appendChild(o);
+      });
+
+      function loadPrefs() {
+        try {
+          var p = JSON.parse(localStorage.getItem("sunhonest.prefs") || "{}");
+          if (p.skin) skinSel.value = String(p.skin);
+          if (p.spf) $("spf").value = String(p.spf);
+          return p.loc || null;
+        } catch (e) { return null; }
+      }
+
+      function savePrefs() {
+        try {
+          localStorage.setItem("sunhonest.prefs", JSON.stringify({
+            skin: skinSel.value, spf: $("spf").value, loc: state.place
+          }));
+        } catch (e) { /* modalità privata: pazienza */ }
+      }
+
+      /* =========================================================== helper ==== */
+
+      /* i nomi dei luoghi arrivano da un'API esterna: mai iniettarli come HTML */
+      function esc(s) {
+        return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        });
+      }
+
+      function fmtTime(ms) {
+        var d = new Date(ms + state.tz);
+        return String(d.getUTCHours()).padStart(2, "0") + ":" + String(d.getUTCMinutes()).padStart(2, "0");
+      }
+
+      function fmtDur(min) {
+        min = Math.round(min);
+        if (min < 60) return min + " min";
+        var h = Math.floor(min / 60), m = min % 60;
+        return m ? h + "h " + String(m).padStart(2, "0") : h + "h";
+      }
+
+      function bandOf(uv) {
+        for (var i = 0; i < BANDS.length; i++) if (uv <= BANDS[i].max) return BANDS[i];
+        return BANDS[BANDS.length - 1];
+      }
+
+      function setState(msg, isError) {
+        var el = $("state");
+        el.textContent = msg;
+        el.className = "state" + (isError ? " state--error" : "");
+        el.hidden = false;
+      }
+
+      /* ============================================================ serie ==== */
+
+      function buildSeries(data) {
+        var off = data.utc_offset_seconds * 1000;
+        var raw = data.hourly.time;
+        var times = raw.map(function (t) { return Date.parse(t + ":00Z") - off; });
+        var uv = data.hourly.uv_index.map(function (v) { return v == null ? 0 : v; });
+        var clear = (data.hourly.uv_index_clear_sky || []).map(function (v) { return v == null ? 0 : v; });
+        return { labels: raw, times: times, uv: uv, clear: clear, off: off };
+      }
+
+      function uvAt(ms) {
+        var s = state.series, t = s.times, u = s.uv;
+        if (ms <= t[0]) return u[0];
+        if (ms >= t[t.length - 1]) return u[u.length - 1];
+        var i = Math.floor((ms - t[0]) / 3600000);
+        if (i >= t.length - 1) return u[u.length - 1];
+        var f = (ms - t[i]) / (t[i + 1] - t[i]);
+        return u[i] + (u[i + 1] - u[i]) * f;
+      }
+
+      /* Ultimo istante (entro 18h) in cui il sole di oggi è ancora capace di scottare. */
+      function sunEnd(startMs) {
+        var last = startMs;
+        for (var m = 0; m <= 18 * 60; m += 5) {
+          if (uvAt(startMs + m * 60000) >= 0.4) last = startMs + m * 60000;
+          else if (last > startMs) break; /* il sole è calato: si chiude qui */
+        }
+        return last;
+      }
+
+      /* Prossimo istante in cui l'UV torna sopra 0.4 (sole utile di domani). */
+      function nextSunUp(startMs) {
+        for (var m = 0; m <= 24 * 60; m += 10) {
+          if (uvAt(startMs + m * 60000) >= 1) return startMs + m * 60000;
+        }
+        return null;
+      }
+
+      /* Minuti necessari perché il lato esposto raggiunga targetSED.
+         rotate = true → la dose totale si divide sui due lati. */
+      function timeToDose(startMs, targetSED, rotate, capMin) {
+        var dose = 0;
+        for (var m = 0; m < capMin; m++) {
+          dose += uvAt(startMs + m * 60000) * SED_PER_MIN_PER_UVI;
+          if ((rotate ? dose / 2 : dose) >= targetSED) return m + 1;
+        }
+        return null;
+      }
+
+      /* Blocchi a dose uguale: ogni lato riceve la stessa energia. */
+      function buildPlan(startMs, totalMin) {
+        var blocks = Math.round(totalMin / 15);
+        if (blocks < 2) blocks = 2;
+        if (blocks > 12) blocks = 12;
+        if (blocks % 2) blocks++;
+
+        var totalDose = 0, k;
+        for (k = 0; k < totalMin; k++) totalDose += uvAt(startMs + k * 60000) * SED_PER_MIN_PER_UVI;
+        var perBlock = totalDose / blocks;
+        if (perBlock <= 0) return [];
+
+        var out = [], t = startMs, acc = 0, cut = perBlock, m = 0;
+        for (; m < totalMin; m++) {
+          acc += uvAt(startMs + m * 60000) * SED_PER_MIN_PER_UVI;
+          if (acc >= cut - 1e-9) {
+            out.push({ from: t, to: startMs + (m + 1) * 60000 });
+            t = startMs + (m + 1) * 60000;
+            cut += perBlock;
+            if (out.length === blocks) break;
+          }
+        }
+        if (out.length < blocks && t < startMs + totalMin * 60000) {
+          out.push({ from: t, to: startMs + totalMin * 60000 });
+        }
+        return out;
+      }
+
+      /* ========================================================== calcolo ==== */
+
+      function compute() {
+        if (!state.series) return;
+
+        var skin = SKIN_TYPES.filter(function (s) { return String(s.id) === skinSel.value; })[0] || SKIN_TYPES[2];
+        var spf = parseFloat($("spf").value) || 1;
+        var spfEff = spf <= 1 ? 1 : 1 + (spf - 1) * SPF_REAL_FACTOR;
+
+        var now = Date.now();
+        var uvNow = Math.max(0, uvAt(now));
+        var band = bandOf(uvNow);
+
+        /* testata */
+        $("uv-now").textContent = uvNow < 1 ? uvNow.toFixed(1) : Math.round(uvNow);
+        $("dial").style.setProperty("--dial", "var(--uv-" + band.n + ")");
+        $("band-title").innerHTML = 'UV <span class="uv-band-name">' + band.name.toLowerCase() + "</span> a " + esc(state.place.name);
+        $("band-desc").textContent = band.desc;
+
+        var targetNoSpf = skin.med * SAFE_FRACTION;
+        var target = targetNoSpf * spfEff;
+
+        var flat = timeToDose(now, target, false, 16 * 60);
+        var rot = timeToDose(now, target, true, 16 * 60);
+        var vitd = timeToDose(now, targetNoSpf * 0.3, false, 16 * 60);
+
+        var end = sunEnd(now);
+        var minutesOfSun = Math.max(0, Math.round((end - now) / 60000));
+
+        $("out").hidden = false;
+        $("state").hidden = true;
+        $("warn").hidden = true;
+
+        /* sole già andato / troppo debole per scottare */
+        if (uvNow < 0.5) {
+          var up = nextSunUp(now);
+          $("m-rot").textContent = "—";
+          $("m-flat").textContent = "—";
+          $("m-vitd").textContent = "—";
+          $("m-rot-note").textContent = "adesso non serve";
+          $("warn").hidden = false;
+          $("warn").innerHTML = "Adesso l'UV è praticamente zero: non ti scotti nemmeno se ci provi." +
+            (up ? " Il sole torna a mordere verso le <b>" + fmtTime(up) + "</b>." : "");
+          $("plan-card").hidden = true;
+          renderChart(uvNow);
+          return;
+        }
+
+        var capped = false;
+        if (rot === null || rot > minutesOfSun) { rot = minutesOfSun; capped = true; }
+        if (flat === null || flat > minutesOfSun) flat = minutesOfSun;
+
+        $("m-rot").innerHTML = fmtDur(rot) + (capped ? ' <small>(fino a sera)</small>' : "");
+        $("m-flat").textContent = fmtDur(flat);
+        $("m-vitd").textContent = vitd === null ? "—" : fmtDur(Math.max(5, Math.min(vitd, 40)));
+        $("m-rot-note").textContent = spf > 1
+          ? "girandoti fronte/retro, con SPF " + spf
+          : "girandoti fronte/retro, senza crema";
+
+        if (capped) {
+          $("warn").hidden = false;
+          $("warn").innerHTML = "Buone notizie: da adesso a quando il sole cala (<b>" + fmtTime(end) +
+            "</b>) non arrivi alla dose che ti scotta. Il piano copre tutta la finestra.";
+        } else if (rot <= 20) {
+          $("warn").hidden = false;
+          $("warn").innerHTML = "UV alto e pelle sensibile: <b>" + fmtDur(rot) +
+            "</b> è pochissimo. Meglio spostare la sessione a dopo le 16, o restare all'ombra con la maglietta.";
+        }
+
+        renderPlan(now, rot, spf);
+        renderChart(uvNow);
+        savePrefs();
+      }
+
+      /* ============================================================ piano ==== */
+
+      function renderPlan(startMs, totalMin, spf) {
+        var card = $("plan-card"), list = $("plan");
+        if (totalMin < 4) { card.hidden = true; return; }
+
+        var blocks = buildPlan(startMs, totalMin);
+        if (!blocks.length) { card.hidden = true; return; }
+
+        card.hidden = false;
+        $("plan-sub").innerHTML = "Sessione di <b>" + fmtDur(totalMin) + "</b> dalle " +
+          fmtTime(startMs) + " alle " + fmtTime(startMs + totalMin * 60000) +
+          ". Gira quando te lo dice il piano: ogni lato prende esattamente metà della dose.";
+
+        list.innerHTML = "";
+        var sessionEnd = startMs + totalMin * 60000;
+        var nextReapply = spf > 1 ? startMs + 120 * 60000 : Infinity;
+
+        blocks.forEach(function (b, i) {
+          var min = Math.round((b.to - b.from) / 60000);
+          var li = document.createElement("li");
+          li.innerHTML =
+            '<span class="step">' + (i + 1) + "</span>" +
+            '<span class="clock">' + fmtTime(b.from) + " → " + fmtTime(b.to) + "</span>" +
+            '<span class="side">' + (i % 2 === 0 ? "🔆 Fronte (pancia e viso)" : "🔄 Retro (schiena)") + "</span>" +
+            '<span class="dur">' + fmtDur(min) + "</span>";
+          list.appendChild(li);
+
+          /* promemoria crema solo se resta abbastanza sessione da proteggere */
+          if (b.to >= nextReapply && sessionEnd - b.to > 20 * 60000) {
+            var r = document.createElement("li");
+            r.className = "reapply";
+            r.innerHTML = '<span class="step">☂️</span><span class="side">Rimetti la crema (sono passate 2 ore) — e comunque dopo ogni bagno</span>';
+            list.appendChild(r);
+          }
+          while (b.to >= nextReapply) nextReapply += 120 * 60000;
+        });
+      }
+
+      /* ========================================================== grafico ==== */
+
+      function renderChart(uvNow) {
+        var s = state.series;
+        var today = new Date(Date.now() + state.tz);
+        var key = today.toISOString().slice(0, 10);
+
+        var idx = [];
+        for (var i = 0; i < s.labels.length; i++) {
+          var lab = s.labels[i];
+          var hour = parseInt(lab.slice(11, 13), 10);
+          if (lab.slice(0, 10) === key && hour >= 5 && hour <= 21) idx.push(i);
+        }
+        if (idx.length < 4) { $("chart-card").hidden = true; return; }
+
+        var maxUv = 0, peakI = idx[0];
+        idx.forEach(function (i) { if (s.uv[i] > maxUv) { maxUv = s.uv[i]; peakI = i; } });
+        var scale = Math.max(4, Math.ceil(maxUv));
+
+        var nowHour = today.getUTCHours();
+        var peakH0 = parseInt(s.labels[peakI].slice(11, 13), 10);
+        /* se "ora" e il picco sono attaccati, una sola etichetta: niente sovrapposizioni */
+        var labelPeak = Math.abs(peakH0 - nowHour) >= 2 || nowHour < 5 || nowHour > 21;
+
+        var plot = $("plot"), axis = $("axis");
+        plot.innerHTML = "";
+        axis.innerHTML = "";
+
+        var tip = document.createElement("div");
+        tip.className = "chart-tip";
+        plot.appendChild(tip);
+
+        idx.forEach(function (i) {
+          var uv = s.uv[i];
+          var h = parseInt(s.labels[i].slice(11, 13), 10);
+          var b = bandOf(uv);
+
+          var col = document.createElement("button");
+          col.type = "button";
+          col.className = "chart-col";
+          if (h === nowHour) col.dataset.now = "1";
+          col.setAttribute("aria-label", h + ":00 — indice UV " + uv.toFixed(1) + ", " + b.name.toLowerCase());
+
+          var bar = document.createElement("div");
+          bar.className = "chart-bar";
+          bar.style.height = Math.max(2, (uv / scale) * 100) + "%";
+          bar.style.setProperty("--bar", "var(--uv-" + b.n + ")");
+          col.appendChild(bar);
+
+          if (h === nowHour || (i === peakI && labelPeak)) {
+            var lab = document.createElement("span");
+            lab.className = "chart-peak";
+            lab.textContent = (h === nowHour ? "ora " : "") + uv.toFixed(1);
+            col.appendChild(lab);
+          }
+
+          function show() {
+            tip.innerHTML = "<b>" + h + ":00</b> · UV <b>" + uv.toFixed(1) + "</b> · " + b.name.toLowerCase();
+            tip.classList.add("is-on");
+            tip.style.left = (col.offsetLeft + col.offsetWidth / 2) + "px";
+            tip.style.top = (col.offsetTop - 4) + "px";
+          }
+          function hide() { tip.classList.remove("is-on"); }
+          col.addEventListener("mouseenter", show);
+          col.addEventListener("focus", show);
+          col.addEventListener("mouseleave", hide);
+          col.addEventListener("blur", hide);
+
+          plot.appendChild(col);
+
+          var ax = document.createElement("span");
+          ax.textContent = h % 3 === 0 ? String(h) : "";
+          axis.appendChild(ax);
+        });
+
+        var peakH = parseInt(s.labels[peakI].slice(11, 13), 10);
+        $("chart-sub").innerHTML = "Picco di oggi: <b>UV " + s.uv[peakI].toFixed(1) +
+          "</b> verso le " + peakH + ":00. Ore locali di " + esc(state.place.name) + ".";
+        $("chart-card").hidden = false;
+
+        /* tabella equivalente, per chi non distingue i colori o stampa la pagina */
+        var rows = idx.map(function (i) {
+          return parseInt(s.labels[i].slice(11, 13), 10) + ":00 → UV " + s.uv[i].toFixed(1);
+        });
+        $("table-wrap").textContent = rows.join("  ·  ");
+      }
+
+      /* ============================================================= dati ==== */
+
+      function loadForecast(place) {
+        state.place = place;
+        $("loc-status").innerHTML = "Posizione: <b>" + esc(place.name) + "</b>" +
+          (place.country ? " (" + esc(place.country) + ")" : "") + " — carico i dati UV…";
+
+        var url = "https://api.open-meteo.com/v1/forecast" +
+          "?latitude=" + encodeURIComponent(place.lat) +
+          "&longitude=" + encodeURIComponent(place.lon) +
+          "&hourly=uv_index,uv_index_clear_sky" +
+          "&daily=uv_index_max,sunrise,sunset" +
+          "&timezone=auto&forecast_days=2";
+
+        fetch(url)
+          .then(function (r) {
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.json();
+          })
+          .then(function (data) {
+            if (!data.hourly || !data.hourly.uv_index) throw new Error("dati mancanti");
+            state.series = buildSeries(data);
+            state.tz = data.utc_offset_seconds * 1000;
+            $("loc-status").innerHTML = "Posizione: <b>" + esc(place.name) + "</b>" +
+              (place.country ? " (" + esc(place.country) + ")" : "") + " · dati aggiornati alle " + fmtTime(Date.now());
+            compute();
+          })
+          .catch(function (err) {
+            $("out").hidden = true;
+            $("plan-card").hidden = true;
+            $("chart-card").hidden = true;
+            setState("Non riesco a scaricare i dati UV (" + err.message + "). Riprova tra un attimo: nessun dato tuo è coinvolto, è solo la rete.", true);
+          });
+      }
+
+      function search(q) {
+        var box = $("results");
+        box.hidden = false;
+        box.innerHTML = "<li><p class='loc-status'>Cerco…</p></li>";
+
+        fetch("https://geocoding-api.open-meteo.com/v1/search?count=5&language=it&format=json&name=" + encodeURIComponent(q))
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            box.innerHTML = "";
+            if (!data.results || !data.results.length) {
+              box.innerHTML = "<li><p class='loc-status'>Nessun posto trovato con questo nome.</p></li>";
+              return;
+            }
+            data.results.forEach(function (r) {
+              var li = document.createElement("li");
+              var btn = document.createElement("button");
+              btn.type = "button";
+              btn.innerHTML = "<b>" + esc(r.name) + "</b> <span>" +
+                esc([r.admin1, r.country].filter(Boolean).join(", ")) + "</span>";
+              btn.addEventListener("click", function () {
+                box.hidden = true;
+                loadForecast({ name: r.name, country: r.country, lat: r.latitude, lon: r.longitude });
+              });
+              li.appendChild(btn);
+              box.appendChild(li);
+            });
+          })
+          .catch(function () {
+            box.innerHTML = "<li><p class='loc-status'>Ricerca non disponibile in questo momento.</p></li>";
+          });
+      }
+
+      /* ============================================================ eventi === */
+
+      $("search-btn").addEventListener("click", function () {
+        var q = $("q").value.trim();
+        if (q.length > 1) search(q);
+      });
+
+      $("q").addEventListener("keydown", function (e) {
+        if (e.key === "Enter") { e.preventDefault(); $("search-btn").click(); }
+      });
+
+      $("geo-btn").addEventListener("click", function () {
+        if (!navigator.geolocation) {
+          $("loc-status").textContent = "Il browser non offre la geolocalizzazione: cerca la città a mano.";
+          return;
+        }
+        $("loc-status").textContent = "Chiedo la posizione al browser…";
+        navigator.geolocation.getCurrentPosition(
+          function (pos) {
+            loadForecast({
+              name: "la tua posizione",
+              country: "",
+              lat: pos.coords.latitude.toFixed(4),
+              lon: pos.coords.longitude.toFixed(4)
+            });
+          },
+          function () {
+            $("loc-status").textContent = "Posizione negata o non disponibile: cerca la città qui sopra.";
+          },
+          { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
+        );
+      });
+
+      skinSel.addEventListener("change", compute);
+      $("spf").addEventListener("change", compute);
+
+      /* ricalcola quando torni sulla pagina dopo un po' */
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden && state.series) compute();
+      });
+
+      var saved = loadPrefs();
+      if (saved && saved.lat) loadForecast(saved);
+    })();
+  </script>
+
+  <!-- 100% privacy-first analytics -->
+  <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supportami — splynt.xyz</title>
+<meta name="description" content="I tool di splynt.xyz sono e restano gratis. Se te ne è tornato utile uno, puoi offrirmi un caffè.">
+<meta name="theme-color" content="#fff8f0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15100c" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<style>
+  .support-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: clamp(24px, 5vw, 40px);
+    box-shadow: var(--shadow);
+    max-width: 640px;
+  }
+  .support-card h1 { font-size: clamp(1.7rem, 5vw, 2.3rem); margin-bottom: 16px; }
+  .support-card p { color: var(--ink-2); }
+  .support-card p + p { margin-top: 14px; }
+  .support-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }
+  .note {
+    margin-top: 22px;
+    font-size: 0.88rem;
+    color: var(--ink-3);
+    border-left: 3px solid var(--border-strong);
+    padding-left: 12px;
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true"></span>
+      splynt<span class="brand-dot">.xyz</span>
+    </a>
+    <nav class="site-nav" aria-label="Principale">
+      <a href="/#tools">Tool</a>
+      <a href="/#perche">Perché</a>
+    </nav>
+  </div>
+</header>
+
+<main class="section">
+  <div class="wrap">
+    <div class="support-card">
+      <p class="eyebrow">Facoltativo, davvero</p>
+      <h1>Se un tool ti è servito, offrimi un caffè</h1>
+      <p>
+        Tutto quello che trovi su splynt.xyz è gratis e resta gratis: nessuna funzione
+        nascosta dietro un piano Pro, nessun account, nessuna pubblicità. Le donazioni
+        non sbloccano niente — servono solo a coprire il dominio e a farmi passare la
+        voglia di mettere un banner.
+      </p>
+      <p>
+        Se preferisci non donare va benissimo lo stesso: usare i tool e dirlo a
+        qualcuno è già un ottimo modo di dare una mano.
+      </p>
+
+      <div class="support-actions">
+        <!-- TODO: sostituisci con il tuo link Ko-fi reale, es. https://ko-fi.com/tuonome -->
+        <a class="btn" href="https://ko-fi.com/" target="_blank" rel="noopener">
+          ☕ Offrimi un caffè su Ko-fi
+        </a>
+        <a class="btn btn--ghost" href="/#tools">Torna ai tool</a>
+      </div>
+
+      <p class="note">
+        Il link Ko-fi è ancora un segnaposto: quando la pagina sarà attiva, basta
+        cambiare l'<code>href</code> del pulsante qui sopra.
+      </p>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>
+      splynt.xyz esiste perché le cose semplici dovrebbero restare semplici:
+      niente pubblicità, niente account, niente abbonamenti.
+    </p>
+    <nav class="footer-links" aria-label="Collegamenti del footer">
+      <a href="/">Home</a>
+      <a href="mailto:ciao@splynt.xyz">Scrivimi</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
