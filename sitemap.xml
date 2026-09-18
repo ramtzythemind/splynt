@@ -4,5 +4,7 @@
   <url><loc>https://splynt.xyz/</loc><priority>1.0</priority></url>
   <url><loc>https://splynt.xyz/sunhonest/</loc><priority>0.8</priority></url>
   <url><loc>https://splynt.xyz/risefree/</loc><priority>0.8</priority></url>
+  <url><loc>https://splynt.xyz/fasthonest/</loc><priority>0.8</priority></url>
+  <url><loc>https://splynt.xyz/claimfree/</loc><priority>0.8</priority></url>
   <url><loc>https://splynt.xyz/supporta/</loc><priority>0.3</priority></url>
 </urlset>

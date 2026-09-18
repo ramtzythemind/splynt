@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FastHonest — timer del digiuno intermittente, gratis</title>
+  <meta name="description"
+    content="Timer per il digiuno intermittente 16:8, 18:6, 20:4 e OMAD: quanto manca, a che ora puoi mangiare, quando chiudere la finestra e cosa succede davvero ora per ora. Gratis, senza account, senza abbonamento.">
+  <meta name="theme-color" content="#fff8f0" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15100c" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://splynt.xyz/fasthonest/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="FastHonest — timer del digiuno intermittente, gratis">
+  <meta property="og:description"
+    content="16:8, 18:6, 20:4, OMAD: il timer e le fasi del digiuno, calcolati nel browser. Gratis, senza account.">
+
+  <style>
+    /* ============================================================ tokens ====
+   Stessi token di SunHonest e RiseFree: i tool devono sembrare la stessa
+   famiglia. Qui in più c'è la scala delle fasi metaboliche.
+*/
+    :root {
+      color-scheme: light dark;
+      --bg: #fff8f0;
+      --bg-glow: #ffe9cf;
+      --surface: #ffffff;
+      --surface-2: #fffaf3;
+      --border: #f0dfc9;
+      --border-strong: #e4cdae;
+      --ink: #241a12;
+      --ink-2: #5c4c3e;
+      --ink-3: #8a7767;
+      --accent: #e8720c;
+      --accent-strong: #b9540a;
+      --accent-soft: #ffeeda;
+      --accent-ring: rgba(232, 114, 12, .28);
+
+      /* fasi: si scaldano man mano che il digiuno avanza */
+      --p1: #8a7767;
+      /* digestione            */
+      --p2: #c98a1b;
+      /* glicogeno             */
+      --p3: #e8720c;
+      /* passaggio ai grassi   */
+      --p4: #2f7d43;
+      /* chetosi leggera       */
+      --p5: #c0342a;
+      /* oltre le 24 ore       */
+
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 1px 2px rgba(60, 38, 16, .04), 0 8px 24px rgba(60, 38, 16, .06);
+      --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #15100c;
+        --bg-glow: #2a1c10;
+        --surface: #1e1711;
+        --surface-2: #241c15;
+        --border: #362a20;
+        --border-strong: #4a392b;
+        --ink: #f6ece1;
+        --ink-2: #c6b5a5;
+        --ink-3: #9a8878;
+        --accent: #ff9a3d;
+        --accent-strong: #ffab5c;
+        --accent-soft: #33220f;
+        --accent-ring: rgba(255, 154, 61, .3);
+
+        --p1: #9a8878;
+        --p2: #e0bb45;
+        --p3: #ff9a3d;
+        --p4: #5cbf68;
+        --p5: #ff7264;
+        --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
+      }
+    }
+
+    /* ============================================================= base ===== */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--bg);
+      background-image: radial-gradient(120% 55% at 50% -10%, var(--bg-glow) 0%, transparent 60%);
+      background-repeat: no-repeat;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.2;
+      letter-spacing: -.02em;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    a {
+      color: var(--accent-strong);
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: .9em;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 820px;
+      margin-inline: auto;
+      padding-inline: 20px;
+    }
+
+    .site-header {
+      padding-block: 22px;
+    }
+
+    .site-header .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -.02em;
+    }
+
+    .brand-mark {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #ffd08a, var(--accent) 70%);
+      box-shadow: 0 0 0 4px var(--accent-ring);
+      flex: none;
+    }
+
+    .brand-dot {
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+
+    .back-link {
+      font-size: .9rem;
+      font-weight: 500;
+      color: var(--ink-2);
+      text-decoration: none;
+      padding: 7px 12px;
+      border-radius: 999px;
+    }
+
+    .back-link:hover {
+      background: var(--surface-2);
+      color: var(--ink);
+    }
+
+    .hero {
+      padding-block: 18px 8px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: var(--accent-strong);
+      background: var(--accent-soft);
+      border: 1px solid var(--border);
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.9rem, 6vw, 2.7rem);
+      margin-bottom: 14px;
+    }
+
+    .hero .lede {
+      color: var(--ink-2);
+      max-width: 60ch;
+    }
+
+    /* ============================================================ cards ===== */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 4vw, 26px);
+      margin-top: 20px;
+    }
+
+    .card>h2 {
+      font-size: 1.12rem;
+      margin-bottom: 4px;
+    }
+
+    .card>h2+.card-sub {
+      color: var(--ink-3);
+      font-size: .88rem;
+      margin-bottom: 16px;
+    }
+
+    label.field {
+      display: block;
+    }
+
+    label.field>span {
+      display: block;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--ink-2);
+      margin-bottom: 6px;
+    }
+
+    select,
+    input[type="time"] {
+      width: 100%;
+      font: inherit;
+      font-size: .95rem;
+      color: var(--ink);
+      background: var(--surface-2);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 11px 12px;
+      min-width: 0;
+    }
+
+    input[type="time"] {
+      font-variant-numeric: tabular-nums;
+    }
+
+    select {
+      appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, var(--ink-3) 50%), linear-gradient(135deg, var(--ink-3) 50%, transparent 50%);
+      background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+      padding-right: 34px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font: inherit;
+      font-weight: 600;
+      font-size: .95rem;
+      padding: 11px 16px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: var(--accent-strong);
+      color: #fff;
+      cursor: pointer;
+      text-decoration: none;
+      transition: filter .15s ease, transform .15s ease;
+    }
+
+    .btn:hover {
+      filter: brightness(1.08);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn--ghost {
+      background: var(--surface-2);
+      color: var(--ink);
+      border-color: var(--border-strong);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .btn {
+        color: #2a1605;
+      }
+
+      .btn--ghost {
+        color: var(--ink);
+      }
+    }
+
+    /* ========================================================== segmented === */
+    .modes {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 5px;
+      margin-bottom: 20px;
+    }
+
+    .modes button {
+      font: inherit;
+      font-weight: 600;
+      font-size: .92rem;
+      cursor: pointer;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: none;
+      color: var(--ink-2);
+      line-height: 1.3;
+    }
+
+    .modes button[aria-pressed="true"] {
+      background: var(--surface);
+      color: var(--ink);
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 640px) {
+      .modes {
+        grid-template-columns: 1fr;
+        border-radius: var(--radius);
+      }
+
+      .modes button {
+        border-radius: var(--radius-sm);
+      }
+    }
+
+    /* ======================================================== protocolli ==== */
+    .protos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .protos button {
+      font: inherit;
+      cursor: pointer;
+      text-align: left;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+      background: var(--surface-2);
+      color: var(--ink-2);
+      line-height: 1.25;
+    }
+
+    .protos button b {
+      display: block;
+      font-size: 1.02rem;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .protos button small {
+      font-size: .74rem;
+      color: var(--ink-3);
+    }
+
+    .protos button[aria-pressed="true"] {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      box-shadow: 0 0 0 3px var(--accent-ring);
+    }
+
+    .protos button[aria-pressed="true"] small {
+      color: var(--accent-strong);
+    }
+
+    .input-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .input-row .field {
+      flex: 1 1 200px;
+    }
+
+    /* ============================================================= timer ==== */
+    .timer {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 18px 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+    }
+
+    .timer .big {
+      font-size: clamp(2.4rem, 11vw, 3.6rem);
+      font-weight: 700;
+      letter-spacing: -.03em;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      color: var(--phase, var(--accent-strong));
+    }
+
+    .timer .big small {
+      display: block;
+      font-size: .9rem;
+      font-weight: 600;
+      letter-spacing: 0;
+      color: var(--ink-3);
+      margin-top: 8px;
+    }
+
+    .timer .side {
+      text-align: right;
+      font-size: .9rem;
+      color: var(--ink-2);
+      flex: 1 1 180px;
+    }
+
+    .timer .side b {
+      display: block;
+      font-size: 1.5rem;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -.02em;
+    }
+
+    @media (max-width: 520px) {
+      .timer .side {
+        text-align: left;
+      }
+    }
+
+    .bar {
+      position: relative;
+      height: 12px;
+      margin: 18px 0 8px;
+      border-radius: 999px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .bar i {
+      display: block;
+      height: 100%;
+      width: 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--p1), var(--p2) 40%, var(--p3) 70%, var(--p4));
+      transition: width .4s ease;
+    }
+
+    .bar-legend {
+      display: flex;
+      justify-content: space-between;
+      font-size: .78rem;
+      color: var(--ink-3);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .window {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .window div {
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+    }
+
+    .window span {
+      display: block;
+      font-size: .78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--ink-3);
+      margin-bottom: 2px;
+    }
+
+    .window b {
+      font-size: 1.24rem;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -.02em;
+    }
+
+    .window small {
+      display: block;
+      font-size: .8rem;
+      color: var(--ink-3);
+      font-weight: 400;
+    }
+
+    @media (max-width: 520px) {
+      .window {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ============================================================= fasi ===== */
+    .phases {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .phases li {
+      display: grid;
+      grid-template-columns: 62px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      opacity: .62;
+    }
+
+    .phases .at {
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--ph, var(--ink-3));
+      letter-spacing: -.01em;
+    }
+
+    .phases .at small {
+      display: block;
+      font-size: .72rem;
+      font-weight: 600;
+      color: var(--ink-3);
+    }
+
+    .phases b {
+      color: var(--ink);
+    }
+
+    .phases p {
+      font-size: .87rem;
+      color: var(--ink-2);
+      margin-top: 2px;
+    }
+
+    .phases li[data-state="done"] {
+      opacity: .78;
+    }
+
+    .phases li[data-state="now"] {
+      opacity: 1;
+      background: var(--surface);
+      border-color: var(--ph, var(--accent));
+      box-shadow: 0 0 0 3px var(--accent-ring);
+    }
+
+    .phases li[data-state="plan"] {
+      opacity: 1;
+    }
+
+    .phases .tag {
+      display: inline-block;
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--ph, var(--accent-strong));
+      margin-left: 8px;
+      vertical-align: 2px;
+    }
+
+    @media (max-width: 520px) {
+      .phases li {
+        grid-template-columns: 54px 1fr;
+        gap: 10px;
+      }
+    }
+
+    .state {
+      color: var(--ink-2);
+      font-size: .95rem;
+    }
+
+    .banner {
+      margin-top: 16px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: .89rem;
+      color: var(--ink-2);
+    }
+
+    .banner b {
+      color: var(--ink);
+    }
+
+    .notes {
+      font-size: .89rem;
+      color: var(--ink-2);
+    }
+
+    .notes p+p {
+      margin-top: 10px;
+    }
+
+    .site-footer {
+      margin-top: 44px;
+      border-top: 1px solid var(--border);
+      padding-block: 24px 40px;
+      color: var(--ink-3);
+      font-size: .86rem;
+    }
+
+    .site-footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .site-footer a {
+      color: var(--ink-2);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+
+    /* --------------------------------------------------- selettore lingua --- */
+    html.i18n-pending body {
+      visibility: hidden;
+    }
+
+    .header-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      gap: 2px;
+      padding: 3px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+
+    .lang-btn {
+      font: inherit;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      line-height: 1;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: none;
+      color: var(--ink-3);
+      cursor: pointer;
+    }
+
+    .lang-btn:hover {
+      color: var(--ink);
+    }
+
+    .lang-btn[aria-pressed="true"] {
+      background: var(--surface);
+      color: var(--ink);
+      border-color: var(--border-strong);
+    }
+  </style>
+  <script src="/assets/i18n.js"></script>
+</head>
+
+<body>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true"></span>
+        splynt<span class="brand-dot">.xyz</span>
+      </a>
+      <span class="header-right">
+        <span data-lang-switch></span>
+        <a class="back-link" href="/#tools" data-i18n="nav.back">← tutti i tool</a>
+      </span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow" data-i18n="hero.eyebrow">🍽️ FastHonest — gratis, senza account</p>
+        <h1 data-i18n="hero.title">Il timer del digiuno intermittente</h1>
+        <p class="lede" data-i18n="hero.lede">
+          16:8, 18:6, 20:4, OMAD: quanto manca, a che ora puoi mangiare, entro quando
+          chiudere la finestra. Le app che fanno esattamente questo chiedono fino a
+          <b>14,99 € al mese</b>: è una sottrazione tra due orari, e la fa il tuo
+          browser.
+        </p>
+      </div>
+    </section>
+
+    <div class="wrap">
+
+      <!-- =============================================== impostazioni ==== -->
+      <section class="card" aria-labelledby="setup-title">
+        <h2 id="setup-title" data-i18n="setup.title">1. Il tuo digiuno</h2>
+        <p class="card-sub" data-i18n="setup.sub">Scegli il protocollo e dimmi un orario. Nient'altro.</p>
+
+        <div class="modes" role="group" aria-label="Modalità" data-i18n-attr="aria-label:setup.modesAria">
+          <button type="button" id="mode-now" aria-pressed="true" data-i18n="setup.modeNow">⏱️ Sto digiunando</button>
+          <button type="button" id="mode-plan" aria-pressed="false" data-i18n="setup.modePlan">🎯 Voglio mangiare
+            alle…</button>
+        </div>
+
+        <div class="protos" role="group" aria-label="Protocollo" data-i18n-attr="aria-label:setup.protoAria"
+          id="protos"></div>
+
+        <div class="input-row">
+          <label class="field">
+            <span id="time-label">Ultimo boccone alle</span>
+            <input type="time" id="time" step="300">
+          </label>
+          <button class="btn btn--ghost" type="button" id="now-btn" data-i18n="setup.useNow">Ho finito adesso</button>
+        </div>
+        <p class="banner" id="hint"></p>
+      </section>
+
+      <!-- ==================================================== risultati == -->
+      <section class="card" aria-labelledby="out-title" aria-live="polite">
+        <h2 id="out-title" data-i18n="out.title">2. A che punto sei</h2>
+        <p class="card-sub" id="out-sub" data-i18n="out.sub">Inserisci un orario per far partire il conto.</p>
+        <p class="state" id="state" hidden></p>
+
+        <div id="result" hidden>
+          <div class="timer">
+            <p class="big" id="big">—<small id="big-sub"></small></p>
+            <p class="side" id="side"></p>
+          </div>
+
+          <div class="bar" aria-hidden="true"><i id="bar-fill"></i></div>
+          <p class="bar-legend"><span id="leg-a">0h</span><span id="leg-b"></span></p>
+
+          <div class="window">
+            <div>
+              <span data-i18n="out.open">Finestra aperta</span>
+              <b id="w-open">—</b>
+              <small id="w-open-sub"></small>
+            </div>
+            <div>
+              <span data-i18n="out.close">Ultimo boccone entro</span>
+              <b id="w-close">—</b>
+              <small id="w-close-sub"></small>
+            </div>
+          </div>
+
+          <p class="banner" id="verdict"></p>
+
+          <h3 style="margin-top:26px;font-size:1rem" data-i18n="out.phasesTitle">Cosa succede, ora per ora</h3>
+          <p class="card-sub" style="margin-bottom:14px" data-i18n="out.phasesSub">Gli orari sono i tuoi. Le fasi sono
+            medie di popolazione: variano molto da persona a persona.</p>
+          <ol class="phases" id="phases"></ol>
+        </div>
+      </section>
+
+      <!-- ====================================================== onestà === -->
+      <section class="card">
+        <h2 data-i18n="honest.title">Come funziona il calcolo (senza giri di parole)</h2>
+        <p class="card-sub" data-i18n="honest.sub">Quello che è dimostrato, quello che è plausibile e quello che è
+          marketing: qui sono tre cose separate.</p>
+        <div class="notes">
+          <p data-i18n="honest.p1">
+            <b>Il conto è una sottrazione.</b> «16:8» vuol dire 16 ore senza calorie e
+            8 ore in cui mangi: dall'ora del tuo ultimo boccone aggiungo le ore di
+            digiuno e ottengo quando puoi ricominciare; da lì aggiungo la finestra e
+            ottengo quando chiuderla. Tutto qui. Non c'è niente da misurare, quindi non
+            c'è niente da abbonare.
+          </p>
+          <p data-i18n="honest.p2">
+            <b>Le fasi sono medie, non il tuo corpo.</b> Le ore che vedi nella
+            cronologia vengono da studi sul metabolismo a digiuno: il glicogeno del
+            fegato che si esaurisce indicativamente tra le 12 e le 24 ore, i corpi
+            chetonici che iniziano a salire in modo misurabile dopo circa 12–16 ore.
+            Ma dipendono da cosa hai mangiato, da quanto ti muovi, dalla massa
+            muscolare e dall'allenamento: chi ha appena fatto una corsa lunga ci arriva
+            molto prima, chi ha cenato con un piatto di pasta molto dopo. Prendile come
+            un ordine di grandezza.
+          </p>
+          <p data-i18n="honest.p3">
+            <b>L'autofagia: qui le app mentono.</b> Molte app ti disegnano una barretta
+            che «sblocca l'autofagia» a un'ora precisa, tipo un videogioco. Nell'uomo
+            non è così: l'autofagia è un processo continuo che si accentua con il
+            digiuno, non un interruttore, e non esiste un modo pratico di misurarla
+            fuori da una biopsia. Le ore che circolano vengono in gran parte da studi
+            su topi. Quindi qui non troverai un contatore dell'autofagia: non perché
+            non succeda niente, ma perché nessuno può dirti a che ora succede a te.
+          </p>
+          <p data-i18n="honest.p4">
+            <b>Cosa dice davvero la ricerca.</b> Gli studi controllati che confrontano
+            il digiuno intermittente con una normale dieta a parità di calorie trovano
+            in genere risultati simili sul peso: il vantaggio principale è che avere
+            una finestra chiusa è una regola semplice, e per molte persone mangiare
+            meno viene da sé. È un modo di organizzare i pasti, non una leva metabolica
+            magica. Se ti trovi bene, ottimo; se ti fa arrivare a cena affamato e finire
+            il pacco di biscotti, non è lo strumento giusto per te.
+          </p>
+          <p data-i18n="honest.p5">
+            <b>Quando non farlo, o non farlo da solo.</b> Il digiuno intermittente non è
+            indicato in gravidanza e allattamento, in età evolutiva, con un disturbo del
+            comportamento alimentare in corso o alle spalle, con diabete trattato con
+            insulina o sulfoniluree (rischio di ipoglicemia), con sottopeso, o quando si
+            prendono farmaci che vanno assunti con il cibo. In tutti questi casi serve
+            prima un medico, non un timer. Questo strumento conta le ore: non è un
+            consiglio medico e non sostituisce nessuno.
+          </p>
+          <p data-i18n="honest.p6">
+            <b>Durante il digiuno.</b> Acqua, tè e caffè senza zucchero né latte non
+            interrompono il digiuno in alcun senso pratico. Se il tuo caffè è dopo le
+            ore in cui vuoi dormire, però, il problema si sposta:
+            <a href="/risefree/">RiseFree</a> ti dice a che ora chiudere la giornata.
+          </p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p data-i18n="footer.claim">
+        Tutto calcolato nel tuo browser: nessun account, e l'orario che scrivi non
+        esce da qui. L'unica richiesta esterna è un conteggio anonimo delle visite,
+        senza cookie.
+      </p>
+      <nav class="footer-links" aria-label="Collegamenti del footer">
+        <a href="/" data-i18n="footer.home">Home</a>
+        <a href="/supporta/" data-i18n="footer.support">Supportami</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    SplyntLang.apply({
+      "meta.title": "FastHonest — free intermittent fasting timer",
+      "meta.desc": "An intermittent fasting timer for 16:8, 18:6, 20:4 and OMAD: time left, when you can eat, when to close the window, and what actually happens hour by hour. Free, no account, no subscription.",
+      "nav.back": "← all the tools",
+      "hero.eyebrow": "🍽️ FastHonest — free, no account",
+      "hero.title": "The intermittent fasting timer",
+      "hero.lede": "16:8, 18:6, 20:4, OMAD: how long is left, when you can eat, by when to close the window. Apps that do exactly this charge up to <b>€14.99 a month</b>: it's a subtraction between two times, and your browser does it.",
+      "setup.title": "1. Your fast",
+      "setup.sub": "Pick a protocol and give me one time. Nothing else.",
+      "setup.modesAria": "Mode",
+      "setup.modeNow": "⏱️ I'm fasting",
+      "setup.modePlan": "🎯 I want to eat at…",
+      "setup.protoAria": "Protocol",
+      "setup.useNow": "Just finished",
+      "out.title": "2. Where you are",
+      "out.sub": "Enter a time to start the count.",
+      "out.open": "Window opens",
+      "out.close": "Last bite by",
+      "out.phasesTitle": "What happens, hour by hour",
+      "out.phasesSub": "The times are yours. The phases are population averages: they vary a lot from person to person.",
+      "honest.title": "How the maths works (no hand-waving)",
+      "honest.sub": "What's proven, what's plausible and what's marketing: here they're three separate things.",
+      "honest.p1": "<b>The maths is a subtraction.</b> \"16:8\" means 16 hours without calories and an 8-hour window in which you eat: I take the time of your last bite, add the fasting hours and get when you can start again; from there I add the window and get when to close it. That's all of it. There's nothing to measure, so there's nothing to charge a subscription for.",
+      "honest.p2": "<b>The phases are averages, not your body.</b> The hours in the timeline come from studies on fasting metabolism: liver glycogen running down roughly between 12 and 24 hours, ketone bodies starting to rise measurably after about 12–16 hours. But they depend on what you ate, how much you move, your muscle mass and your training: someone who just ran long gets there much sooner, someone who had a plate of pasta much later. Treat them as an order of magnitude.",
+      "honest.p3": "<b>Autophagy: this is where apps lie.</b> Plenty of apps draw you a little bar that \"unlocks autophagy\" at a precise hour, like a video game. In humans it doesn't work that way: autophagy is a continuous process that fasting turns up, not a switch, and there's no practical way to measure it outside a biopsy. The hours you see quoted largely come from mouse studies. So you won't find an autophagy counter here: not because nothing is happening, but because nobody can tell you at what hour it happens to you.",
+      "honest.p4": "<b>What the research actually says.</b> Controlled trials comparing intermittent fasting with a normal diet at equal calories generally find similar results on weight: the main advantage is that a closed window is a simple rule, and for a lot of people eating less follows by itself. It's a way of organising meals, not a magic metabolic lever. If it suits you, great; if it gets you to dinner starving and finishing the biscuits, it's not the right tool for you.",
+      "honest.p5": "<b>When not to do it, or not to do it alone.</b> Intermittent fasting is not advisable during pregnancy or breastfeeding, in childhood and adolescence, with a current or past eating disorder, with diabetes treated with insulin or sulfonylureas (risk of hypoglycaemia), when underweight, or when taking drugs that must be taken with food. In all of those cases you need a doctor first, not a timer. This tool counts hours: it is not medical advice and it replaces nobody.",
+      "honest.p6": "<b>During the fast.</b> Water, tea and coffee without sugar or milk don't break the fast in any practical sense. If your coffee lands after the hours when you want to sleep, though, the problem moves: <a href=\"/risefree/\">RiseFree</a> tells you when to close the day.",
+      "footer.claim": "Everything is worked out in your browser: no account, and the time you type never leaves this page. The only outside request is an anonymous visit count, without cookies.",
+      "footer.home": "Home",
+      "footer.support": "Support me",
+
+      /* --- stringhe generate dal codice --- */
+      "proto.1212.tag": "gentle",
+      "proto.1410.tag": "easy start",
+      "proto.168.tag": "the classic",
+      "proto.186.tag": "demanding",
+      "proto.204.tag": "hard",
+      "proto.omad.tag": "one meal",
+      "label.lastBite": "Last bite at",
+      "label.firstMeal": "I want to eat at",
+      "hint.now": "Tell me when you had your <b>last bite</b> with calories: the fast starts from there, not from when you went to bed.",
+      "hint.plan": "Tell me when you want your <b>first meal</b>: I'll work back to the time you have to stop eating the evening before.",
+      "day.today": "today",
+      "day.tomorrow": "tomorrow",
+      "day.yesterday": "yesterday",
+      "state.empty": "Enter a time to start the count.",
+      "big.elapsed": "of {total} hours of fasting",
+      "big.done": "fast complete",
+      "side.left": "left",
+      "side.firstMeal": "your first meal",
+      "side.eatingNow": "window open until",
+      "big.lastBite": "last bite, then it closes",
+      "w.openSub": "{h} after your last bite",
+      "w.closeSub": "the {h}-hour window ends here",
+      "verdict.fasting": "You're <b>{pct}%</b> through. {phase}",
+      "verdict.done": "<b>Fast complete.</b> The window is open: you have {left} before the last bite, at {close}.",
+      "verdict.plan": "To eat at <b>{first}</b> with a {fast}-hour fast, your <b>last bite</b> has to be at <b>{last}</b> ({day}). The window then closes at <b>{close}</b>.",
+      "phase.tagNow": "you are here",
+      "phase.1.name": "Digestion and absorption",
+      "phase.1.desc": "Insulin is high and the body is running on what you just ate. Nothing is being \"burned\" yet: it's being stored.",
+      "phase.2.name": "The tank runs down",
+      "phase.2.desc": "Blood sugar and insulin come back down, and the liver starts releasing its glycogen to keep glucose steady. This is the boring, entirely normal part of any night.",
+      "phase.3.name": "Switching to fat",
+      "phase.3.desc": "Liver glycogen is getting low, lipolysis picks up and the first ketones appear. The hour this happens swings wildly: an evening workout brings it forward, a large dinner pushes it back.",
+      "phase.4.name": "Light ketosis",
+      "phase.4.desc": "Ketones keep rising and become a real fuel for the brain. Many people report clear-headedness here; hunger often comes in waves rather than growing steadily.",
+      "phase.5.name": "Beyond 24 hours",
+      "phase.5.desc": "This is no longer routine intermittent fasting. Longer fasts are a different subject, with real effects on electrolytes and medication: it's a conversation for a doctor, not for a timer.",
+      "err.badTime": "Enter a valid time."
+    });
+  </script>
+
+  <script>
+    (function () {
+      "use strict";
+
+      /* Traduzione: t() con testo italiano di fallback, tf() con {segnaposto}. */
+      var t = function (key, it) {
+        return window.SplyntLang ? window.SplyntLang.t(key, it) : it;
+      };
+      function tf(key, it, vars) {
+        return t(key, it).replace(/\{(\w+)\}/g, function (_, k) {
+          return vars[k] == null ? "" : vars[k];
+        });
+      }
+
+      /* I protocolli: fast = ore di digiuno, il resto delle 24 è la finestra. */
+      var PROTOS = [
+        { id: "1212", fast: 12, tagKey: "proto.1212.tag", tag: "morbido" },
+        { id: "1410", fast: 14, tagKey: "proto.1410.tag", tag: "per iniziare" },
+        { id: "168", fast: 16, tagKey: "proto.168.tag", tag: "il classico" },
+        { id: "186", fast: 18, tagKey: "proto.186.tag", tag: "impegnativo" },
+        { id: "204", fast: 20, tagKey: "proto.204.tag", tag: "duro" },
+        { id: "omad", fast: 23, tagKey: "proto.omad.tag", tag: "un pasto" }
+      ];
+
+      /* Le fasi metaboliche: ore dall'ultimo boccone. Sono medie di popolazione,
+         e la pagina lo dice a chiare lettere: nessun «autofagia sbloccata!». */
+      var PHASES = [
+        {
+          h: 0, v: "--p1", nameKey: "phase.1.name", name: "Digestione e assorbimento",
+          descKey: "phase.1.desc",
+          desc: "L'insulina è alta e il corpo usa quello che hai appena mangiato. Non stai «bruciando» niente: stai immagazzinando."
+        },
+        {
+          h: 4, v: "--p2", nameKey: "phase.2.name", name: "Il serbatoio si svuota",
+          descKey: "phase.2.desc",
+          desc: "Glicemia e insulina scendono, e il fegato inizia a rilasciare il suo glicogeno per tenere stabile la glicemia. È la parte noiosa e del tutto normale di qualunque notte."
+        },
+        {
+          h: 12, v: "--p3", nameKey: "phase.3.name", name: "Passaggio ai grassi",
+          descKey: "phase.3.desc",
+          desc: "Il glicogeno del fegato scarseggia, la lipolisi aumenta e compaiono i primi chetoni. L'ora esatta balla parecchio: un allenamento serale la anticipa, una cena abbondante la sposta in avanti."
+        },
+        {
+          h: 16, v: "--p4", nameKey: "phase.4.name", name: "Chetosi leggera",
+          descKey: "phase.4.desc",
+          desc: "I chetoni continuano a salire e diventano un carburante vero per il cervello. Molti riferiscono lucidità in questa fase; la fame spesso va a ondate invece di crescere di continuo."
+        },
+        {
+          h: 24, v: "--p5", nameKey: "phase.5.name", name: "Oltre le 24 ore",
+          descKey: "phase.5.desc",
+          desc: "Qui non è più digiuno intermittente di routine. I digiuni lunghi sono un altro discorso, con effetti veri su elettroliti e farmaci: è una conversazione da medico, non da timer."
+        }
+      ];
+
+      var $ = function (id) { return document.getElementById(id); };
+      var STORE = "splynt.fasthonest";
+
+      var mode = "now";       /* "now" = sto digiunando | "plan" = voglio mangiare alle… */
+      var proto = PROTOS[2];  /* 16:8 */
+      var ticker = null;
+
+      /* ============================================================ helper === */
+
+      function pad(n) { return String(n).padStart(2, "0"); }
+      function fmt(d) { return pad(d.getHours()) + ":" + pad(d.getMinutes()); }
+
+      function fmtDur(ms) {
+        var min = Math.max(0, Math.round(ms / 60000));
+        var h = Math.floor(min / 60), m = min % 60;
+        return h + "h " + pad(m);
+      }
+
+      function fmtHours(h) {
+        return h % 1 === 0 ? String(h) : String(h).replace(".", ",");
+      }
+
+      function dayLabel(date) {
+        var a = new Date(); a.setHours(0, 0, 0, 0);
+        var b = new Date(date.getTime()); b.setHours(0, 0, 0, 0);
+        var diff = Math.round((b - a) / 86400000);
+        if (diff === 0) return t("day.today", "oggi");
+        if (diff === 1) return t("day.tomorrow", "domani");
+        if (diff === -1) return t("day.yesterday", "ieri");
+        return "";
+      }
+
+      /* L'HH:MM scritto, agganciato al giorno giusto.
+         Modalità "sto digiunando": l'ultimo pasto è nel passato, quindi prendo
+         l'occorrenza più recente non futura (le 21:00 scritte alle 08:00 sono
+         ieri sera). Modalità "piano": il primo pasto è nel futuro. */
+      function anchor(hhmm, future) {
+        var p = hhmm.split(":");
+        var d = new Date();
+        d.setHours(parseInt(p[0], 10), parseInt(p[1], 10), 0, 0);
+        if (future && d.getTime() <= Date.now()) d = new Date(d.getTime() + 86400000);
+        if (!future && d.getTime() > Date.now()) d = new Date(d.getTime() - 86400000);
+        return d;
+      }
+
+      function cssVar(name) {
+        return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      }
+
+      /* =========================================================== protocolli = */
+
+      function renderProtos() {
+        var host = $("protos");
+        host.innerHTML = "";
+        PROTOS.forEach(function (p) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.setAttribute("aria-pressed", String(p.id === proto.id));
+          b.innerHTML = "<b>" + p.fast + ":" + (24 - p.fast) + "</b><small>" +
+            t(p.tagKey, p.tag) + "</small>";
+          b.addEventListener("click", function () {
+            proto = p;
+            renderProtos();
+            save();
+            render();
+          });
+          host.appendChild(b);
+        });
+      }
+
+      /* ============================================================ modalità = */
+
+      function setMode(next) {
+        mode = next;
+        $("mode-now").setAttribute("aria-pressed", String(mode === "now"));
+        $("mode-plan").setAttribute("aria-pressed", String(mode === "plan"));
+        $("time-label").textContent = mode === "now"
+          ? t("label.lastBite", "Ultimo boccone alle")
+          : t("label.firstMeal", "Voglio mangiare alle");
+        $("now-btn").hidden = mode !== "now";
+        $("hint").innerHTML = mode === "now"
+          ? t("hint.now", "Dimmi quando hai dato l'<b>ultimo boccone</b> con calorie: il digiuno parte da lì, non da quando sei andato a letto.")
+          : t("hint.plan", "Dimmi quando vuoi fare il <b>primo pasto</b>: torno indietro fino all'ora in cui devi smettere di mangiare la sera prima.");
+        save();
+        render();
+      }
+
+      /* ============================================================== fasi === */
+
+      function renderPhases(startMs, nowMs, live) {
+        var host = $("phases");
+        host.innerHTML = "";
+
+        PHASES.forEach(function (ph, i) {
+          var at = new Date(startMs + ph.h * 3600000);
+          var next = PHASES[i + 1];
+          var endMs = next ? startMs + next.h * 3600000 : Infinity;
+
+          var li = document.createElement("li");
+          var state = "plan";
+          if (live) {
+            if (nowMs >= endMs) state = "done";
+            else if (nowMs >= at.getTime()) state = "now";
+            else state = "future";
+          }
+          li.dataset.state = state;
+          li.style.setProperty("--ph", cssVar(ph.v));
+
+          var when = document.createElement("div");
+          when.className = "at";
+          when.innerHTML = fmt(at) + "<small>" + ph.h + "h</small>";
+
+          var body = document.createElement("div");
+          var title = document.createElement("b");
+          title.textContent = t(ph.nameKey, ph.name);
+          body.appendChild(title);
+          if (state === "now") {
+            var tag = document.createElement("span");
+            tag.className = "tag";
+            tag.textContent = t("phase.tagNow", "sei qui");
+            body.appendChild(tag);
+          }
+          var p = document.createElement("p");
+          p.textContent = t(ph.descKey, ph.desc);
+          body.appendChild(p);
+
+          li.append(when, body);
+          host.appendChild(li);
+        });
+      }
+
+      /* ============================================================ render === */
+
+      function render() {
+        var val = $("time").value;
+        var ok = /^\d{2}:\d{2}$/.test(val);
+
+        $("result").hidden = !ok;
+        $("state").hidden = ok;
+        if (!ok) {
+          $("state").textContent = t("state.empty", "Inserisci un orario per far partire il conto.");
+          stopTick();
+          return;
+        }
+
+        var fastMs = proto.fast * 3600000;
+        var windowH = 24 - proto.fast;
+        var start, planned = mode === "plan";
+
+        if (planned) {
+          var first = anchor(val, true);
+          start = new Date(first.getTime() - fastMs);
+        } else {
+          start = anchor(val, false);
+        }
+
+        var openAt = new Date(start.getTime() + fastMs);
+        var closeAt = new Date(openAt.getTime() + windowH * 3600000);
+        var now = Date.now();
+        var elapsed = now - start.getTime();
+        var pct = Math.max(0, Math.min(100, (elapsed / fastMs) * 100));
+
+        /* --- numerone --- */
+        var phaseIdx = 0;
+        for (var i = 0; i < PHASES.length; i++) {
+          if (elapsed >= PHASES[i].h * 3600000) phaseIdx = i;
+        }
+        $("big").style.setProperty("--phase", cssVar(PHASES[phaseIdx].v));
+
+        if (planned) {
+          $("big").innerHTML = fmt(start) + "<small>" +
+            t("big.lastBite", "ultimo boccone, poi si chiude") + "</small>";
+          $("side").innerHTML = "<b>" + fmt(openAt) + "</b>" +
+            t("side.firstMeal", "il primo pasto");
+          $("bar-fill").style.width = "0%";
+        } else if (elapsed < fastMs) {
+          $("big").innerHTML = fmtDur(elapsed) + "<small>" +
+            tf("big.elapsed", "su {total} ore di digiuno", { total: fmtHours(proto.fast) }) + "</small>";
+          $("side").innerHTML = "<b>" + fmtDur(fastMs - elapsed) + "</b>" +
+            t("side.left", "al traguardo");
+          $("bar-fill").style.width = pct + "%";
+        } else {
+          $("big").innerHTML = fmtDur(fastMs) + "<small>" + t("big.done", "digiuno completato") + "</small>";
+          $("side").innerHTML = "<b>" + fmt(closeAt) + "</b>" + t("side.eatingNow", "finestra aperta fino a");
+          $("bar-fill").style.width = "100%";
+        }
+
+        $("leg-a").textContent = fmt(start);
+        $("leg-b").textContent = fmt(openAt) + " · " + fmtHours(proto.fast) + "h";
+
+        /* --- finestra --- */
+        $("w-open").textContent = fmt(openAt);
+        $("w-open-sub").textContent = dayLabel(openAt) + " · " +
+          tf("w.openSub", "{h} dopo l'ultimo boccone", { h: fmtHours(proto.fast) + "h" });
+        $("w-close").textContent = fmt(closeAt);
+        $("w-close-sub").textContent = dayLabel(closeAt) + " · " +
+          tf("w.closeSub", "qui finisce la finestra da {h} ore", { h: fmtHours(windowH) });
+
+        /* --- verdetto --- */
+        var v = $("verdict");
+        if (planned) {
+          v.innerHTML = tf("verdict.plan",
+            "Per mangiare alle <b>{first}</b> con un digiuno di {fast} ore, l'<b>ultimo boccone</b> va dato alle <b>{last}</b> ({day}). La finestra poi si chiude alle <b>{close}</b>.",
+            {
+              first: fmt(openAt), fast: fmtHours(proto.fast), last: fmt(start),
+              day: dayLabel(start) || fmt(start), close: fmt(closeAt)
+            });
+        } else if (elapsed < fastMs) {
+          v.innerHTML = tf("verdict.fasting", "Sei al <b>{pct}%</b>. {phase}", {
+            pct: Math.round(pct),
+            phase: t(PHASES[phaseIdx].nameKey, PHASES[phaseIdx].name) + "."
+          });
+        } else {
+          v.innerHTML = tf("verdict.done",
+            "<b>Digiuno completato.</b> La finestra è aperta: hai {left} prima dell'ultimo boccone, alle {close}.",
+            { left: fmtDur(closeAt.getTime() - now), close: fmt(closeAt) });
+        }
+
+        renderPhases(start.getTime(), now, !planned);
+
+        if (!planned) startTick(); else stopTick();
+      }
+
+      /* Il timer aggiorna il minuto: tenere un intervallo da un secondo per
+         mostrare i secondi sarebbe solo un modo elegante di scaldare la batteria. */
+      function startTick() {
+        if (ticker) return;
+        ticker = setInterval(render, 20000);
+      }
+
+      function stopTick() {
+        if (ticker) { clearInterval(ticker); ticker = null; }
+      }
+
+      /* ========================================================== persistenza = */
+
+      function save() {
+        try {
+          localStorage.setItem(STORE, JSON.stringify({
+            mode: mode, proto: proto.id, time: $("time").value
+          }));
+        } catch (e) { /* modalità privata: pazienza */ }
+      }
+
+      function restore() {
+        var saved = null;
+        try { saved = JSON.parse(localStorage.getItem(STORE) || "null"); } catch (e) { /* idem */ }
+        if (!saved) return;
+        for (var i = 0; i < PROTOS.length; i++) {
+          if (PROTOS[i].id === saved.proto) proto = PROTOS[i];
+        }
+        if (typeof saved.time === "string") $("time").value = saved.time;
+        return saved.mode === "plan" ? "plan" : "now";
+      }
+
+      /* =============================================================== avvio = */
+
+      $("mode-now").addEventListener("click", function () { setMode("now"); });
+      $("mode-plan").addEventListener("click", function () { setMode("plan"); });
+      $("time").addEventListener("input", function () { save(); render(); });
+      $("now-btn").addEventListener("click", function () {
+        var d = new Date();
+        d.setMinutes(Math.round(d.getMinutes() / 5) * 5, 0, 0);
+        $("time").value = fmt(d);
+        save();
+        render();
+      });
+
+      /* Tornando sulla scheda dopo ore, il conto deve essere già giusto. */
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden) render();
+      });
+
+      var startMode = restore();
+      renderProtos();
+      setMode(startMode || "now");
+    })();
+  </script>
+
+  <!-- 100% privacy-first analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+
+</body>
+
+</html>

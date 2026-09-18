@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ClaimFree — rimborso volo cancellato o in ritardo, senza commissioni</title>
+  <meta name="description"
+    content="Scopri se hai diritto alla compensazione UE fino a 600 € per volo cancellato, in ritardo o negato imbarco, e genera gratis la lettera di reclamo da mandare alla compagnia. Niente commissioni del 35%, niente account.">
+  <meta name="theme-color" content="#fff8f0" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15100c" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://splynt.xyz/claimfree/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ClaimFree — rimborso volo cancellato o in ritardo, senza commissioni">
+  <meta property="og:description"
+    content="Fino a 600 € per volo cancellato o in ritardo. Il calcolo e la lettera di reclamo, gratis: le agenzie si tengono il 35%.">
+
+  <style>
+    /* ============================================================ tokens ====
+   Stessi token di SunHonest, RiseFree e FastHonest.
+*/
+    :root {
+      color-scheme: light dark;
+      --bg: #fff8f0;
+      --bg-glow: #ffe9cf;
+      --surface: #ffffff;
+      --surface-2: #fffaf3;
+      --border: #f0dfc9;
+      --border-strong: #e4cdae;
+      --ink: #241a12;
+      --ink-2: #5c4c3e;
+      --ink-3: #8a7767;
+      --accent: #e8720c;
+      --accent-strong: #b9540a;
+      --accent-soft: #ffeeda;
+      --accent-ring: rgba(232, 114, 12, .28);
+
+      --yes: #2f7d43;
+      --maybe: #9a7a00;
+      --no: #c0342a;
+
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 1px 2px rgba(60, 38, 16, .04), 0 8px 24px rgba(60, 38, 16, .06);
+      --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #15100c;
+        --bg-glow: #2a1c10;
+        --surface: #1e1711;
+        --surface-2: #241c15;
+        --border: #362a20;
+        --border-strong: #4a392b;
+        --ink: #f6ece1;
+        --ink-2: #c6b5a5;
+        --ink-3: #9a8878;
+        --accent: #ff9a3d;
+        --accent-strong: #ffab5c;
+        --accent-soft: #33220f;
+        --accent-ring: rgba(255, 154, 61, .3);
+
+        --yes: #5cbf68;
+        --maybe: #e0bb45;
+        --no: #ff7264;
+        --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
+      }
+    }
+
+    /* ============================================================= base ===== */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--bg);
+      background-image: radial-gradient(120% 55% at 50% -10%, var(--bg-glow) 0%, transparent 60%);
+      background-repeat: no-repeat;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.2;
+      letter-spacing: -.02em;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    a {
+      color: var(--accent-strong);
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: .9em;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 820px;
+      margin-inline: auto;
+      padding-inline: 20px;
+    }
+
+    .site-header {
+      padding-block: 22px;
+    }
+
+    .site-header .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -.02em;
+    }
+
+    .brand-mark {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #ffd08a, var(--accent) 70%);
+      box-shadow: 0 0 0 4px var(--accent-ring);
+      flex: none;
+    }
+
+    .brand-dot {
+      color: var(--ink-3);
+      font-weight: 500;
+    }
+
+    .back-link {
+      font-size: .9rem;
+      font-weight: 500;
+      color: var(--ink-2);
+      text-decoration: none;
+      padding: 7px 12px;
+      border-radius: 999px;
+    }
+
+    .back-link:hover {
+      background: var(--surface-2);
+      color: var(--ink);
+    }
+
+    .hero {
+      padding-block: 18px 8px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: var(--accent-strong);
+      background: var(--accent-soft);
+      border: 1px solid var(--border);
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.9rem, 6vw, 2.7rem);
+      margin-bottom: 14px;
+    }
+
+    .hero .lede {
+      color: var(--ink-2);
+      max-width: 60ch;
+    }
+
+    /* ============================================================ cards ===== */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 4vw, 26px);
+      margin-top: 20px;
+    }
+
+    .card>h2 {
+      font-size: 1.12rem;
+      margin-bottom: 4px;
+    }
+
+    .card>h2+.card-sub {
+      color: var(--ink-3);
+      font-size: .88rem;
+      margin-bottom: 16px;
+    }
+
+    label.field {
+      display: block;
+    }
+
+    label.field>span,
+    .field>.lbl {
+      display: block;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--ink-2);
+      margin-bottom: 6px;
+    }
+
+    select,
+    input[type="text"],
+    input[type="date"],
+    textarea {
+      width: 100%;
+      font: inherit;
+      font-size: .95rem;
+      color: var(--ink);
+      background: var(--surface-2);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 11px 12px;
+      min-width: 0;
+    }
+
+    select {
+      appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, var(--ink-3) 50%), linear-gradient(135deg, var(--ink-3) 50%, transparent 50%);
+      background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+      padding-right: 34px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 12px;
+    }
+
+    .grid .full {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 560px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font: inherit;
+      font-weight: 600;
+      font-size: .95rem;
+      padding: 11px 16px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: var(--accent-strong);
+      color: #fff;
+      cursor: pointer;
+      text-decoration: none;
+      transition: filter .15s ease, transform .15s ease;
+    }
+
+    .btn:hover {
+      filter: brightness(1.08);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn--ghost {
+      background: var(--surface-2);
+      color: var(--ink);
+      border-color: var(--border-strong);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .btn {
+        color: #2a1605;
+      }
+
+      .btn--ghost {
+        color: var(--ink);
+      }
+    }
+
+    /* ========================================================= combobox ===== */
+    .combo {
+      position: relative;
+    }
+
+    .combo ul {
+      position: absolute;
+      z-index: 20;
+      left: 0;
+      right: 0;
+      top: calc(100% + 4px);
+      margin: 0;
+      padding: 4px;
+      list-style: none;
+      max-height: 280px;
+      overflow-y: auto;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+    }
+
+    .combo li {
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: .92rem;
+      line-height: 1.35;
+    }
+
+    .combo li b {
+      font-family: var(--mono);
+      font-size: .85rem;
+      color: var(--accent-strong);
+      margin-right: 8px;
+    }
+
+    .combo li small {
+      display: block;
+      color: var(--ink-3);
+      font-size: .78rem;
+    }
+
+    .combo li[aria-selected="true"],
+    .combo li:hover {
+      background: var(--accent-soft);
+    }
+
+    .combo .picked {
+      font-size: .8rem;
+      color: var(--ink-3);
+      margin-top: 6px;
+    }
+
+    .combo .picked b {
+      color: var(--yes);
+    }
+
+    /* ========================================================== segmented === */
+    .modes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 5px;
+      margin-bottom: 20px;
+    }
+
+    .modes button {
+      font: inherit;
+      font-weight: 600;
+      font-size: .92rem;
+      cursor: pointer;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: none;
+      color: var(--ink-2);
+      line-height: 1.3;
+    }
+
+    .modes button[aria-pressed="true"] {
+      background: var(--surface);
+      color: var(--ink);
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 640px) {
+      .modes {
+        grid-template-columns: 1fr;
+        border-radius: var(--radius);
+      }
+
+      .modes button {
+        border-radius: var(--radius-sm);
+      }
+    }
+
+    /* =========================================================== verdetto === */
+    .verdict {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      padding: 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--v, var(--border));
+      background: var(--surface-2);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--v, var(--accent)) 18%, transparent);
+    }
+
+    .verdict .amount {
+      font-size: clamp(2.5rem, 12vw, 3.8rem);
+      font-weight: 700;
+      letter-spacing: -.03em;
+      line-height: 1;
+      color: var(--v, var(--ink));
+      font-variant-numeric: tabular-nums;
+    }
+
+    .verdict .txt {
+      flex: 1 1 260px;
+    }
+
+    .verdict .txt b {
+      display: block;
+      font-size: 1.05rem;
+      margin-bottom: 2px;
+    }
+
+    .verdict .txt span {
+      font-size: .9rem;
+      color: var(--ink-2);
+    }
+
+    .checks {
+      list-style: none;
+      margin: 18px 0 0;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .checks li {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      font-size: .89rem;
+      color: var(--ink-2);
+    }
+
+    .checks .ico {
+      font-size: .95rem;
+      line-height: 1.5;
+      color: var(--c, var(--ink-3));
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .checks b {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .rights {
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius-sm);
+      background: var(--surface-2);
+      padding: 14px 16px;
+      font-size: .89rem;
+      color: var(--ink-2);
+    }
+
+    .rights h3 {
+      font-size: .95rem;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .rights ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .rights li+li {
+      margin-top: 4px;
+    }
+
+    .state {
+      color: var(--ink-2);
+      font-size: .95rem;
+    }
+
+    /* ============================================================ lettera == */
+    .letter textarea {
+      font-family: var(--mono);
+      font-size: .82rem;
+      line-height: 1.6;
+      min-height: 360px;
+      resize: vertical;
+      background: var(--surface-2);
+      white-space: pre-wrap;
+    }
+
+    .letter-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      align-items: center;
+    }
+
+    .copied {
+      font-size: .85rem;
+      color: var(--yes);
+      font-weight: 600;
+    }
+
+    .notes {
+      font-size: .89rem;
+      color: var(--ink-2);
+    }
+
+    .notes p+p {
+      margin-top: 10px;
+    }
+
+    .site-footer {
+      margin-top: 44px;
+      border-top: 1px solid var(--border);
+      padding-block: 24px 40px;
+      color: var(--ink-3);
+      font-size: .86rem;
+    }
+
+    .site-footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .site-footer a {
+      color: var(--ink-2);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+
+    /* --------------------------------------------------- selettore lingua --- */
+    html.i18n-pending body {
+      visibility: hidden;
+    }
+
+    .header-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      gap: 2px;
+      padding: 3px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+
+    .lang-btn {
+      font: inherit;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      line-height: 1;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: none;
+      color: var(--ink-3);
+      cursor: pointer;
+    }
+
+    .lang-btn:hover {
+      color: var(--ink);
+    }
+
+    .lang-btn[aria-pressed="true"] {
+      background: var(--surface);
+      color: var(--ink);
+      border-color: var(--border-strong);
+    }
+  </style>
+  <script src="/assets/i18n.js"></script>
+</head>
+
+<body>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true"></span>
+        splynt<span class="brand-dot">.xyz</span>
+      </a>
+      <span class="header-right">
+        <span data-lang-switch></span>
+        <a class="back-link" href="/#tools" data-i18n="nav.back">← tutti i tool</a>
+      </span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow" data-i18n="hero.eyebrow">✈️ ClaimFree — gratis, senza commissioni</p>
+        <h1 data-i18n="hero.title">Volo in ritardo o cancellato: quanto ti devono</h1>
+        <p class="lede" data-i18n="hero.lede">
+          Il Regolamento europeo 261/2004 ti dà fino a <b>600 €</b>, e non c'entra il
+          prezzo del biglietto. Le agenzie che fanno il reclamo al posto tuo si tengono
+          <b>il 35%</b> — fino a 210 € su una sola pratica. Qui vedi se hai diritto e
+          ti porti via la lettera già scritta: la mandi tu, e tieni tutto.
+        </p>
+      </div>
+    </section>
+
+    <div class="wrap">
+
+      <!-- ===================================================== il volo ==== -->
+      <section class="card" aria-labelledby="flight-title">
+        <h2 id="flight-title" data-i18n="flight.title">1. Il volo</h2>
+        <p class="card-sub" data-i18n="flight.sub">La destinazione è quella <b>finale</b> del biglietto, non lo scalo:
+          la distanza si misura fin lì.</p>
+
+        <div class="grid">
+          <div class="field combo full" id="c-dep">
+            <span class="lbl" data-i18n="flight.dep">Aeroporto di partenza</span>
+            <input type="text" id="dep" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list"
+              placeholder="Roma, FCO, Milano Malpensa…" data-i18n-attr="placeholder:flight.depPh">
+            <p class="picked" id="dep-picked"></p>
+          </div>
+          <div class="field combo full" id="c-arr">
+            <span class="lbl" data-i18n="flight.arr">Destinazione finale</span>
+            <input type="text" id="arr" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list"
+              placeholder="New York JFK, Londra, Tenerife…" data-i18n-attr="placeholder:flight.arrPh">
+            <p class="picked" id="arr-picked"></p>
+          </div>
+          <div class="field combo full" id="c-air">
+            <span class="lbl" data-i18n="flight.airline">Compagnia aerea</span>
+            <input type="text" id="airline" autocomplete="off" role="combobox" aria-expanded="false"
+              aria-autocomplete="list" placeholder="Ryanair, ITA Airways, Emirates…"
+              data-i18n-attr="placeholder:flight.airlinePh">
+            <p class="picked" id="airline-picked"></p>
+          </div>
+          <label class="field">
+            <span data-i18n="flight.date">Data del volo</span>
+            <input type="date" id="date">
+          </label>
+          <label class="field">
+            <span data-i18n="flight.number">Numero del volo (facoltativo)</span>
+            <input type="text" id="flightno" placeholder="FR 1234" autocomplete="off">
+          </label>
+        </div>
+      </section>
+
+      <!-- ================================================ cosa è successo = -->
+      <section class="card" aria-labelledby="what-title">
+        <h2 id="what-title" data-i18n="what.title">2. Cosa è successo</h2>
+        <p class="card-sub" data-i18n="what.sub">Tre casi, regole diverse. Scegli il tuo.</p>
+
+        <div class="modes" role="group" aria-label="Tipo di disservizio" data-i18n-attr="aria-label:what.modesAria">
+          <button type="button" id="ev-delay" aria-pressed="true" data-i18n="what.delay">🕐 Ritardo</button>
+          <button type="button" id="ev-cancel" aria-pressed="false" data-i18n="what.cancel">✖️ Cancellato</button>
+          <button type="button" id="ev-denied" aria-pressed="false" data-i18n="what.denied">🚫 Negato
+            imbarco</button>
+        </div>
+
+        <div class="grid">
+          <label class="field full" id="f-delay">
+            <span data-i18n="what.delayQ">Con quanto ritardo sei arrivato a destinazione finale</span>
+            <select id="delay">
+              <option value="0" data-i18n="what.d0">Meno di 3 ore</option>
+              <option value="3" selected data-i18n="what.d3">Tra 3 e 4 ore</option>
+              <option value="4" data-i18n="what.d4">Più di 4 ore</option>
+              <option value="99" data-i18n="what.d99">Non sono mai partito / ho rinunciato</option>
+            </select>
+          </label>
+
+          <label class="field full" id="f-notice" hidden>
+            <span data-i18n="what.noticeQ">Con quanto preavviso te l'hanno comunicato</span>
+            <select id="notice">
+              <option value="14" data-i18n="what.n14">Almeno 14 giorni prima</option>
+              <option value="7" data-i18n="what.n7">Tra 7 e 13 giorni prima</option>
+              <option value="0" selected data-i18n="what.n0">Meno di 7 giorni prima, o direttamente in aeroporto
+              </option>
+            </select>
+          </label>
+
+          <label class="field full" id="f-reroute" hidden>
+            <span data-i18n="what.rerouteQ">Il volo alternativo che ti hanno dato</span>
+            <select id="reroute">
+              <option value="none" selected data-i18n="what.r0">Nessuno: ho chiesto il rimborso o mi sono arrangiato
+              </option>
+              <option value="2" data-i18n="what.r2">Sono arrivato entro 2 ore dall'orario originale</option>
+              <option value="3" data-i18n="what.r3">Sono arrivato tra le 2 e le 3 ore dopo</option>
+              <option value="4" data-i18n="what.r4">Sono arrivato tra le 3 e le 4 ore dopo</option>
+              <option value="9" data-i18n="what.r9">Sono arrivato più di 4 ore dopo</option>
+            </select>
+          </label>
+
+          <label class="field full" id="f-volunteer" hidden>
+            <span data-i18n="what.volQ">Hai rinunciato al posto volontariamente?</span>
+            <select id="volunteer">
+              <option value="no" selected data-i18n="what.vol0">No: mi hanno lasciato a terra contro la mia volontà
+              </option>
+              <option value="yes" data-i18n="what.vol1">Sì, in cambio di un compenso offerto dalla compagnia</option>
+            </select>
+          </label>
+
+          <label class="field full">
+            <span data-i18n="what.reasonQ">Che motivo ti ha dato la compagnia</span>
+            <select id="reason">
+              <option value="none" selected data-i18n="what.rs0">Nessuna spiegazione, o una frase generica</option>
+              <option value="tech" data-i18n="what.rs1">Guasto tecnico dell'aereo</option>
+              <option value="ops" data-i18n="what.rs2">Motivi operativi, equipaggio, aereo arrivato tardi</option>
+              <option value="strikeair" data-i18n="what.rs3">Sciopero del personale della compagnia</option>
+              <option value="strikeext" data-i18n="what.rs4">Sciopero esterno: controllori di volo, aeroporto, handling
+              </option>
+              <option value="weather" data-i18n="what.rs5">Maltempo</option>
+              <option value="safety" data-i18n="what.rs6">Sicurezza, impatto con volatili, emergenza medica</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <!-- =================================================== il verdetto == -->
+      <section class="card" aria-labelledby="out-title" aria-live="polite">
+        <h2 id="out-title" data-i18n="out.title">3. Quanto ti devono</h2>
+        <p class="card-sub" id="out-sub" data-i18n="out.sub">Scegli partenza, destinazione e compagnia per vedere il
+          conto.</p>
+        <p class="state" id="state" hidden></p>
+
+        <div id="result" hidden>
+          <div class="verdict" id="verdict">
+            <p class="amount" id="amount">—</p>
+            <p class="txt"><b id="v-title"></b><span id="v-sub"></span></p>
+          </div>
+          <ul class="checks" id="checks"></ul>
+          <div class="rights" id="rights"></div>
+        </div>
+      </section>
+
+      <!-- ===================================================== la lettera = -->
+      <section class="card letter" id="letter-card" hidden>
+        <h2 data-i18n="letter.title">4. La lettera, già scritta</h2>
+        <p class="card-sub" data-i18n="letter.sub">Aggiungi i tuoi dati, copiala e mandala alla compagnia. È l'unica
+          cosa che le agenzie fanno davvero, e per cui si tengono il 35%.</p>
+
+        <div class="grid" style="margin-bottom:16px">
+          <label class="field">
+            <span data-i18n="letter.name">Nome e cognome</span>
+            <input type="text" id="pax" placeholder="Mario Rossi" autocomplete="off">
+          </label>
+          <label class="field">
+            <span data-i18n="letter.pnr">Codice di prenotazione</span>
+            <input type="text" id="pnr" placeholder="ABC123" autocomplete="off">
+          </label>
+        </div>
+
+        <label class="field">
+          <span data-i18n="letter.text">Testo del reclamo</span>
+          <textarea id="letter" spellcheck="false" readonly></textarea>
+        </label>
+
+        <div class="letter-actions">
+          <button class="btn" type="button" id="copy" data-i18n="letter.copy">Copia la lettera</button>
+          <a class="btn btn--ghost" id="mail" href="#" data-i18n="letter.mail">Aprila nella mail</a>
+          <span class="copied" id="copied" hidden data-i18n="letter.copied">Copiata ✓</span>
+        </div>
+      </section>
+
+      <!-- ====================================================== onestà === -->
+      <section class="card">
+        <h2 data-i18n="honest.title">Come funziona il calcolo (senza giri di parole)</h2>
+        <p class="card-sub" data-i18n="honest.sub">Cos'è certo, cosa dipende da un giudice e cosa questo tool non può
+          sapere.</p>
+        <div class="notes">
+          <p data-i18n="honest.p1">
+            <b>Gli importi non sono un'opinione: stanno nel testo.</b> L'articolo 7 del
+            Regolamento (CE) 261/2004 fissa <b>250 €</b> fino a 1500 km, <b>400 €</b>
+            per le tratte intraeuropee sopra i 1500 km e per le altre tra 1500 e 3500 km,
+            <b>600 €</b> oltre i 3500 km fuori dall'Unione. La distanza è quella in linea
+            d'aria tra partenza e destinazione <i>finale</i>, che qui calcolo con la
+            formula dell'emisenoverso sulle coordinate reali dei due aeroporti. Il prezzo
+            del biglietto non entra nel conto: chi ha pagato 29 € prende quanto chi ne ha
+            pagati 900.
+          </p>
+          <p data-i18n="honest.p2">
+            <b>Quando si applica.</b> Sempre se parti da un aeroporto dell'Unione, dello
+            Spazio economico europeo o dalla Svizzera, con qualunque compagnia. Se invece
+            parti da fuori e atterri qui, solo se la compagnia è europea: un Dubai–Roma
+            con Emirates non è coperto, lo stesso volo con ITA sì. Per il Regno Unito
+            dopo la Brexit vale una copia quasi identica della norma, con importi in
+            sterline (220, 350 e 520 £).
+          </p>
+          <p data-i18n="honest.p3">
+            <b>Tre ore, non tre ore di partenza.</b> Il Regolamento parla di cancellazione,
+            ma la Corte di giustizia (sentenza <i>Sturgeon</i>, 2009) ha esteso la
+            compensazione ai ritardi di almeno tre ore <i>all'arrivo</i>: conta l'ora in
+            cui si apre il portellone a destinazione, non quella in cui sei decollato. Se
+            sei partito con quattro ore di ritardo e ne hai recuperate due in volo, non
+            spetta niente. È la ragione per cui vale la pena guardare l'orario vero di
+            atterraggio prima di rinunciare.
+          </p>
+          <p data-i18n="honest.p4">
+            <b>Le «circostanze eccezionali» sono più strette di quanto ti dicono.</b>
+            L'articolo 5.3 esonera la compagnia solo per eventi fuori dal suo controllo, e
+            <b>l'onere della prova è suo</b>, non tuo. Maltempo, sciopero dei controllori
+            di volo, chiusure per sicurezza: di norma sì. Ma un guasto tecnico ordinario
+            no — la Corte l'ha detto in <i>Wallentin-Hermann</i> (2008) e ribadito in
+            <i>van der Lans</i> (2015): i guasti fanno parte del mestiere di far volare
+            aerei. E lo sciopero del <i>proprio</i> personale non è eccezionale
+            (<i>Airhelp c. SAS</i>, 2021). Se la risposta che hai ricevuto è
+            «problemi operativi», non è una difesa: è una frase.
+          </p>
+          <p data-i18n="honest.p5">
+            <b>Cosa questo tool non sa.</b> Non sa se il tuo aereo è davvero decollato in
+            ritardo, non vede il tuo biglietto e non conosce la vera causa del disservizio:
+            usa quello che scrivi tu. Il verdetto è una stima ben fondata, non una
+            consulenza legale e nemmeno una promessa di pagamento. Se la compagnia
+            contesta la causa, decide in ultima analisi un giudice. Due cose da sapere
+            comunque: la richiesta si prescrive, e il termine cambia da Paese a Paese
+            (in Italia si applicano <b>due anni</b>, in Germania tre, in Francia e Spagna
+            cinque, nel Regno Unito sei); e se la compagnia non risponde o dice no, il
+            passo successivo non è un'agenzia, è l'organismo nazionale — in Italia
+            l'<b>ENAC</b> — o il giudice di pace, dove la causa la puoi fare da solo.
+          </p>
+          <p data-i18n="honest.p6">
+            <b>Perché è gratis.</b> Perché è una tabella di distanze e qualche condizione:
+            non c'è nessun lavoro che valga il 35% di 600 €. Le agenzie hanno un vantaggio
+            vero solo quando la compagnia fa muro e bisogna andare in causa, ed è giusto
+            che si facciano pagare per quello. Ma per una lettera e un bonifico, no. Se
+            tra due mesi ti arriva il bonifico e ti va, <a href="/supporta/">offrimi un
+              caffè</a>: è tutto qui il modello di business.
+          </p>
+          <p data-i18n="honest.p7">
+            Dati degli aeroporti e delle compagnie da <a href="https://openflights.org/data"
+              rel="noopener">OpenFlights</a> (licenza ODbL), con le correzioni per le
+            compagnie nate o cambiate di recente.
+          </p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p data-i18n="footer.claim">
+        Tutto calcolato nel tuo browser: nessun account, e i dati del tuo volo non
+        escono da qui — la lettera la scrive questa pagina, non un server.
+      </p>
+      <nav class="footer-links" aria-label="Collegamenti del footer">
+        <a href="/" data-i18n="footer.home">Home</a>
+        <a href="/supporta/" data-i18n="footer.support">Supportami</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    SplyntLang.apply({
+      "meta.title": "ClaimFree — flight delay and cancellation compensation, no commission",
+      "meta.desc": "Find out whether you're owed up to €600 for a cancelled or delayed flight or denied boarding, and generate the claim letter to send to the airline, for free. No 35% commission, no account.",
+      "nav.back": "← all the tools",
+      "hero.eyebrow": "✈️ ClaimFree — free, no commission",
+      "hero.title": "Delayed or cancelled flight: what they owe you",
+      "hero.lede": "European Regulation 261/2004 gives you up to <b>€600</b>, and it has nothing to do with the ticket price. The agencies that file the claim for you keep <b>35%</b> — up to €210 on a single case. Here you see whether you qualify and walk away with the letter already written: you send it, and you keep all of it.",
+      "flight.title": "1. The flight",
+      "flight.sub": "The destination is the <b>final</b> one on your ticket, not the connection: distance is measured all the way there.",
+      "flight.dep": "Departure airport",
+      "flight.depPh": "Rome, FCO, Milan Malpensa…",
+      "flight.arr": "Final destination",
+      "flight.arrPh": "New York JFK, London, Tenerife…",
+      "flight.airline": "Airline",
+      "flight.airlinePh": "Ryanair, ITA Airways, Emirates…",
+      "flight.date": "Date of the flight",
+      "flight.number": "Flight number (optional)",
+      "what.title": "2. What happened",
+      "what.sub": "Three cases, different rules. Pick yours.",
+      "what.modesAria": "Type of disruption",
+      "what.delay": "🕐 Delay",
+      "what.cancel": "✖️ Cancelled",
+      "what.denied": "🚫 Denied boarding",
+      "what.delayQ": "How late you reached your final destination",
+      "what.d0": "Less than 3 hours",
+      "what.d3": "Between 3 and 4 hours",
+      "what.d4": "More than 4 hours",
+      "what.d99": "I never travelled / I gave up",
+      "what.noticeQ": "How much notice they gave you",
+      "what.n14": "At least 14 days before",
+      "what.n7": "Between 7 and 13 days before",
+      "what.n0": "Less than 7 days before, or at the airport",
+      "what.rerouteQ": "The alternative flight they offered",
+      "what.r0": "None: I asked for a refund or sorted myself out",
+      "what.r2": "I arrived within 2 hours of the original time",
+      "what.r3": "I arrived between 2 and 3 hours later",
+      "what.r4": "I arrived between 3 and 4 hours later",
+      "what.r9": "I arrived more than 4 hours later",
+      "what.volQ": "Did you give up your seat voluntarily?",
+      "what.vol0": "No: I was left behind against my will",
+      "what.vol1": "Yes, in exchange for compensation offered by the airline",
+      "what.reasonQ": "What reason the airline gave you",
+      "what.rs0": "No explanation, or a generic phrase",
+      "what.rs1": "Technical fault on the aircraft",
+      "what.rs2": "Operational reasons, crew, late inbound aircraft",
+      "what.rs3": "Strike by the airline's own staff",
+      "what.rs4": "External strike: air traffic control, airport, ground handling",
+      "what.rs5": "Bad weather",
+      "what.rs6": "Safety, bird strike, medical emergency",
+      "out.title": "3. What they owe you",
+      "out.sub": "Pick departure, destination and airline to see the figure.",
+      "letter.title": "4. The letter, already written",
+      "letter.sub": "Add your details, copy it and send it to the airline. It's the only thing the agencies actually do, and what they keep 35% for.",
+      "letter.name": "Full name",
+      "letter.pnr": "Booking reference",
+      "letter.text": "Text of the claim",
+      "letter.copy": "Copy the letter",
+      "letter.mail": "Open it in your mail app",
+      "letter.copied": "Copied ✓",
+      "honest.title": "How the maths works (no hand-waving)",
+      "honest.sub": "What's certain, what a judge decides, and what this tool cannot know.",
+      "honest.p1": "<b>The amounts aren't an opinion: they're in the text.</b> Article 7 of Regulation (EC) 261/2004 sets <b>€250</b> up to 1500 km, <b>€400</b> for intra-European routes over 1500 km and for other routes between 1500 and 3500 km, and <b>€600</b> beyond 3500 km outside the Union. The distance is the great-circle distance between departure and <i>final</i> destination, which I work out here with the haversine formula on the real coordinates of the two airports. The ticket price doesn't enter into it: someone who paid €29 gets the same as someone who paid €900.",
+      "honest.p2": "<b>When it applies.</b> Always if you depart from an airport in the Union, the European Economic Area or Switzerland, with any airline. If instead you depart from outside and land here, only if the airline is European: a Dubai–Rome on Emirates isn't covered, the same flight on ITA is. For the United Kingdom after Brexit a near-identical copy of the rule applies, with amounts in pounds (£220, £350 and £520).",
+      "honest.p3": "<b>Three hours, not three hours of departure.</b> The Regulation talks about cancellation, but the Court of Justice (the <i>Sturgeon</i> judgment, 2009) extended compensation to delays of at least three hours <i>on arrival</i>: what counts is when the door opens at your destination, not when you took off. If you left four hours late and made two of them up in the air, nothing is owed. That's why it's worth checking the real landing time before giving up.",
+      "honest.p4": "<b>\"Extraordinary circumstances\" are narrower than they tell you.</b> Article 5.3 only excuses the airline for events outside its control, and <b>the burden of proof is on them</b>, not you. Bad weather, air traffic control strikes, security closures: usually yes. But an ordinary technical fault, no — the Court said so in <i>Wallentin-Hermann</i> (2008) and repeated it in <i>van der Lans</i> (2015): breakdowns are part of the business of flying aircraft. And a strike by the airline's <i>own</i> staff is not extraordinary (<i>Airhelp v SAS</i>, 2021). If the answer you got was \"operational reasons\", that isn't a defence: it's a phrase.",
+      "honest.p5": "<b>What this tool doesn't know.</b> It doesn't know whether your aircraft really left late, it can't see your ticket and it doesn't know the true cause of the disruption: it uses what you type. The verdict is a well-founded estimate, not legal advice and not a promise of payment. If the airline disputes the cause, a judge decides in the end. Two things worth knowing anyway: claims expire, and the deadline changes from country to country (in Italy <b>two years</b> apply, in Germany three, in France and Spain five, in the United Kingdom six); and if the airline doesn't reply or says no, the next step isn't an agency, it's the national enforcement body — in Italy <b>ENAC</b> — or the small claims court, where you can act on your own.",
+      "honest.p6": "<b>Why it's free.</b> Because it's a distance table and a handful of conditions: there's no work here worth 35% of €600. The agencies have a real advantage only when the airline digs in and it has to go to court, and it's fair that they charge for that. But for a letter and a bank transfer, no. If the money lands in two months and you feel like it, <a href=\"/supporta/\">buy me a coffee</a>: that's the whole business model.",
+      "honest.p7": "Airport and airline data from <a href=\"https://openflights.org/data\" rel=\"noopener\">OpenFlights</a> (ODbL licence), with corrections for airlines that were founded or changed recently.",
+      "footer.claim": "Everything is worked out in your browser: no account, and your flight details never leave this page — the letter is written by this page, not by a server.",
+      "footer.home": "Home",
+      "footer.support": "Support me",
+
+      /* --- stringhe generate dal codice --- */
+      "state.need": "Pick departure airport, final destination and airline.",
+      "combo.none": "No airport found. Try the three-letter code (FCO, LHR, JFK…).",
+      "combo.noneAir": "Airline not found. Type the first letters of the name.",
+      "picked.ok": "{name} · {code} — {juris}",
+      "juris.E": "EU/EEA: Regulation 261/2004 applies here",
+      "juris.U": "United Kingdom: UK261 applies here",
+      "juris.X": "outside the EU",
+      "juris.airE": "European airline",
+      "juris.airU": "UK airline",
+      "juris.airX": "non-European airline",
+      "v.yes": "You are owed compensation",
+      "v.likely": "You are very probably owed compensation",
+      "v.maybe": "It depends on what the airline can prove",
+      "v.no": "No compensation due",
+      "v.sub.yes": "{dist} km · {band}. Ask for it: you have nothing to lose but a letter.",
+      "v.sub.no": "You still have the other rights listed below.",
+      "v.sub.maybe": "{dist} km · {band}. Worth claiming anyway: the burden of proof is theirs.",
+      "band.1": "up to 1500 km",
+      "band.2": "1500–3500 km",
+      "band.3": "over 3500 km",
+      "band.2eu": "over 1500 km within Europe",
+      "chk.regimeE": "<b>Regulation 261/2004 applies.</b> {why}",
+      "chk.regimeU": "<b>UK261 applies</b> (the British copy of the rule). {why}",
+      "chk.regimeNo": "<b>The Regulation does not apply to this flight.</b> You departed outside the EU with a non-European airline: in that case European law has no hold. Check the rules of the country of departure — Brazil, Canada and Turkey have their own.",
+      "why.dep": "You departed from {air}, so the rule covers you whatever the airline.",
+      "why.arr": "You landed at {air} with a European airline, so the rule covers you.",
+      "why.arrU": "You landed at {air} with a European or British airline.",
+      "chk.dist": "<b>{dist} km</b> in a straight line from {a} to {b}: {band}, so the figure is <b>{amount}</b>.",
+      "chk.delay3": "<b>Three hours or more on arrival.</b> That's the threshold set by the Sturgeon judgment: from there, a delay is worth the same as a cancellation.",
+      "chk.delayNo": "<b>Under three hours on arrival.</b> Below that threshold no compensation is due, however annoying the day was.",
+      "chk.delayNever": "<b>You never travelled.</b> After five hours of delay you're entitled to a refund of the ticket; compensation, on the other hand, follows the cancellation rules — if the airline cancelled, switch to the tab above.",
+      "chk.notice14": "<b>They told you at least 14 days ahead.</b> That's the one case the Regulation excludes outright: no compensation, whatever the reason.",
+      "chk.notice7": "<b>Between 7 and 13 days' notice.</b> Compensation is due unless the replacement flight left no more than 2 hours early and got you there less than 4 hours late.",
+      "chk.notice0": "<b>Less than 7 days' notice.</b> Compensation is due unless the replacement got you there less than 2 hours late.",
+      "chk.rerouteOk": "<b>The alternative flight got you there close enough to the original time</b> ({win}), so the airline is off the hook for this one.",
+      "chk.rerouteHalf": "<b>Half the amount.</b> Article 7.2 halves the compensation when the rerouting lands you within {win} of the original arrival — so {full} becomes {amount}.",
+      "chk.rerouteFull": "<b>You arrived well beyond the limits</b> the Regulation sets for rerouting, so the full amount stands.",
+      "chk.deniedOk": "<b>Denied boarding against your will.</b> This is the clearest case in the whole Regulation: with a confirmed booking and on-time check-in, compensation is due immediately, and no \"extraordinary circumstance\" excuses it.",
+      "chk.deniedVol": "<b>You volunteered.</b> When you give up your seat in exchange for a deal, you accept that deal instead of the statutory compensation: the Regulation no longer applies.",
+      "chk.reasonOk": "<b>{reason}.</b> This is not an extraordinary circumstance: the Court of Justice has ruled on it. The airline has to pay.",
+      "chk.reasonNone": "<b>They gave you no real explanation.</b> Good: the burden of proving an extraordinary circumstance is on the airline, not on you. Claim, and make them prove it.",
+      "chk.reasonExtra": "<b>{reason}.</b> If the airline can actually prove it, this excuses it and nothing is due. But a generic answer isn't proof: ask in writing for the documented cause, and if it doesn't arrive, insist.",
+      "chk.old": "<b>The flight is {years} years old.</b> In Italy the deadline is normally two years; in other countries it runs from three to six. Check the limit in the country that applies before writing.",
+      "reason.tech": "Technical fault",
+      "reason.ops": "Operational reasons or late inbound aircraft",
+      "reason.strikeair": "Strike by the airline's own staff",
+      "reason.strikeext": "External strike",
+      "reason.weather": "Bad weather",
+      "reason.safety": "Safety or bird strike",
+      "rights.title": "Whatever happens, these rights are yours",
+      "rights.care": "<b>Assistance while you wait:</b> food and drink, and a hotel with transfers if you have to stay overnight — from 2 hours' delay on short routes, 3 on medium, 4 on long. These are owed even when the cause is extraordinary: weather does not suspend dinner.",
+      "rights.refund": "<b>Refund:</b> from 5 hours' delay, and always when a flight is cancelled, you can turn down the trip and get the ticket price back within 7 days — plus the return leg, if going on alone makes no sense.",
+      "rights.extra": "<b>Real expenses:</b> compensation doesn't cover a missed hotel or a booking lost at the far end. Those you claim separately, with receipts, under the Montreal Convention.",
+      "rights.enac": "<b>If they say no:</b> in Italy the complaint goes to ENAC, in each EU country to its own enforcement body, and in the end to the justice of the peace. No agency is required at any point.",
+      "letter.subject": "Claim for compensation under Regulation (EC) 261/2004 — flight {flight} of {date}",
+      "letter.body": "To the Customer Relations Department of {airline}\n\nSubject: {subject}\n\nDear Sir or Madam,\n\nI am writing as a passenger on flight {flight} of {date}, from {dep} to {arr}, booking reference {pnr}.\n\n{facts}\n\nUnder Article 7 of Regulation (EC) No 261/2004, the great-circle distance between departure and final destination being approximately {dist} km, I therefore claim compensation of {amount}.\n\nI remind you that under Article 5(3) the carrier is released from this obligation only if it proves that the disruption was caused by extraordinary circumstances which could not have been avoided even if all reasonable measures had been taken, and that the burden of that proof lies with the carrier. A generic reference to operational reasons does not meet it.\n\nI ask you to pay the amount due by bank transfer within 14 days of receipt of this letter, to the account I will provide on your confirmation. Failing a reply within that period I will refer the matter to the competent national enforcement body and, if necessary, to the courts, with the related costs charged to you.\n\nI enclose a copy of the booking and of the boarding pass.\n\nYours faithfully,\n\n{pax}\n\nDate: {today}",
+      "facts.delay": "The flight reached its final destination with a delay of more than three hours, which under the Court of Justice's settled case-law (Sturgeon and following) gives rise to the same right to compensation as a cancellation.",
+      "facts.cancel": "The flight was cancelled and I was informed less than fourteen days before the scheduled departure, without being offered rerouting within the limits set by Article 5(1)(c) of the Regulation.",
+      "facts.denied": "I was denied boarding against my will despite holding a confirmed reservation and presenting myself for check-in on time, as provided for in Article 4 of the Regulation.",
+      "placeholder.pax": "[your name and surname]",
+      "placeholder.pnr": "[booking reference]",
+      "placeholder.flight": "[flight number]",
+      "placeholder.date": "[date of the flight]"
+    });
+  </script>
+
+  <script src="/claimfree/data.js"></script>
+  <script>
+    (function () {
+      "use strict";
+
+      var t = function (key, it) {
+        return window.SplyntLang ? window.SplyntLang.t(key, it) : it;
+      };
+      function tf(key, it, vars) {
+        return t(key, it).replace(/\{(\w+)\}/g, function (_, k) {
+          return vars[k] == null ? "" : vars[k];
+        });
+      }
+
+      var $ = function (id) { return document.getElementById(id); };
+      var STORE = "splynt.claimfree";
+      var EN = !!(window.SplyntLang && window.SplyntLang.lang === "en");
+
+      /* ========================================================== dataset ==== */
+
+      var D = window.CLAIMFREE_DATA || { airports: "", airlines: "" };
+
+      /* IATA|nome|citta|paese|giurisdizione|lat|lon|rotte */
+      var AIRPORTS = D.airports.split("\n").filter(Boolean).map(function (r) {
+        var p = r.split("|");
+        return {
+          code: p[0], name: p[1], city: p[2], cc: p[3], j: p[4],
+          lat: parseFloat(p[5]), lon: parseFloat(p[6]), w: parseInt(p[7], 10) || 0
+        };
+      });
+
+      /* IATA|nome|paese|giurisdizione */
+      var AIRLINES = D.airlines.split("\n").filter(Boolean).map(function (r) {
+        var p = r.split("|");
+        return { code: p[0], name: p[1], cc: p[2], j: p[3] };
+      });
+
+      /* Gli italiani cercano «Monaco», non «Munich»: senza questo il campo
+         sembra rotto proprio sulle città più cercate. */
+      var ALIAS = {
+        Rome: "Roma", Milan: "Milano", Turin: "Torino", Florence: "Firenze",
+        Venice: "Venezia", Naples: "Napoli", Genoa: "Genova", Padua: "Padova",
+        Munich: "Monaco di Baviera", Cologne: "Colonia", Frankfurt: "Francoforte",
+        Nuremberg: "Norimberga", Paris: "Parigi", Lyon: "Lione", Marseille: "Marsiglia",
+        Nice: "Nizza", Bordeaux: "Bordò", Strasbourg: "Strasburgo", London: "Londra",
+        Edinburgh: "Edimburgo", Dublin: "Dublino", Lisbon: "Lisbona", Seville: "Siviglia",
+        Vienna: "Vienna Wien", Prague: "Praga", Warsaw: "Varsavia", Krakow: "Cracovia",
+        Copenhagen: "Copenaghen", Stockholm: "Stoccolma", Gothenburg: "Goteborg",
+        Athens: "Atene", Thessaloniki: "Salonicco", Bucharest: "Bucarest",
+        Budapest: "Budapest", Zagreb: "Zagabria", Belgrade: "Belgrado",
+        Istanbul: "Istanbul", Moscow: "Mosca", "Saint Petersburg": "San Pietroburgo",
+        Geneva: "Ginevra", Zurich: "Zurigo", Basel: "Basilea", Brussels: "Bruxelles",
+        Antwerp: "Anversa", "The Hague": "Aia", Luxembourg: "Lussemburgo",
+        "New York": "Nuova York", Philadelphia: "Filadelfia", Cairo: "Il Cairo",
+        Marrakech: "Marrakesh", Algiers: "Algeri", Tunis: "Tunisi", Tripoli: "Tripoli",
+        Beijing: "Pechino", Shanghai: "Sciangai", Tokyo: "Tokio", Seoul: "Seul",
+        Bangkok: "Bangkok", "Ho Chi Minh City": "Saigon", Mumbai: "Bombay",
+        Kolkata: "Calcutta", Delhi: "Nuova Delhi", Havana: "Avana",
+        "Mexico City": "Citta del Messico", Lima: "Lima", Santiago: "Santiago",
+        "Buenos Aires": "Buenos Aires", "Sao Paulo": "San Paolo", Salvador: "Salvador",
+        Johannesburg: "Johannesburg", "Cape Town": "Citta del Capo", Nairobi: "Nairobi"
+      };
+
+      /* Testo di ricerca: senza accenti, minuscolo, con l'alias italiano dentro. */
+      function norm(s) {
+        return (s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+      }
+
+      AIRPORTS.forEach(function (a) {
+        a.q = norm(a.code + " " + a.name + " " + a.city + " " +
+          (ALIAS[a.city] || ALIAS[a.name] || ""));
+        a.label = a.name + (a.city && norm(a.name).indexOf(norm(a.city)) < 0 ? " · " + a.city : "");
+      });
+      AIRLINES.forEach(function (a) { a.q = norm(a.code + " " + a.name); a.w = 0; });
+
+      var BY_CODE = {};
+      AIRPORTS.forEach(function (a) { BY_CODE[a.code] = a; });
+
+      /* ======================================================== combobox ===== */
+
+      function Combo(id, list, onPick, isAirline) {
+        var input = $(id);
+        var host = input.parentNode;
+        var picked = $(id + "-picked");
+        var box = null, items = [], cursor = -1;
+        var self = { value: null };
+
+        function close() {
+          if (box) { box.remove(); box = null; }
+          input.setAttribute("aria-expanded", "false");
+          cursor = -1;
+        }
+
+        function choose(a) {
+          self.value = a;
+          input.value = isAirline ? a.name : a.label + " (" + a.code + ")";
+          var jkey = a.j === "E" ? (isAirline ? "juris.airE" : "juris.E")
+            : a.j === "U" ? (isAirline ? "juris.airU" : "juris.U")
+              : (isAirline ? "juris.airX" : "juris.X");
+          var jit = a.j === "E"
+            ? (isAirline ? "compagnia europea" : "UE/SEE: qui vale il Regolamento 261/2004")
+            : a.j === "U"
+              ? (isAirline ? "compagnia britannica" : "Regno Unito: qui vale UK261")
+              : (isAirline ? "compagnia extraeuropea" : "fuori dall'Unione europea");
+          picked.innerHTML = "<b>✓</b> " + a.code + " — " + t(jkey, jit);
+          close();
+          onPick();
+        }
+
+        function open(q) {
+          close();
+          var n = norm(q);
+          if (n.length < 2) return;
+
+          /* Rilevanza: codice IATA esatto, poi chi inizia una parola con quello
+             che hai scritto, poi il resto. A parità vince lo scalo con più
+             rotte, altrimenti «roma» risponde Roma (Australia), non Fiumicino. */
+          var hits = [];
+          for (var i = 0; i < list.length; i++) {
+            var a = list[i], rank;
+            if (a.code.toLowerCase() === n) rank = 0;
+            else if ((" " + a.q).indexOf(" " + n) >= 0) rank = 1;
+            else if (a.q.indexOf(n) >= 0) rank = 2;
+            else continue;
+            hits.push({ a: a, rank: rank });
+          }
+          hits.sort(function (x, y) { return x.rank - y.rank || y.a.w - x.a.w; });
+          items = hits.slice(0, 8).map(function (h) { return h.a; });
+
+          box = document.createElement("ul");
+          box.setAttribute("role", "listbox");
+          box.id = id + "-list";
+
+          if (!items.length) {
+            var li = document.createElement("li");
+            li.textContent = isAirline
+              ? t("combo.noneAir", "Compagnia non trovata. Scrivi le prime lettere del nome.")
+              : t("combo.none", "Nessun aeroporto trovato. Prova con il codice di tre lettere (FCO, LHR, JFK…).");
+            li.style.cursor = "default";
+            box.appendChild(li);
+          } else {
+            items.forEach(function (a, idx) {
+              var li = document.createElement("li");
+              li.setAttribute("role", "option");
+              li.setAttribute("aria-selected", "false");
+              li.innerHTML = "<b>" + a.code + "</b>" + (isAirline ? a.name : a.label) +
+                (isAirline ? "" : "<small>" + a.cc + "</small>");
+              li.addEventListener("mousedown", function (e) { e.preventDefault(); choose(items[idx]); });
+              box.appendChild(li);
+            });
+          }
+          host.appendChild(box);
+          input.setAttribute("aria-expanded", "true");
+          input.setAttribute("aria-controls", box.id);
+        }
+
+        function move(d) {
+          if (!box || !items.length) return;
+          cursor = (cursor + d + items.length) % items.length;
+          [].forEach.call(box.children, function (li, i) {
+            li.setAttribute("aria-selected", String(i === cursor));
+          });
+          box.children[cursor].scrollIntoView({ block: "nearest" });
+        }
+
+        input.addEventListener("input", function () {
+          self.value = null;
+          picked.textContent = "";
+          open(input.value);
+          onPick();
+        });
+        input.addEventListener("keydown", function (e) {
+          if (e.key === "ArrowDown") { e.preventDefault(); move(1); }
+          else if (e.key === "ArrowUp") { e.preventDefault(); move(-1); }
+          else if (e.key === "Enter") {
+            if (items.length) { e.preventDefault(); choose(items[cursor < 0 ? 0 : cursor]); }
+          } else if (e.key === "Escape") close();
+        });
+        input.addEventListener("blur", function () { setTimeout(close, 120); });
+
+        self.set = function (code) {
+          for (var i = 0; i < list.length; i++) {
+            if (list[i].code === code) { choose(list[i]); return; }
+          }
+        };
+        return self;
+      }
+
+      /* ========================================================= distanza ==== */
+
+      /* Emisenoverso: il Regolamento parla di «distanza ortodromica», cioè questa. */
+      function greatCircle(a, b) {
+        var R = 6371;
+        var rad = Math.PI / 180;
+        var dLat = (b.lat - a.lat) * rad, dLon = (b.lon - a.lon) * rad;
+        var s = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos(a.lat * rad) * Math.cos(b.lat * rad) *
+          Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        return Math.round(2 * R * Math.asin(Math.min(1, Math.sqrt(s))));
+      }
+
+      /* ======================================================= valutazione === */
+
+      var EXTRA = { weather: 1, strikeext: 1, safety: 1 };   /* circostanze eccezionali */
+
+      var REASON_IT = {
+        tech: "Guasto tecnico", ops: "Motivi operativi o aereo arrivato tardi",
+        strikeair: "Sciopero del personale della compagnia", strikeext: "Sciopero esterno",
+        weather: "Maltempo", safety: "Sicurezza o impatto con volatili"
+      };
+
+      /* In italiano l'euro sta dopo (600 €), in inglese davanti (€600). */
+      function money(n, cur) {
+        if (cur === "£") return "£" + n;
+        return EN ? "€" + n : n + " €";
+      }
+
+      function evaluate(s) {
+        var r = { checks: [], amount: 0, cur: "€", verdict: "no", dist: 0, band: "" };
+
+        var dep = s.dep, arr = s.arr, air = s.airline;
+        if (!dep || !arr || !air) return null;
+
+        /* --- 1. si applica? --- */
+        var regime = null, why = "";
+        if (dep.j === "E") {
+          regime = "E";
+          why = tf("why.dep", "Sei partito da {air}, quindi la norma ti copre con qualunque compagnia.", { air: dep.code });
+        } else if (arr.j === "E" && air.j === "E") {
+          regime = "E";
+          why = tf("why.arr", "Sei atterrato a {air} con una compagnia europea, quindi la norma ti copre.", { air: arr.code });
+        } else if (dep.j === "U") {
+          regime = "U";
+          why = tf("why.dep", "Sei partito da {air}, quindi la norma ti copre con qualunque compagnia.", { air: dep.code });
+        } else if (arr.j === "U" && (air.j === "U" || air.j === "E")) {
+          regime = "U";
+          why = tf("why.arrU", "Sei atterrato a {air} con una compagnia europea o britannica.", { air: arr.code });
+        }
+
+        if (!regime) {
+          r.checks.push({ s: "no", html: t("chk.regimeNo", "<b>Il Regolamento non si applica a questo volo.</b> Sei partito da fuori dall'Unione con una compagnia extraeuropea: in quel caso la legge europea non ha presa. Verifica le regole del Paese di partenza — Brasile, Canada e Turchia ne hanno di proprie.") });
+          r.verdict = "no";
+          return r;
+        }
+
+        r.cur = regime === "U" ? "£" : "€";
+        r.checks.push({
+          s: "ok",
+          html: tf(regime === "E" ? "chk.regimeE" : "chk.regimeU",
+            regime === "E"
+              ? "<b>Si applica il Regolamento 261/2004.</b> {why}"
+              : "<b>Si applica UK261</b> (la copia britannica della norma). {why}",
+            { why: why })
+        });
+
+        /* --- 2. distanza e importo base --- */
+        var dist = greatCircle(dep, arr);
+        r.dist = dist;
+        /* «Volo intracomunitario» ai fini dell'art. 7: per il 261 vuol dire
+           entrambi gli aeroporti nell'Unione (il Regno Unito dopo la Brexit non
+           conta più); per UK261 la lettura britannica include entrambe le aree. */
+        var intraEu = regime === "E"
+          ? (dep.j === "E" && arr.j === "E")
+          : (!!dep.j && !!arr.j);
+        var base, bandKey, bandIt;
+
+        if (dist <= 1500) {
+          base = regime === "U" ? 220 : 250;
+          bandKey = "band.1"; bandIt = "fino a 1500 km";
+          r.cut = 2;
+        } else if (intraEu || dist <= 3500) {
+          base = regime === "U" ? 350 : 400;
+          bandKey = intraEu && dist > 1500 ? "band.2eu" : "band.2";
+          bandIt = intraEu && dist > 1500 ? "oltre 1500 km dentro l'Europa" : "1500–3500 km";
+          r.cut = 3;
+        } else {
+          base = regime === "U" ? 520 : 600;
+          bandKey = "band.3"; bandIt = "oltre 3500 km";
+          r.cut = 4;
+        }
+        r.band = t(bandKey, bandIt);
+        r.amount = base;
+        r.checks.push({
+          s: "ok",
+          html: tf("chk.dist", "<b>{dist} km</b> in linea d'aria da {a} a {b}: {band}, quindi la cifra di riferimento è <b>{amount}</b>.",
+            { dist: dist.toLocaleString(EN ? "en" : "it"), a: dep.code, b: arr.code, band: r.band, amount: money(base, r.cur) })
+        });
+
+        /* --- 3. il fatto --- */
+        var due = true;
+
+        if (s.event === "delay") {
+          if (s.delay === "99") {
+            r.checks.push({ s: "warn", html: t("chk.delayNever", "<b>Non sei mai partito.</b> Oltre le cinque ore di ritardo hai diritto al rimborso del biglietto; la compensazione invece segue le regole della cancellazione — se il volo è stato cancellato, passa alla scheda qui sopra.") });
+            due = false;
+          } else if (s.delay === "0") {
+            r.checks.push({ s: "no", html: t("chk.delayNo", "<b>Sotto le tre ore all'arrivo.</b> Sotto quella soglia non spetta compensazione, per quanto la giornata sia stata storta.") });
+            due = false;
+          } else {
+            r.checks.push({ s: "ok", html: t("chk.delay3", "<b>Tre ore o più all'arrivo.</b> È la soglia fissata dalla sentenza Sturgeon: da lì in poi un ritardo vale quanto una cancellazione.") });
+          }
+        }
+
+        if (s.event === "cancel") {
+          if (s.notice === "14") {
+            r.checks.push({ s: "no", html: t("chk.notice14", "<b>Te l'hanno detto con almeno 14 giorni di anticipo.</b> È l'unico caso che il Regolamento esclude in partenza: niente compensazione, qualunque sia il motivo.") });
+            due = false;
+          } else {
+            var lateLimit = s.notice === "7" ? 4 : 2;
+            r.checks.push({
+              s: "ok",
+              html: s.notice === "7"
+                ? t("chk.notice7", "<b>Preavviso tra 7 e 13 giorni.</b> La compensazione spetta, a meno che il volo sostitutivo sia partito al massimo 2 ore prima e ti abbia fatto arrivare con meno di 4 ore di ritardo.")
+                : t("chk.notice0", "<b>Preavviso sotto i 7 giorni.</b> La compensazione spetta, a meno che il sostitutivo ti abbia fatto arrivare con meno di 2 ore di ritardo.")
+            });
+
+            var rr = s.reroute;
+            if (rr !== "none") {
+              var got = parseInt(rr, 10);
+              if (got < lateLimit) {
+                r.checks.push({
+                  s: "no",
+                  html: tf("chk.rerouteOk", "<b>Il volo alternativo ti ha riportato abbastanza vicino all'orario originale</b> ({win}), quindi su questo punto la compagnia è a posto.",
+                    { win: "< " + lateLimit + "h" })
+                });
+                due = false;
+              } else if (got <= r.cut) {
+                r.halved = true;
+                r.checks.push({
+                  s: "warn",
+                  html: tf("chk.rerouteHalf", "<b>Metà dell'importo.</b> L'articolo 7.2 dimezza la compensazione quando la riprotezione ti fa arrivare entro {win} dall'orario originale: quindi {full} diventano {amount}.",
+                    { win: r.cut + "h", full: money(base, r.cur), amount: money(base / 2, r.cur) })
+                });
+                r.amount = base / 2;
+              } else {
+                r.checks.push({ s: "ok", html: t("chk.rerouteFull", "<b>Sei arrivato ben oltre i limiti</b> che il Regolamento fissa per la riprotezione, quindi l'importo resta pieno.") });
+              }
+            }
+          }
+        }
+
+        if (s.event === "denied") {
+          if (s.volunteer === "yes") {
+            r.checks.push({ s: "no", html: t("chk.deniedVol", "<b>Hai fatto il volontario.</b> Quando rinunci al posto in cambio di un accordo, accetti quell'accordo al posto della compensazione di legge: il Regolamento non si applica più.") });
+            due = false;
+          } else {
+            r.checks.push({ s: "ok", html: t("chk.deniedOk", "<b>Imbarco negato contro la tua volontà.</b> È il caso più netto di tutto il Regolamento: con prenotazione confermata e check-in nei tempi, la compensazione spetta subito, e nessuna «circostanza eccezionale» la scusa.") });
+          }
+        }
+
+        /* --- 4. la causa --- */
+        var extraordinary = false;
+        if (due && s.event !== "denied") {
+          if (s.reason === "none") {
+            r.checks.push({ s: "ok", html: t("chk.reasonNone", "<b>Non ti hanno dato una spiegazione vera.</b> Meglio così: l'onere di provare la circostanza eccezionale è della compagnia, non tuo. Fai la richiesta e falle portare la prova.") });
+          } else if (EXTRA[s.reason]) {
+            extraordinary = true;
+            r.checks.push({
+              s: "warn",
+              html: tf("chk.reasonExtra", "<b>{reason}.</b> Se la compagnia riesce davvero a provarlo, la esonera e non spetta nulla. Ma una risposta generica non è una prova: chiedi per iscritto la causa documentata, e se non arriva insisti.",
+                { reason: t("reason." + s.reason, REASON_IT[s.reason]) })
+            });
+          } else {
+            r.checks.push({
+              s: "ok",
+              html: tf("chk.reasonOk", "<b>{reason}.</b> Non è una circostanza eccezionale: la Corte di giustizia si è già pronunciata. La compagnia deve pagare.",
+                { reason: t("reason." + s.reason, REASON_IT[s.reason]) })
+            });
+          }
+        }
+
+        /* --- 5. prescrizione --- */
+        if (s.date) {
+          var years = (Date.now() - new Date(s.date).getTime()) / 31557600000;
+          if (years > 1.8) {
+            r.checks.push({
+              s: "warn",
+              html: tf("chk.old", "<b>Il volo ha {years} anni.</b> In Italia il termine applicato è di norma due anni; negli altri Paesi va da tre a sei. Verifica il limite del Paese che si applica prima di scrivere.",
+                { years: years.toFixed(1).replace(".", EN ? "." : ",") })
+            });
+          }
+        }
+
+        if (!due) { r.amount = 0; r.verdict = "no"; }
+        else if (extraordinary) r.verdict = "maybe";
+        else if (s.reason === "none") r.verdict = "likely";
+        else r.verdict = "yes";
+
+        return r;
+      }
+
+      /* =========================================================== lettera == */
+
+      function buildLetter(s, r) {
+        var ph = function (key, it, val) { return val || t(key, it); };
+        var flight = ph("placeholder.flight", "[numero del volo]", $("flightno").value.trim());
+        var dateStr = s.date
+          ? new Date(s.date).toLocaleDateString(EN ? "en-GB" : "it-IT")
+          : t("placeholder.date", "[data del volo]");
+        var pax = ph("placeholder.pax", "[nome e cognome]", $("pax").value.trim());
+        var pnr = ph("placeholder.pnr", "[codice di prenotazione]", $("pnr").value.trim());
+
+        var subject = tf("letter.subject",
+          "Richiesta di compensazione pecuniaria ai sensi del Regolamento (CE) 261/2004 — volo {flight} del {date}",
+          { flight: flight, date: dateStr });
+
+        var factsIt = {
+          delay: "Il volo è arrivato a destinazione finale con un ritardo superiore a tre ore, circostanza che secondo la giurisprudenza consolidata della Corte di giustizia (sentenza Sturgeon e successive) dà diritto alla stessa compensazione prevista per la cancellazione.",
+          cancel: "Il volo è stato cancellato e la comunicazione mi è pervenuta meno di quattordici giorni prima della partenza prevista, senza che mi sia stata offerta una riprotezione nei limiti previsti dall'articolo 5, paragrafo 1, lettera c) del Regolamento.",
+          denied: "Mi è stato negato l'imbarco contro la mia volontà pur essendo in possesso di prenotazione confermata e essendomi presentato all'accettazione nei termini previsti, come disciplinato dall'articolo 4 del Regolamento."
+        };
+
+        return tf("letter.body",
+          "Spett.le Servizio Relazioni con la Clientela di {airline}\n\n" +
+          "Oggetto: {subject}\n\n" +
+          "Egregi signori,\n\n" +
+          "scrivo in qualità di passeggero del volo {flight} del {date}, da {dep} a {arr}, codice di prenotazione {pnr}.\n\n" +
+          "{facts}\n\n" +
+          "Ai sensi dell'articolo 7 del Regolamento (CE) n. 261/2004, essendo la distanza ortodromica tra partenza e destinazione finale pari a circa {dist} km, chiedo pertanto la corresponsione della compensazione pecuniaria di {amount}.\n\n" +
+          "Ricordo che ai sensi dell'articolo 5, paragrafo 3, il vettore è liberato da tale obbligo solo se prova che il disservizio è dipeso da circostanze eccezionali che non si sarebbero comunque potute evitare anche adottando tutte le misure del caso, e che l'onere di tale prova grava sul vettore. Un generico richiamo a motivi operativi non lo soddisfa.\n\n" +
+          "Vi chiedo di provvedere al pagamento entro 14 giorni dal ricevimento della presente, mediante bonifico sulle coordinate che vi trasmetterò a vostra conferma. In mancanza di riscontro entro tale termine mi rivolgerò all'organismo nazionale competente e, se necessario, all'autorità giudiziaria, con addebito delle relative spese.\n\n" +
+          "Allego copia della prenotazione e della carta d'imbarco.\n\n" +
+          "Distinti saluti,\n\n{pax}\n\nData: {today}",
+          {
+            airline: s.airline.name,
+            subject: subject,
+            flight: flight,
+            date: dateStr,
+            dep: s.dep.name + " (" + s.dep.code + ")",
+            arr: s.arr.name + " (" + s.arr.code + ")",
+            pnr: pnr,
+            facts: t("facts." + s.event, factsIt[s.event]),
+            dist: r.dist.toLocaleString(EN ? "en" : "it"),
+            amount: money(r.amount, r.cur),
+            pax: pax,
+            today: new Date().toLocaleDateString(EN ? "en-GB" : "it-IT")
+          });
+      }
+
+      /* ============================================================ render === */
+
+      var combos = {};
+      var event = "delay";
+
+      function readState() {
+        return {
+          dep: combos.dep.value,
+          arr: combos.arr.value,
+          airline: combos.airline.value,
+          event: event,
+          delay: $("delay").value,
+          notice: $("notice").value,
+          reroute: $("reroute").value,
+          volunteer: $("volunteer").value,
+          reason: $("reason").value,
+          date: $("date").value
+        };
+      }
+
+      var ICON = { ok: "✓", warn: "!", no: "✕" };
+      var COLOR = { ok: "--yes", warn: "--maybe", no: "--no" };
+
+      function render() {
+        var s = readState();
+        var r = evaluate(s);
+
+        if (!r) {
+          $("result").hidden = true;
+          $("letter-card").hidden = true;
+          $("state").hidden = false;
+          $("state").textContent = t("state.need", "Scegli aeroporto di partenza, destinazione finale e compagnia.");
+          save();
+          return;
+        }
+        $("state").hidden = true;
+        $("result").hidden = false;
+
+        var v = r.verdict;
+        var color = v === "yes" || v === "likely" ? "--yes" : v === "maybe" ? "--maybe" : "--no";
+        $("verdict").style.setProperty("--v", "var(" + color + ")");
+
+        $("amount").textContent = r.amount ? money(r.amount, r.cur) : "—";
+        $("v-title").textContent =
+          v === "yes" ? t("v.yes", "Ti spetta la compensazione")
+            : v === "likely" ? t("v.likely", "Con ogni probabilità ti spetta")
+              : v === "maybe" ? t("v.maybe", "Dipende da cosa riesce a provare la compagnia")
+                : t("v.no", "Non spetta compensazione");
+        $("v-sub").textContent = r.amount
+          ? tf(v === "maybe" ? "v.sub.maybe" : "v.sub.yes",
+            v === "maybe"
+              ? "{dist} km · {band}. Vale comunque la pena chiedere: l'onere della prova è loro."
+              : "{dist} km · {band}. Chiedila: non rischi niente, se non una lettera.",
+            { dist: r.dist.toLocaleString(EN ? "en" : "it"), band: r.band })
+          : t("v.sub.no", "Restano validi gli altri diritti elencati qui sotto.");
+
+        var ul = $("checks");
+        ul.innerHTML = "";
+        r.checks.forEach(function (c) {
+          var li = document.createElement("li");
+          li.style.setProperty("--c", "var(" + COLOR[c.s] + ")");
+          var ico = document.createElement("span");
+          ico.className = "ico";
+          ico.setAttribute("aria-hidden", "true");
+          ico.textContent = ICON[c.s];
+          var body = document.createElement("div");
+          body.innerHTML = c.html;
+          li.append(ico, body);
+          ul.appendChild(li);
+        });
+
+        $("rights").innerHTML = "<h3>" + t("rights.title", "Qualunque cosa succeda, questi diritti sono tuoi") + "</h3><ul>" +
+          "<li>" + t("rights.care", "<b>Assistenza durante l'attesa:</b> cibo e bevande, e albergo con trasferimento se devi passare la notte — da 2 ore di ritardo sulle tratte corte, 3 sulle medie, 4 sulle lunghe. Spettano anche quando la causa è eccezionale: il maltempo non sospende la cena.") + "</li>" +
+          "<li>" + t("rights.refund", "<b>Rimborso:</b> da 5 ore di ritardo, e sempre in caso di cancellazione, puoi rinunciare al viaggio e riavere il prezzo del biglietto entro 7 giorni — più il volo di ritorno, se proseguire da solo non ha senso.") + "</li>" +
+          "<li>" + t("rights.extra", "<b>Spese vere:</b> la compensazione non copre l'albergo perso o la prenotazione saltata a destinazione. Quelle si chiedono a parte, con le ricevute, in base alla Convenzione di Montreal.") + "</li>" +
+          "<li>" + t("rights.enac", "<b>Se dicono di no:</b> in Italia il reclamo va all'ENAC, in ogni Paese UE al proprio organismo nazionale, e in ultima istanza al giudice di pace. In nessun passaggio serve un'agenzia.") + "</li>" +
+          "</ul>";
+
+        var showLetter = r.amount > 0;
+        $("letter-card").hidden = !showLetter;
+        if (showLetter) {
+          var text = buildLetter(s, r);
+          $("letter").value = text;
+          $("mail").href = "mailto:?subject=" +
+            encodeURIComponent(tf("letter.subject",
+              "Richiesta di compensazione pecuniaria ai sensi del Regolamento (CE) 261/2004 — volo {flight} del {date}",
+              {
+                flight: $("flightno").value.trim() || t("placeholder.flight", "[numero del volo]"),
+                date: s.date ? new Date(s.date).toLocaleDateString(EN ? "en-GB" : "it-IT") : t("placeholder.date", "[data del volo]")
+              })) +
+            "&body=" + encodeURIComponent(text);
+        }
+
+        save();
+      }
+
+      /* ============================================================ eventi === */
+
+      function setEvent(next) {
+        event = next;
+        ["delay", "cancel", "denied"].forEach(function (e) {
+          $("ev-" + e).setAttribute("aria-pressed", String(e === next));
+        });
+        $("f-delay").hidden = next !== "delay";
+        $("f-notice").hidden = next !== "cancel";
+        $("f-reroute").hidden = next !== "cancel";
+        $("f-volunteer").hidden = next !== "denied";
+        render();
+      }
+
+      /* ======================================================== persistenza = */
+
+      function save() {
+        try {
+          localStorage.setItem(STORE, JSON.stringify({
+            dep: combos.dep.value && combos.dep.value.code,
+            arr: combos.arr.value && combos.arr.value.code,
+            airline: combos.airline.value && combos.airline.value.code,
+            event: event,
+            delay: $("delay").value, notice: $("notice").value,
+            reroute: $("reroute").value, volunteer: $("volunteer").value,
+            reason: $("reason").value, date: $("date").value
+          }));
+        } catch (e) { /* modalità privata: pazienza */ }
+      }
+
+      function restore() {
+        var s = null;
+        try { s = JSON.parse(localStorage.getItem(STORE) || "null"); } catch (e) { /* idem */ }
+        if (!s) return;
+        ["delay", "notice", "reroute", "volunteer", "reason", "date"].forEach(function (id) {
+          if (typeof s[id] === "string" && s[id]) $(id).value = s[id];
+        });
+        if (s.dep) combos.dep.set(s.dep);
+        if (s.arr) combos.arr.set(s.arr);
+        if (s.airline) combos.airline.set(s.airline);
+        return s.event;
+      }
+
+      /* =============================================================== avvio = */
+
+      combos.dep = Combo("dep", AIRPORTS, render, false);
+      combos.arr = Combo("arr", AIRPORTS, render, false);
+      combos.airline = Combo("airline", AIRLINES, render, true);
+
+      ["delay", "notice", "reroute", "volunteer", "reason", "date", "flightno", "pax", "pnr"]
+        .forEach(function (id) { $(id).addEventListener("input", render); });
+
+      $("ev-delay").addEventListener("click", function () { setEvent("delay"); });
+      $("ev-cancel").addEventListener("click", function () { setEvent("cancel"); });
+      $("ev-denied").addEventListener("click", function () { setEvent("denied"); });
+
+      $("copy").addEventListener("click", function () {
+        var ta = $("letter");
+        ta.removeAttribute("readonly");
+        ta.select();
+        ta.setSelectionRange(0, 99999);
+        var done = false;
+        try { done = document.execCommand("copy"); } catch (e) { /* vecchi browser */ }
+        ta.setAttribute("readonly", "readonly");
+        if (!done && navigator.clipboard) navigator.clipboard.writeText(ta.value);
+        $("copied").hidden = false;
+        setTimeout(function () { $("copied").hidden = true; }, 2500);
+      });
+
+      var savedEvent = restore();
+      setEvent(savedEvent === "cancel" || savedEvent === "denied" ? savedEvent : "delay");
+    })();
+  </script>
+
+  <!-- 100% privacy-first analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+
+</body>
+
+</html>

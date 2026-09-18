@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>RiseFree — a che ora andare a dormire (e svegliarti)</title>
   <meta name="description"
-    content="Calcola gli orari giusti per andare a letto o per la sveglia, allineati ai cicli del sonno da 90 minuti. Gratis, senza account, senza abbonamento.">
+    content="Calcola gli orari giusti per andare a letto o per la sveglia, allineati ai cicli del sonno da 90 minuti, e il tuo piano di sonno ideale in base a età, cronotipo e abitudini. Gratis, senza account, senza abbonamento.">
   <meta name="theme-color" content="#fff8f0" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#15100c" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -315,7 +315,7 @@
     /* ========================================================== segmented === */
     .modes {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 6px;
       background: var(--surface-2);
       border: 1px solid var(--border);
@@ -344,7 +344,7 @@
       box-shadow: var(--shadow);
     }
 
-    @media (max-width: 460px) {
+    @media (max-width: 640px) {
       .modes {
         grid-template-columns: 1fr;
         border-radius: var(--radius);
@@ -498,6 +498,207 @@
       margin-top: 10px;
     }
 
+    /* ============================================================= piano ==== */
+    .plan-fields {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 12px;
+    }
+
+    .plan-fields fieldset {
+      grid-column: 1 / -1;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface-2);
+      padding: 10px 14px 14px;
+      margin: 0;
+      min-width: 0;
+    }
+
+    .plan-fields legend {
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--ink-2);
+      padding-inline: 4px;
+    }
+
+    .plan-fields .pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .plan-fields .pair input {
+      background: var(--surface);
+    }
+
+    .field-hint {
+      font-size: .8rem;
+      color: var(--ink-3);
+      margin-top: 8px;
+    }
+
+    @media (max-width: 520px) {
+      .plan-fields,
+      .plan-fields .pair {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .plan-hero {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px 20px;
+      align-items: center;
+      background: var(--accent-soft);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+    }
+
+    .plan-hero .big {
+      font-size: 2.3rem;
+      font-weight: 700;
+      letter-spacing: -.03em;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      color: var(--accent-strong);
+    }
+
+    .plan-hero .big small {
+      display: block;
+      font-size: .74rem;
+      font-weight: 600;
+      letter-spacing: 0;
+      color: var(--ink-3);
+      margin-bottom: 6px;
+    }
+
+    .plan-hero .sum {
+      font-size: .92rem;
+      color: var(--ink-2);
+    }
+
+    .plan-hero .sum b {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    @media (max-width: 520px) {
+      .plan-hero {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .plan-alt {
+      font-size: .86rem;
+      color: var(--ink-3);
+      margin-top: 10px;
+    }
+
+    .plan-alt b {
+      color: var(--ink-2);
+      font-weight: 600;
+    }
+
+    .plan h3 {
+      font-size: .95rem;
+      margin: 22px 0 8px;
+    }
+
+    .timeline {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 6px;
+    }
+
+    .timeline li {
+      display: grid;
+      grid-template-columns: 28px auto 1fr;
+      gap: 10px;
+      align-items: baseline;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      font-size: .9rem;
+      color: var(--ink-2);
+    }
+
+    .timeline .ico {
+      text-align: center;
+    }
+
+    .timeline .at {
+      font-weight: 700;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .timeline .what b {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .timeline li[data-key="1"] {
+      background: var(--accent-soft);
+      border-color: var(--border-strong);
+    }
+
+    .timeline li[data-key="1"] .at {
+      color: var(--accent-strong);
+    }
+
+    @media (max-width: 520px) {
+      .timeline li {
+        grid-template-columns: 28px 1fr;
+        row-gap: 2px;
+      }
+
+      .timeline .what {
+        grid-column: 2 / -1;
+      }
+    }
+
+    .checks {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .checks li {
+      display: grid;
+      grid-template-columns: 10px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      font-size: .89rem;
+      color: var(--ink-2);
+    }
+
+    .checks .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--q, var(--q-ok));
+      margin-top: 7px;
+    }
+
+    .checks b {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
     .site-footer {
       margin-top: 44px;
       border-top: 1px solid var(--border);
@@ -624,6 +825,8 @@
             alle…</button>
           <button type="button" id="mode-bed" aria-pressed="false" data-i18n="setup.modeBed">🛏️ Vado a letto
             ora</button>
+          <button type="button" id="mode-plan" aria-pressed="false" data-i18n="setup.modePlan">🧭 Il mio piano
+            ideale</button>
         </div>
 
         <div class="input-row">
@@ -635,7 +838,7 @@
             attuale</button>
         </div>
 
-        <label class="field chrono">
+        <label class="field chrono" id="chrono-field">
           <span data-i18n="setup.chrono">Il tuo cronotipo (facoltativo)</span>
           <select id="chrono">
             <option value="early" data-i18n="setup.chronoEarly">Mattiniero — crollo presto, mi sveglio da solo</option>
@@ -644,15 +847,85 @@
           </select>
         </label>
         <p class="chrono-hint" id="chrono-hint"></p>
+
+        <div class="plan-fields" id="plan-fields" hidden>
+          <label class="field">
+            <span data-i18n="plan.age">La tua età</span>
+            <select id="p-age">
+              <option value="teen" data-i18n="plan.ageTeen">14–17 anni</option>
+              <option value="young" data-i18n="plan.ageYoung">18–25 anni</option>
+              <option value="adult" selected data-i18n="plan.ageAdult">26–64 anni</option>
+              <option value="senior" data-i18n="plan.ageSenior">65 anni o più</option>
+            </select>
+          </label>
+          <label class="field">
+            <span data-i18n="plan.latency">Quanto ci metti ad addormentarti</span>
+            <select id="p-latency">
+              <option value="5" data-i18n="plan.lat5">Quasi subito (5 minuti)</option>
+              <option value="10" data-i18n="plan.lat10">Circa 10 minuti</option>
+              <option value="20" selected data-i18n="plan.lat20">Circa 20 minuti</option>
+              <option value="30" data-i18n="plan.lat30">Circa mezz'ora</option>
+              <option value="45" data-i18n="plan.lat45">45 minuti o più</option>
+            </select>
+          </label>
+          <fieldset>
+            <legend data-i18n="plan.free">Nei giorni liberi, senza sveglia (facoltativo ma prezioso)</legend>
+            <div class="pair">
+              <label class="field">
+                <span data-i18n="plan.freeBed">Mi addormento verso</span>
+                <input type="time" id="p-free-bed" step="300">
+              </label>
+              <label class="field">
+                <span data-i18n="plan.freeWake">Mi sveglio da solo verso</span>
+                <input type="time" id="p-free-wake" step="300">
+              </label>
+            </div>
+            <p class="field-hint" data-i18n="plan.freeHint">È il modo più affidabile per stimare quanto sonno ti serve
+              davvero e il tuo cronotipo: quello che fa il corpo quando nessuno lo comanda.</p>
+          </fieldset>
+          <label class="field">
+            <span data-i18n="plan.waso">Risvegli durante la notte</span>
+            <select id="p-waso">
+              <option value="rarely" data-i18n="plan.wasoRarely">Raramente, o brevi</option>
+              <option value="sometimes" selected data-i18n="plan.wasoSometimes">Qualche volta</option>
+              <option value="often" data-i18n="plan.wasoOften">Spesso, o a lungo</option>
+            </select>
+          </label>
+          <label class="field">
+            <span data-i18n="plan.alcohol">Alcol la sera</span>
+            <select id="p-alcohol">
+              <option value="none" selected data-i18n="plan.alcNone">No, o quasi mai</option>
+              <option value="sometimes" data-i18n="plan.alcSome">Qualche sera</option>
+              <option value="often" data-i18n="plan.alcOften">Quasi tutte le sere</option>
+            </select>
+          </label>
+          <label class="field">
+            <span data-i18n="plan.caffeine">Ultima caffeina della giornata (se la prendi)</span>
+            <input type="time" id="p-caffeine" step="300">
+          </label>
+          <label class="field">
+            <span data-i18n="plan.exercise">Fine dell'allenamento intenso (se ti alleni la sera)</span>
+            <input type="time" id="p-exercise" step="300">
+          </label>
+        </div>
       </section>
 
       <!-- ==================================================== risultati == -->
       <section class="card" aria-labelledby="out-title" aria-live="polite">
-        <h2 id="out-title" data-i18n="out.title">2. Gli orari giusti</h2>
+        <h2 id="out-title">2. Gli orari giusti</h2>
         <p class="card-sub" id="out-sub" data-i18n="out.sub">Inserisci un orario per vedere le proposte.</p>
         <p class="state" id="state" hidden></p>
         <ol class="opts" id="opts"></ol>
         <p class="nap" id="nap" hidden></p>
+
+        <div class="plan" id="plan-out" hidden>
+          <div class="plan-hero" id="plan-hero"></div>
+          <p class="plan-alt" id="plan-alt"></p>
+          <h3 data-i18n="plan.timelineTitle">La tua giornata, contata all'indietro dal letto</h3>
+          <ol class="timeline" id="plan-timeline"></ol>
+          <h3 data-i18n="plan.checksTitle">Cosa dice il tuo profilo</h3>
+          <ul class="checks" id="plan-checks"></ul>
+        </div>
       </section>
 
       <!-- ====================================================== onestà === -->
@@ -690,6 +963,27 @@
             bersaglio largo, non come un cronometro. Se dormi male da settimane,
             il problema non lo risolve un calcolo: quello è un discorso da medico.
           </p>
+          <p data-i18n="honest.p5">
+            <b>Il piano ideale</b> è la stessa aritmetica con più ingressi, ognuno preso
+            dalla letteratura e non dal marketing. Il fabbisogno di sonno parte dalle
+            fasce d'età della National Sleep Foundation (7–9 ore da adulti, 8–10 da
+            adolescenti, 7–8 oltre i 65) e, se me lo dici, da quanto dormi nei giorni
+            senza sveglia: è il metodo del Munich ChronoType Questionnaire, e dalla
+            metà di quel sonno ricavo anche il cronotipo e il <i>jet lag sociale</i>,
+            cioè di quanto il tuo orologio si sposta tra settimana e weekend. Poi
+            sottraggo dalla sveglia i risvegli notturni, il sonno che ti serve e la
+            tua latenza: quello è l'orario delle luci spente.
+          </p>
+          <p data-i18n="honest.p6">
+            Le regole di contorno hanno numeri altrettanto dichiarati: la caffeina ha
+            un'emivita di circa 5 ore e una revisione del 2023 colloca l'ultima tazza
+            a circa 9 ore dal letto; l'alcol accorcia la latenza ma frammenta la
+            seconda metà della notte; l'esercizio intenso a meno di un'ora dal letto
+            ritarda il sonno, mentre prima lo aiuta; la luce forte la sera frena la
+            melatonina, quella del mattino àncora l'orologio. Anche qui sono medie su
+            popolazioni, non misure su di te: il piano ti dà un bersaglio coerente, non
+            una prescrizione. E se i segnali di insonnia ci sono, te lo scrive.
+          </p>
         </div>
       </section>
 
@@ -713,7 +1007,7 @@
   <script>
     SplyntLang.apply({
       "meta.title": "RiseFree — when to go to bed (and when to wake up)",
-      "meta.desc": "Work out the right time to go to bed or to set your alarm, aligned to 90-minute sleep cycles. Free, no account, no subscription.",
+      "meta.desc": "Work out the right time to go to bed or to set your alarm, aligned to 90-minute sleep cycles, plus your ideal sleep schedule based on age, chronotype and habits. Free, no account, no subscription.",
       "nav.back": "← all the tools",
 
       "hero.eyebrow": "🌙 RiseFree — free, no account",
@@ -769,6 +1063,85 @@
       "honest.p2": "Before the first cycle there's the time it takes you to fall asleep: <b>latency</b>, on average <b>15 minutes</b> for a good sleeper. So <i>go to bed</i> at 10:45pm means <i>asleep</i> from 11:00pm: the times you see already account for it.",
       "honest.p3": "The chronotype acts exactly there, and it's the only genuinely uncertain part of the sum: <b>10 minutes</b> if you're an early bird, <b>15</b> on average, <b>35</b> if you're a night owl — because a night owl put to bed at eleven doesn't fall asleep on command. In practice the window shifts by about twenty minutes, but the cycles stay aligned to the second, because latency sits before sleep, not inside it. It's a gentle nudge, not a diagnosis: real differences between chronotypes reach a couple of hours, and estimating them would take weeks of data (and an account, and €19.99 a month).",
       "honest.p4": "<b>What this tool is not:</b> a measurement. The 90 minutes are an average — in reality a cycle runs from 80 to 110 minutes and changes through the night (REM gets longer towards morning). So treat these times as a wide target, not a stopwatch. If you've been sleeping badly for weeks, no calculation fixes that: that's a conversation for a doctor.",
+
+      "setup.modePlan": "🧭 My ideal schedule",
+      "setup.labelPlan": "Alarm on work or school days",
+      "out.titlePlan": "2. Your sleep plan",
+      "out.subPlan": "Alarm at <b>{time}</b>. This is a recurring plan, not tonight's time: it works if you keep it every day, weekend included.",
+      "state.askPlan": "Type what time you have to wake up on work or school days.",
+
+      "plan.age": "Your age",
+      "plan.ageTeen": "14–17",
+      "plan.ageYoung": "18–25",
+      "plan.ageAdult": "26–64",
+      "plan.ageSenior": "65 or older",
+      "plan.latency": "How long it takes you to fall asleep",
+      "plan.lat5": "Almost at once (5 minutes)",
+      "plan.lat10": "About 10 minutes",
+      "plan.lat20": "About 20 minutes",
+      "plan.lat30": "About half an hour",
+      "plan.lat45": "45 minutes or more",
+      "plan.free": "On free days, with no alarm (optional but valuable)",
+      "plan.freeBed": "I fall asleep around",
+      "plan.freeWake": "I wake up on my own around",
+      "plan.freeHint": "It's the most reliable way to estimate how much sleep you really need and your chronotype: what the body does when nobody is telling it what to do.",
+      "plan.waso": "Waking up during the night",
+      "plan.wasoRarely": "Rarely, or briefly",
+      "plan.wasoSometimes": "Sometimes",
+      "plan.wasoOften": "Often, or for a long time",
+      "plan.alcohol": "Alcohol in the evening",
+      "plan.alcNone": "No, or hardly ever",
+      "plan.alcSome": "Some evenings",
+      "plan.alcOften": "Most evenings",
+      "plan.caffeine": "Last caffeine of the day (if any)",
+      "plan.exercise": "End of hard training (if you train in the evening)",
+      "plan.timelineTitle": "Your day, counted backwards from bed",
+      "plan.checksTitle": "What your profile says",
+
+      "plan.heroLabel": "In bed, lights out",
+      "plan.heroSum": "You fall asleep around <b>{onset}</b>, sleep <b>{need}</b> and wake at <b>{wake}</b>. Time in bed: <b>{tib}</b>, with an estimated efficiency of {eff}% (above 85% is healthy sleep).",
+      "plan.altExact": "{need} is exactly <b>{n} cycles</b> of 90 minutes: your need and the cycles coincide.",
+      "plan.alt": "If you'd rather wake at the end of a cycle: <b>{n1} cycles</b> ({d1}) means bed at <b>{t1}</b>, <b>{n2} cycles</b> ({d2}) means <b>{t2}</b>. Remember the 90 minutes are an average.",
+      "plan.by": "by {t}",
+
+      "tl.caffeine": "<b>Last caffeine</b> — coffee, tea, cola, energy drinks. Half-life of 5 hours: 9 hours later a third is still in your blood.",
+      "tl.alcohol": "<b>Last drink</b> — alcohol puts you under quickly and then breaks up the second half of the night.",
+      "tl.meal": "<b>Last big meal</b> — digesting and deep sleep don't get along.",
+      "tl.exercise": "<b>End of hard training</b> — light exercise is fine later too.",
+      "tl.wind": "<b>Lights low, screens away</b> — bright light holds back melatonin: an hour of dimness.",
+      "tl.bed": "<b>In bed, lights out</b> — not earlier: the bed is for sleeping, not for waiting for sleep.",
+      "tl.onset": "<b>Asleep</b> (estimate, counting your {lat} minutes of latency).",
+      "tl.wake": "<b>Alarm</b> — on free days too, by {wkEnd}: your internal clock is set by consistency.",
+      "tl.light": "<b>Daylight</b>, 10–30 minutes — the signal that anchors the clock and brings the evening forward.",
+      "tl.nap": "<b>Nap</b>, if needed: 20 minutes at most, and not after this time.",
+
+      "ck.needFree": "<b>Estimated need: {need}</b> — from your free nights ({free}).",
+      "ck.needFreeCap": "<b>Estimated need: {need}</b> — your free nights last {free}, but weekends also include catch-up: I stop at the top of your age range.",
+      "ck.needFreeMin": "<b>Estimated need: {need}</b> — on free days you sleep {free}, less than the minimum for your age: I raise it to the minimum, because below that threshold it's not a need, it's a restriction.",
+      "ck.needAge": "<b>Estimated need: {need}</b> — from your age range (recommended {min}–{max}). Fill in the free days to get your own number, not an average.",
+      "ck.chrono": "<b>Chronotype: {label}</b> — the midpoint of your free sleep falls at {msf}.",
+      "ck.chronoEarly": "early",
+      "ck.chronoMid": "intermediate",
+      "ck.chronoLate": "late",
+      "ck.alignOk": "<b>Aligned with your internal clock</b> — the plan's sleep onset is close to your spontaneous one ({delta} min apart).",
+      "ck.alignEarly": "<b>{delta} earlier</b> than when you fall asleep spontaneously. It won't happen on command: move bedtime 15 minutes earlier every 2–3 evenings, bright light as soon as you wake, dim light in the evening.",
+      "ck.alignHard": "<b>{delta} earlier</b>: that's a fight against your biological clock, and whoever picks it usually loses. If you can, negotiate the alarm; if you can't, gradual shifts and morning light are the only real levers.",
+      "ck.alignLate": "<b>You have margin</b>: the plan has you falling asleep {delta} after your spontaneous time. If sleep comes earlier, follow it.",
+      "ck.sjOk": "<b>Social jetlag: {sj}</b> — under an hour. Your clock keeps the same time on weekdays and weekends.",
+      "ck.sjWarn": "<b>Social jetlag: {sj}</b> — every weekend your clock changes time zone, and Monday pays for it. On free days get up by {wkEnd}: if sleep is missing, make it up with a nap.",
+      "ck.caffOk": "<b>Caffeine: fine</b> — your last cup is {gap} before bed.",
+      "ck.caffWarn": "<b>Caffeine too late</b> — your last cup at {at} is {gap} before bed: move it before {cut}, or make it decaf.",
+      "ck.caffAfter": "<b>Caffeine after bedtime</b> — your last cup at {at} comes after lights-out at {bed}: either a typo, or the first reason you sleep badly. Last cup by {cut}.",
+      "ck.exAfter": "<b>Training after bedtime</b> — you finish at {at}, but lights-out is at {bed}. If the training time can't move, the plan doesn't hold: wrap up by {cut}.",
+      "ck.exOk": "<b>Training: fine</b> — you finish {gap} before bed.",
+      "ck.exWarn": "<b>Training too close to bed</b> — you finish {gap} before: high body temperature and adrenaline delay sleep. Wrap up by {cut}, or lower the intensity.",
+      "ck.alcSome": "<b>Alcohol</b> — it puts you under sooner, then fragments the second half of the night (less REM, more awakenings). Last drink by {cut}.",
+      "ck.alcOften": "<b>Alcohol most evenings</b> — I've added 15 minutes of awakenings to the sum. It's the single heaviest item on this list: last drink by {cut}.",
+      "ck.insomnia": "<b>Signals not to ignore</b> — more than 30 minutes to fall asleep or long awakenings, 3 nights a week for 3 months, is the definition of chronic insomnia. No calculation cures it: a doctor does, and the first-line treatment is cognitive behavioural therapy (CBT-I). Meanwhile: if you've been awake for 20 minutes, get up and come back when you're sleepy.",
+      "ck.rule20": "<b>The 20-minute rule</b> — if you stay awake for more than 20 minutes, get up, keep the light low, and return to bed when sleepiness returns: the bed has to stay associated with sleeping.",
+
+      "honest.p5": "<b>The ideal plan</b> is the same arithmetic with more inputs, each taken from the literature rather than from marketing. Sleep need starts from the National Sleep Foundation age ranges (7–9 hours for adults, 8–10 for teenagers, 7–8 over 65) and, if you tell me, from how long you sleep on alarm-free days: that's the Munich ChronoType Questionnaire method, and from the midpoint of that sleep I also derive your chronotype and your <i>social jetlag</i>, i.e. how far your clock shifts between weekdays and weekends. Then I subtract from the alarm your night awakenings, the sleep you need and your latency: that's lights-out time.",
+      "honest.p6": "The surrounding rules have equally explicit numbers: caffeine has a half-life of about 5 hours and a 2023 review places the last cup about 9 hours before bed; alcohol shortens latency but fragments the second half of the night; hard exercise less than an hour before bed delays sleep, while earlier it helps; bright light in the evening holds back melatonin, morning light anchors the clock. Again, these are population averages, not measurements of you: the plan gives you a coherent target, not a prescription. And if the signs of insomnia are there, it says so.",
 
       "footer.claim": "All worked out in your browser: no account, and the time you type never leaves this page. The only outside request is an anonymous visit count, without cookies.",
       "footer.home": "Home",
@@ -868,6 +1241,249 @@
         return d;
       }
 
+
+      /* ============================================================= piano ==== */
+
+      /* Fabbisogno per fascia d'età (National Sleep Foundation, 2015): minuti. */
+      var PLAN_AGE = {
+        teen: { min: 480, max: 600, def: 540 },
+        young: { min: 420, max: 540, def: 480 },
+        adult: { min: 420, max: 540, def: 480 },
+        senior: { min: 420, max: 480, def: 450 }
+      };
+      /* Minuti svegli dopo l'addormentamento (WASO): 10–20 è normale, >30 è clinico. */
+      var PLAN_WASO = { rarely: 10, sometimes: 20, often: 40 };
+
+      var CAFFEINE_GAP = 9 * 60;   /* Gardiner et al. 2023: ~8,8 h per una tazza standard */
+      var ALCOHOL_GAP = 4 * 60;
+      var MEAL_GAP = 3 * 60;
+      var EXERCISE_GAP = 90;       /* Stutz et al. 2019: l'intenso entro 1h ritarda il sonno */
+      var WIND_DOWN = 60;
+      var WEEKEND_SLACK = 60;      /* jet lag sociale sotto l'ora */
+      var NAP_WINDOW = 8 * 60;
+
+      /* Aritmetica sull'orologio (minuti dalla mezzanotte, modulo 24h): il piano è
+         ricorrente, non ha un "oggi" e un "domani". */
+      function toMin(hhmm) {
+        if (!hhmm) return null;
+        var p = hhmm.split(":");
+        return parseInt(p[0], 10) * 60 + parseInt(p[1], 10);
+      }
+      function mod(n) { return ((n % 1440) + 1440) % 1440; }
+      function clock(m) {
+        m = mod(Math.round(m / 5) * 5);
+        return pad(Math.floor(m / 60)) + ":" + pad(m % 60);
+      }
+      /* distanza più corta sul quadrante */
+      function circDiff(a, b) { var d = mod(a - b); return Math.min(d, 1440 - d); }
+      function fmtGap(min) { return min < 60 ? min + " min" : fmtDur(min); }
+
+      function renderPlan() {
+        var raw = $("time").value;
+        var out = $("plan-out");
+        if (!raw) {
+          $("state").hidden = false;
+          $("state").textContent = t("state.askPlan", "Scrivi a che ora devi svegliarti nei giorni di lavoro o di scuola.");
+          $("out-sub").textContent = t("out.sub", "Inserisci un orario per vedere le proposte.");
+          out.hidden = true;
+          return;
+        }
+        $("state").hidden = true;
+        out.hidden = false;
+
+        var wake = toMin(raw);
+        var age = PLAN_AGE[$("p-age").value] || PLAN_AGE.adult;
+        var latency = parseInt($("p-latency").value, 10) || 20;
+        var wasoBase = PLAN_WASO[$("p-waso").value] || 20;
+        var alcohol = $("p-alcohol").value;
+        var waso = wasoBase + (alcohol === "often" ? 15 : 0);
+        var caff = toMin($("p-caffeine").value);
+        var exer = toMin($("p-exercise").value);
+
+        /* giorni liberi → fabbisogno e cronotipo (metodo MCTQ) */
+        var freeBed = toMin($("p-free-bed").value);
+        var freeWake = toMin($("p-free-wake").value);
+        var freeDur = null, msf = null;
+        if (freeBed != null && freeWake != null) {
+          freeDur = mod(freeWake - freeBed);
+          if (freeDur < 180 || freeDur > 840) freeDur = null;   /* orari inverosimili: ignoro */
+          else msf = mod(freeBed + freeDur / 2);
+        }
+
+        var need, needKey, needIt;
+        if (freeDur != null) {
+          need = Math.min(Math.max(freeDur, age.min), age.max);
+          if (freeDur > age.max) {
+            needKey = "ck.needFreeCap";
+            needIt = "<b>Fabbisogno stimato: {need}</b> — le tue notti libere durano {free}, ma il weekend include anche il recupero: mi fermo al massimo della tua fascia d'età.";
+          } else if (freeDur < age.min) {
+            needKey = "ck.needFreeMin";
+            needIt = "<b>Fabbisogno stimato: {need}</b> — nei giorni liberi dormi {free}, meno del minimo per la tua età: alzo al minimo, perché sotto quella soglia non è un fabbisogno, è una restrizione.";
+          } else {
+            needKey = "ck.needFree";
+            needIt = "<b>Fabbisogno stimato: {need}</b> — dalle tue notti libere ({free}).";
+          }
+        } else {
+          need = age.def;
+          needKey = "ck.needAge";
+          needIt = "<b>Fabbisogno stimato: {need}</b> — dalla fascia d'età (consigliate {min}–{max}). Compila i giorni liberi per avere un numero tuo, non una media.";
+        }
+        need = Math.round(need / 5) * 5;
+
+        /* il cuore del conto: sveglia − risvegli − sonno − latenza = luci spente */
+        var onset = mod(wake - waso - need);
+        var bed = mod(onset - latency);
+        var tib = latency + need + waso;
+        var eff = Math.round(need / tib * 100);
+        var wkEnd = clock(wake + WEEKEND_SLACK);
+
+        $("out-sub").innerHTML = tf("out.subPlan",
+          "Sveglia alle <b>{time}</b>. Questo è un piano ricorrente, non l'orario di stasera: funziona se lo tieni ogni giorno, weekend compreso.",
+          { time: clock(wake) });
+
+        /* ---- risultato principale ---- */
+        $("plan-hero").innerHTML =
+          '<span class="big"><small>' + t("plan.heroLabel", "A letto, luci spente") + "</small>" + clock(bed) + "</span>" +
+          '<span class="sum">' + tf("plan.heroSum",
+            "Ti addormenti verso <b>{onset}</b>, dormi <b>{need}</b> e ti svegli alle <b>{wake}</b>. Tempo a letto: <b>{tib}</b>, con un'efficienza stimata del {eff}% (sopra l'85% è sonno sano).",
+            { onset: clock(onset), need: fmtDur(need), wake: clock(wake), tib: fmtDur(tib), eff: eff }) + "</span>";
+
+        /* ---- cicli: l'identità del tool, ma qui come alternativa ---- */
+        var nLow = Math.floor(need / CYCLE), nHigh = Math.ceil(need / CYCLE);
+        if (nLow === nHigh) {
+          $("plan-alt").innerHTML = tf("plan.altExact",
+            "{need} sono esattamente <b>{n} cicli</b> da 90 minuti: fabbisogno e cicli coincidono.",
+            { need: fmtDur(need), n: nLow });
+        } else {
+          $("plan-alt").innerHTML = tf("plan.alt",
+            "Se preferisci svegliarti a fine ciclo: <b>{n1} cicli</b> ({d1}) → a letto alle <b>{t1}</b>, oppure <b>{n2} cicli</b> ({d2}) → alle <b>{t2}</b>. Ricorda che i 90 minuti sono una media.",
+            {
+              n1: nLow, d1: fmtDur(nLow * CYCLE), t1: clock(wake - waso - nLow * CYCLE - latency),
+              n2: nHigh, d2: fmtDur(nHigh * CYCLE), t2: clock(wake - waso - nHigh * CYCLE - latency)
+            });
+        }
+
+        /* ---- la giornata, in ordine ---- */
+        var by = function (m) { return tf("plan.by", "entro le {t}", { t: clock(m) }); };
+        var items = [
+          { ico: "☕", at: clock(bed - CAFFEINE_GAP), key: "tl.caffeine", it: "<b>Ultima caffeina</b> — caffè, tè, cola, energy drink. Emivita di 5 ore: 9 ore dopo ne circola ancora un terzo." },
+          alcohol !== "none" ? { ico: "🍷", at: clock(bed - ALCOHOL_GAP), key: "tl.alcohol", it: "<b>Ultimo bicchiere</b> — l'alcol addormenta in fretta e poi spezza la seconda metà della notte." } : null,
+          { ico: "🍽️", at: clock(bed - MEAL_GAP), key: "tl.meal", it: "<b>Ultimo pasto abbondante</b> — digerire e dormire profondo non vanno d'accordo." },
+          { ico: "🏃", at: clock(bed - EXERCISE_GAP), key: "tl.exercise", it: "<b>Fine dell'allenamento intenso</b> — quello leggero va bene anche più tardi." },
+          { ico: "🔅", at: clock(bed - WIND_DOWN), key: "tl.wind", it: "<b>Luci basse, schermi via</b> — la luce forte frena la melatonina: un'ora di penombra." },
+          { ico: "🛏️", at: clock(bed), main: true, key: "tl.bed", it: "<b>A letto, luci spente</b> — non prima: il letto serve per dormire, non per aspettare il sonno." },
+          { ico: "😴", at: clock(onset), key: "tl.onset", it: "<b>Addormentato</b> (stima, contando i tuoi {lat} minuti di latenza).", vars: { lat: latency } },
+          { ico: "⏰", at: clock(wake), main: true, key: "tl.wake", it: "<b>Sveglia</b> — anche nei giorni liberi entro le {wkEnd}: l'orologio interno si regola sulla costanza.", vars: { wkEnd: wkEnd } },
+          { ico: "☀️", at: by(wake + 60), key: "tl.light", it: "<b>Luce naturale</b>, 10–30 minuti — è il segnale che àncora l'orologio e anticipa la sera." },
+          { ico: "💤", at: by(wake + NAP_WINDOW), key: "tl.nap", it: "<b>Pisolino</b>, se serve: 20 minuti al massimo, e non oltre quest'ora." }
+        ];
+        var tl = $("plan-timeline");
+        tl.innerHTML = "";
+        items.forEach(function (it) {
+          if (!it) return;
+          var li = document.createElement("li");
+          if (it.main) li.dataset.key = "1";
+          li.innerHTML =
+            '<span class="ico" aria-hidden="true">' + it.ico + "</span>" +
+            '<span class="at">' + it.at + "</span>" +
+            '<span class="what">' + tf(it.key, it.it, it.vars || {}) + "</span>";
+          tl.appendChild(li);
+        });
+
+        /* ---- cosa dice il profilo ---- */
+        var checks = [];
+        var add = function (q, key, it, vars) { checks.push({ q: q, html: tf(key, it, vars || {}) }); };
+
+        add("best", needKey, needIt, {
+          need: fmtDur(need), free: freeDur != null ? fmtDur(freeDur) : "",
+          min: fmtDur(age.min), max: fmtDur(age.max)
+        });
+
+        if (msf != null) {
+          var label = msf < 180
+            ? t("ck.chronoEarly", "mattiniero")
+            : (msf > 300 ? t("ck.chronoLate", "serotino") : t("ck.chronoMid", "intermedio"));
+          add("best", "ck.chrono", "<b>Cronotipo {label}</b> — la metà del tuo sonno libero cade alle {msf}.",
+            { label: label, msf: clock(msf) });
+
+          /* di quanto il piano anticipa (o posticipa) l'addormentamento spontaneo */
+          var ahead = mod(freeBed - onset);            /* >0 e <12h: il piano è più presto */
+          if (ahead > 720) {
+            add("best", "ck.alignLate", "<b>Hai margine</b>: il piano ti fa addormentare {delta} dopo il tuo orario spontaneo. Se ti scappa prima il sonno, seguilo.",
+              { delta: fmtGap(1440 - ahead) });
+          } else if (ahead <= 45) {
+            add("best", "ck.alignOk", "<b>Allineato all'orologio interno</b> — l'orario di addormentamento del piano è vicino a quello spontaneo ({delta} min di differenza).",
+              { delta: ahead });
+          } else if (ahead <= 180) {
+            add("ok", "ck.alignEarly", "<b>Anticipo di {delta}</b> rispetto a quando ti addormenti spontaneamente. Non ci riuscirai a comando: sposta il letto di 15 minuti ogni 2–3 sere, luce forte appena sveglio, penombra la sera.",
+              { delta: fmtGap(ahead) });
+          } else {
+            add("low", "ck.alignHard", "<b>Anticipo di {delta}</b>: è una lotta contro l'orologio biologico, e in genere la perde chi ci prova. Se puoi, tratta la sveglia; se non puoi, gradualità e luce del mattino sono le uniche leve vere.",
+              { delta: fmtGap(ahead) });
+          }
+
+          var msw = mod(onset + need / 2);
+          var sj = circDiff(msf, msw);
+          if (sj < 60) {
+            add("best", "ck.sjOk", "<b>Jet lag sociale: {sj}</b> — sotto l'ora. Il tuo orologio fa lo stesso orario in settimana e nel weekend.", { sj: fmtGap(sj) });
+          } else {
+            add(sj >= 120 ? "low" : "ok", "ck.sjWarn", "<b>Jet lag sociale: {sj}</b> — ogni weekend il tuo orologio cambia fuso, e il lunedì lo paga. Nei giorni liberi alzati entro le {wkEnd}: se manca sonno, recuperalo con un pisolino.",
+              { sj: fmtGap(sj), wkEnd: wkEnd });
+          }
+        }
+
+        /* gap > 12h significa "dopo le luci spente", non "molto prima" */
+        if (caff != null) {
+          var cgap = mod(bed - caff);
+          if (cgap > 720) {
+            add("low", "ck.caffAfter", "<b>Caffeina dopo l'ora di letto</b> — l'ultima tazza alle {at} cade dopo le luci spente delle {bed}: o è un errore di battitura, o è il primo motivo per cui dormi male. Ultima tazza entro le {cut}.",
+              { at: clock(caff), bed: clock(bed), cut: clock(bed - CAFFEINE_GAP) });
+          } else if (cgap < CAFFEINE_GAP) {
+            add("low", "ck.caffWarn", "<b>Caffeina troppo tardi</b> — l'ultima tazza alle {at} è a {gap} dal letto: spostala prima delle {cut}, o passa al decaffeinato.",
+              { at: clock(caff), gap: fmtGap(cgap), cut: clock(bed - CAFFEINE_GAP) });
+          } else {
+            add("best", "ck.caffOk", "<b>Caffeina: ok</b> — l'ultima tazza è a {gap} dal letto.", { gap: fmtGap(cgap) });
+          }
+        }
+
+        if (exer != null) {
+          var egap = mod(bed - exer);
+          if (egap > 720) {
+            add("ok", "ck.exAfter", "<b>Allenamento dopo l'ora di letto</b> — finisci alle {at}, ma le luci spente sono alle {bed}. Se l'orario dell'allenamento non si sposta, il piano non regge: chiudi entro le {cut}.",
+              { at: clock(exer), bed: clock(bed), cut: clock(bed - EXERCISE_GAP) });
+          } else if (egap < EXERCISE_GAP) {
+            add("ok", "ck.exWarn", "<b>Allenamento troppo vicino al letto</b> — finisci {gap} prima: temperatura e adrenalina alte ritardano il sonno. Chiudi entro le {cut}, o abbassa l'intensità.",
+              { gap: fmtGap(egap), cut: clock(bed - EXERCISE_GAP) });
+          } else {
+            add("best", "ck.exOk", "<b>Allenamento: ok</b> — finisci {gap} prima di andare a letto.", { gap: fmtGap(egap) });
+          }
+        }
+
+        if (alcohol === "sometimes") {
+          add("ok", "ck.alcSome", "<b>Alcol</b> — ti addormenta prima, poi ti frammenta la seconda metà della notte (meno REM, più risvegli). Ultimo bicchiere entro le {cut}.",
+            { cut: clock(bed - ALCOHOL_GAP) });
+        } else if (alcohol === "often") {
+          add("low", "ck.alcOften", "<b>Alcol quasi tutte le sere</b> — ho aggiunto 15 minuti di risvegli al conto. È la cosa singola che pesa di più in questa lista: ultimo bicchiere entro le {cut}.",
+            { cut: clock(bed - ALCOHOL_GAP) });
+        }
+
+        var slowOnset = latency >= 30, longWake = wasoBase >= 40;
+        if (slowOnset && longWake) {
+          add("low", "ck.insomnia", "<b>Segnali da non ignorare</b> — più di 30 minuti per addormentarti o risvegli lunghi, se succede 3 notti a settimana da 3 mesi, è la definizione di insonnia cronica. Non la cura un calcolo: la cura un medico, e la prima scelta è la terapia cognitivo-comportamentale (CBT-I). Intanto: se sei sveglio da 20 minuti, alzati e torna a letto quando hai sonno.");
+        } else if (slowOnset || longWake) {
+          add("ok", "ck.rule20", "<b>Regola dei 20 minuti</b> — se resti sveglio più di 20 minuti, alzati, luce bassa, e torna a letto quando torna il sonno: il letto deve restare associato al dormire.");
+        }
+
+        var ul = $("plan-checks");
+        ul.innerHTML = "";
+        checks.forEach(function (c) {
+          var li = document.createElement("li");
+          li.style.setProperty("--q", "var(--q-" + c.q + ")");
+          li.innerHTML = '<span class="dot" aria-hidden="true"></span><span>' + c.html + "</span>";
+          ul.appendChild(li);
+        });
+      }
+
       /* ============================================================ render === */
 
       function render() {
@@ -878,6 +1494,13 @@
         var list = $("opts");
         list.innerHTML = "";
         $("nap").hidden = true;
+
+        if (mode === "plan") {
+          renderPlan();
+          savePrefs();
+          return;
+        }
+        $("plan-out").hidden = true;
 
         if (!raw) {
           $("state").hidden = false;
@@ -962,20 +1585,33 @@
         mode = next;
         $("mode-wake").setAttribute("aria-pressed", String(mode === "wake"));
         $("mode-bed").setAttribute("aria-pressed", String(mode === "bed"));
+        $("mode-plan").setAttribute("aria-pressed", String(mode === "plan"));
         $("time-label").textContent = mode === "wake"
           ? t("setup.labelWake", "Orario della sveglia")
-          : t("setup.labelBed", "A che ora ti metti a letto");
+          : mode === "bed"
+            ? t("setup.labelBed", "A che ora ti metti a letto")
+            : t("setup.labelPlan", "Sveglia nei giorni di lavoro o di scuola");
         $("now-btn").hidden = mode !== "bed";
+        $("chrono-field").hidden = mode === "plan";
+        $("chrono-hint").hidden = mode === "plan";
+        $("plan-fields").hidden = mode !== "plan";
+        $("out-title").textContent = mode === "plan"
+          ? t("out.titlePlan", "2. Il tuo piano di sonno")
+          : t("out.title", "2. Gli orari giusti");
         if (mode === "bed") $("time").value = fmt(new Date());
         render();
       }
 
       /* ====================================================== preferenze ==== */
 
+      var PLAN_FIELDS = ["p-age", "p-latency", "p-free-bed", "p-free-wake", "p-waso", "p-alcohol", "p-caffeine", "p-exercise"];
+
       function savePrefs() {
         try {
+          var plan = {};
+          PLAN_FIELDS.forEach(function (id) { plan[id] = $(id).value; });
           localStorage.setItem("risefree.prefs", JSON.stringify({
-            chrono: $("chrono").value, mode: mode, time: mode === "wake" ? $("time").value : ""
+            chrono: $("chrono").value, mode: mode, time: mode === "bed" ? "" : $("time").value, plan: plan
           }));
         } catch (e) { /* modalità privata: pazienza */ }
       }
@@ -989,6 +1625,11 @@
 
       $("mode-wake").addEventListener("click", function () { setMode("wake"); });
       $("mode-bed").addEventListener("click", function () { setMode("bed"); });
+      $("mode-plan").addEventListener("click", function () { setMode("plan"); });
+      PLAN_FIELDS.forEach(function (id) {
+        $(id).addEventListener("input", render);
+        $(id).addEventListener("change", render);
+      });
       $("now-btn").addEventListener("click", function () { $("time").value = fmt(new Date()); render(); });
       $("time").addEventListener("input", render);
       $("chrono").addEventListener("change", render);
@@ -996,7 +1637,10 @@
       var saved = loadPrefs();
       if (saved.chrono && CHRONO[saved.chrono]) $("chrono").value = saved.chrono;
       if (saved.time) $("time").value = saved.time;
-      setMode(saved.mode === "bed" ? "bed" : "wake");
+      if (saved.plan) PLAN_FIELDS.forEach(function (id) {
+        if (typeof saved.plan[id] === "string") $(id).value = saved.plan[id];
+      });
+      setMode(saved.mode === "bed" || saved.mode === "plan" ? saved.mode : "wake");
     })();
   </script>
 
